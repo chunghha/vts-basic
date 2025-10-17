@@ -1,0 +1,222 @@
+@import "tailwindcss";
+
+/* Fontsource Font Imports */
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/ibm-plex-sans/700.css";
+
+@import "@fontsource/ibm-plex-serif/400.css";
+@import "@fontsource/ibm-plex-serif/500.css";
+@import "@fontsource/ibm-plex-serif/600.css";
+@import "@fontsource/ibm-plex-serif/700.css";
+
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+@import "@fontsource/ibm-plex-mono/600.css";
+@import "@fontsource/ibm-plex-mono/700.css";
+
+@plugin "daisyui" {
+  logs: false;
+  themes:
+    polar --default,
+    dark --prefersdark;
+}
+@plugin "daisyui/theme" {
+  name: "light";
+  --color-primary: "#d7827e";
+  --color-secondary: "#286983";
+  --color-accent: "#b4637a";
+  --color-neutral: "#f2e9e1";
+  --color-base-100: "#faf4ed";
+  --color-info: "#56949f";
+  --color-success: "#907aa9";
+  --color-warning: "#ea9d34";
+  --color-error: "#eb6f92";
+  --color-contrast: "#191724";
+}
+@plugin "daisyui/theme" {
+  name: "milkshake";
+  prefersdark: false;
+  color-scheme: "light";
+  --color-base-100: #f0f4f2;
+  --color-base-200: oklch(97% 0.001 106.424);
+  --color-base-300: oklch(92% 0.003 48.717);
+  --color-base-content: #181818;
+  --color-primary: #ede6cb;
+  --color-primary-content: #171714;
+  --color-secondary: #5d8a9b;
+  --color-secondary-content: #eef3f5;
+  --color-accent: #202f4b;
+  --color-accent-content: #e8eaed;
+  --color-neutral: #c3d3d6;
+  --color-neutral-content: #131515;
+  --color-info: #3a5779;
+  --color-info-content: #ebeef1;
+  --color-success: #005249;
+  --color-success-content: #e5edec;
+  --color-warning: #ffcb8e;
+  --color-warning-content: #19140e;
+  --color-error: #69092d;
+  --color-error-content: #f0e6ea;
+  --radius-selector: 0rem;
+  --radius-field: 0rem;
+  --radius-box: 0rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
+@plugin "daisyui/theme" {
+  name: "dark";
+  --color-primary: "#ea9a97";
+  --color-secondary: "#3e8fb0";
+  --color-accent: "#eb6f92";
+  --color-neutral: "#393552";
+  --color-base-100: "#191724";
+  --color-info: "#9ccfd8";
+  --color-success: "#c4a7e7";
+  --color-warning: "#f6c177";
+  --color-error: "#b4637a";
+  --color-contrast: "#faf4ed";
+}
+@plugin "daisyui/theme" {
+  name: "mindful";
+  prefersdark: false;
+  color-scheme: "light";
+  --color-base-100: #f9f7ec;
+  --color-base-200: #e0ded4;
+  --color-base-300: #c7c5bc;
+  --color-base-content: #181817;
+  --color-primary: #002d72;
+  --color-primary-content: oklch(98% 0.022 95.277);
+  --color-secondary: #09cdcd;
+  --color-secondary-content: oklch(100% 0 0);
+  --color-accent: #81459e;
+  --color-accent-content: oklch(97% 0.014 254.604);
+  --color-neutral: #004bbf;
+  --color-neutral-content: oklch(98% 0.026 102.212);
+  --color-info: #573894;
+  --color-info-content: oklch(97% 0.013 236.62);
+  --color-success: oklch(60% 0.118 184.704);
+  --color-success-content: oklch(98% 0.014 180.72);
+  --color-warning: #a0e5d9;
+  --color-warning-content: #181817;
+  --color-error: oklch(59% 0.249 0.584);
+  --color-error-content: oklch(97% 0.014 343.198);
+  --radius-selector: 0.25rem;
+  --radius-field: 2rem;
+  --radius-box: 0.25rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 1;
+}
+@plugin "daisyui/theme" {
+  name: "polar";
+  default: true;
+  prefersdark: false;
+  color-scheme: "light";
+  --color-base-100: #f9fafa;
+  --color-base-200: oklch(96% 0.007 247.896);
+  --color-base-300: #dee7ed;
+  --color-base-content: #161717;
+  --color-primary: #002244;
+  --color-primary-content: #e5e8ec;
+  --color-secondary: #69092d;
+  --color-secondary-content: #f0e6ea;
+  --color-accent: #ffab6e;
+  --color-accent-content: #19110b;
+  --color-neutral: oklch(27% 0.041 260.031);
+  --color-neutral-content: oklch(98% 0.003 247.858);
+  --color-info: #1e3442;
+  --color-info-content: #e8eaec;
+  --color-success: #85a3b2;
+  --color-success-content: #0d1011;
+  --color-warning: #e9d8c8;
+  --color-warning-content: #171514;
+  --color-error: #732553;
+  --color-error-content: #f1e9ed;
+  --radius-selector: 0rem;
+  --radius-field: 0rem;
+  --radius-box: 0rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 1;
+}
+@plugin "daisyui/theme" {
+  name: "pursuit";
+  prefersdark: false;
+  color-scheme: "light";
+  --color-base-100: #f6f2e1;
+  --color-base-200: #ddd9ca;
+  --color-base-300: #c4c1b4;
+  --color-base-content: #181816;
+  --color-primary: #e94e6d;
+  --color-primary-content: #fcedf0;
+  --color-secondary: #327a88;
+  --color-secondary-content: #e6e6e6;
+  --color-accent: #0f084b;
+  --color-accent-content: #e7e6ed;
+  --color-neutral: #90c693;
+  --color-neutral-content: #17180f;
+  --color-info: #082c2c;
+  --color-info-content: #e6e9e9;
+  --color-success: #15706c;
+  --color-success-content: #e7f0f0;
+  --color-warning: #ede2e0;
+  --color-warning-content: #171616;
+  --color-error: #906c93;
+  --color-error-content: #f3f0f4;
+  --radius-selector: 0rem;
+  --radius-field: 0rem;
+  --radius-box: 0rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 2px;
+  --depth: 1;
+  --noise: 1;
+}
+
+/* Basic app styles */
+html {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  @apply m-0;
+  font-family:
+    "IBM Plex Sans",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Roboto",
+    "Oxygen",
+    "Ubuntu",
+    "Cantarell",
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue",
+    sans-serif;
+  background-color: var(--color-base-100);
+  color: var(--color-base-content, #111827);
+}
+
+/* Code styling */
+code {
+  font-family:
+    "IBM Plex Mono", source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
