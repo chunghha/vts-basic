@@ -1,6 +1,7 @@
 import { useId } from 'react'
+import { APP_VERSION } from '../routes/__root'
 
-export default function Home(): JSX.Element {
+export default function Home() {
 	const emailId = useId()
 	const componentsId = useId()
 	const themesId = useId()
@@ -64,7 +65,9 @@ export default function Home(): JSX.Element {
 
 									<div className="text-right">
 										<div className="text-xs text-base-content/60">Version</div>
-										<div className="font-medium">1.0.0</div>
+										<div className="badge badge-sm bg-base-200 text-base-content/70 border-0 shadow-inner font-mono font-medium">
+											v{APP_VERSION}
+										</div>
 									</div>
 								</div>
 

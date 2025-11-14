@@ -197,19 +197,6 @@ html {
 
 body {
   @apply m-0;
-  font-family:
-    "IBM Plex Sans",
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    "Roboto",
-    "Oxygen",
-    "Ubuntu",
-    "Cantarell",
-    "Fira Sans",
-    "Droid Sans",
-    "Helvetica Neue",
-    sans-serif;
   background-color: var(--color-base-100);
   color: var(--color-base-content, #111827);
 }
@@ -219,4 +206,14 @@ code {
   font-family:
     "IBM Plex Mono", source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+/* Apply serif font to headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-serif;
 }
