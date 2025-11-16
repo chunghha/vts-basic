@@ -23,7 +23,7 @@ use tokio::{fs, signal};
 use tower::ServiceBuilder;
 use tower_http::{compression::CompressionLayer, services::ServeFile, trace::TraceLayer};
 
-use metrics::{counter, describe_counter, describe_histogram};
+use metrics::{counter, describe_counter, describe_histogram, histogram};
 use metrics_exporter_prometheus::PrometheusBuilder;
 use tracing::{field, info_span};
 use tracing_subscriber::{EnvFilter, Registry, layer::SubscriberExt, util::SubscriberInitExt};
@@ -174,18 +174,18 @@ async fn proxy_fallback(
 
     match state.client.request(req).await {
         Ok(mut resp) => {
-            let _elapsed = start.elapsed();
+            let elapsed = start.elapsed();
             let status = resp.status();
             span.record("status", status.as_u16());
-            // histogram!("proxy_request_latency_ms", elapsed.as_millis() as f64);
+            histogram!("proxy_upstream_latency_seconds").record(elapsed.as_secs_f64());
             resp.headers_mut()
                 .insert("x-proxy", "rust-proxy".parse().unwrap());
             resp.into_response()
         }
         Err(error) => {
-            let _elapsed = start.elapsed();
+            let elapsed = start.elapsed();
             tracing::error!(%error, "Upstream server error");
-            // histogram!("proxy_request_latency_ms", elapsed.as_millis() as f64);
+            histogram!("proxy_upstream_latency_seconds").record(elapsed.as_secs_f64());
             let _ = counter!("proxy_errors_total", "error_type" => "upstream_error".to_string());
             (StatusCode::INTERNAL_SERVER_ERROR, "Internal Server Error").into_response()
         }
@@ -204,8 +204,8 @@ async fn main() {
     describe_counter!("proxy_requests_total", "Total number of proxy requests");
     describe_counter!("proxy_errors_total", "Total number of proxy errors");
     describe_histogram!(
-        "proxy_request_latency_ms",
-        "Proxy upstream request latency in milliseconds"
+        "proxy_upstream_latency_seconds",
+        "Proxy upstream request latency in seconds"
     );
 
     tracing::info!("Initializing proxy server");

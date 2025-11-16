@@ -25,8 +25,9 @@
 //! Uses only existing dependencies (tokio, axum, hyper) to avoid adding
 //! extra dev-dependencies.
 
-use axum::{Router, routing::get};
-use hyper::{Body, Client, Request, body::to_bytes, client::HttpConnector};
+use axum::{body::Body, Router, routing::get};
+use hyper_util::client::legacy::{Client, connect::HttpConnector};
+use http_body_util::BodyExt;
 use std::{
     env, fs,
     path::Path,
@@ -72,7 +73,7 @@ fn find_proxy_binary() -> Option<std::path::PathBuf> {
 }
 
 /// Spawn proxy child process configured to point at our dummy upstream.
-fn spawn_proxy(upstream_port: u16, proxy_port: u16, metrics_port: u16) -> Child {
+fn spawn_proxy(upstream_port: u16, proxy_port: u16) -> Child {
     let binary =
         find_proxy_binary().unwrap_or_else(|| panic!("Proxy binary not found. Build failed?"));
 
@@ -89,7 +90,6 @@ fn spawn_proxy(upstream_port: u16, proxy_port: u16, metrics_port: u16) -> Child 
     cmd.env("PROXY_PORT", proxy_port.to_string())
         .env("SSR_UPSTREAM_HOST", "127.0.0.1")
         .env("SSR_UPSTREAM_PORT", upstream_port.to_string())
-        .env("METRICS_PORT", metrics_port.to_string())
         .env("LOG_FORMAT", "json") // exercise JSON logging path
         .stdout(Stdio::piped())
         .stderr(Stdio::piped());
@@ -100,16 +100,17 @@ fn spawn_proxy(upstream_port: u16, proxy_port: u16, metrics_port: u16) -> Child 
 
 /// Poll an HTTP GET until success or timeout.
 async fn wait_for_get_ok(url: &str, timeout: Duration) -> Result<Vec<u8>, String> {
-    let client: Client<HttpConnector, Body> = Client::new();
+    let client: Client<_, Body> = Client::builder(hyper_util::rt::TokioExecutor::new()).build(HttpConnector::new());
     let start = std::time::Instant::now();
 
     loop {
         match client.get(url.parse().unwrap()).await {
             Ok(resp) => {
                 if resp.status().is_success() {
-                    let body_bytes = to_bytes(resp.into_body())
+                    let body_bytes = resp.into_body().collect()
                         .await
-                        .map_err(|e| format!("Body read error: {e}"))?;
+                        .map_err(|e| format!("Body read error: {e}"))?
+                        .to_bytes();
                     return Ok(body_bytes.to_vec());
                 }
             }
@@ -124,7 +125,7 @@ async fn wait_for_get_ok(url: &str, timeout: Duration) -> Result<Vec<u8>, String
 
 /// Read metrics endpoint text.
 async fn fetch_metrics(url: &str) -> Result<String, String> {
-    let client: Client<HttpConnector, Body> = Client::new();
+    let client: Client<_, Body> = Client::builder(hyper_util::rt::TokioExecutor::new()).build(HttpConnector::new());
     let resp = client
         .get(url.parse().unwrap())
         .await
@@ -132,9 +133,10 @@ async fn fetch_metrics(url: &str) -> Result<String, String> {
     if !resp.status().is_success() {
         return Err(format!("Metrics non-200: {}", resp.status()));
     }
-    let bytes = to_bytes(resp.into_body())
+    let bytes = resp.into_body().collect()
         .await
-        .map_err(|e| e.to_string())?;
+        .map_err(|e| e.to_string())?
+        .to_bytes();
     Ok(String::from_utf8_lossy(&bytes).into_owned())
 }
 
@@ -148,12 +150,8 @@ async fn test_proxy_end_to_end() {
     let proxy_port = proxy_listener.local_addr().unwrap().port();
     drop(proxy_listener);
 
-    let metrics_listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
-    let metrics_port = metrics_listener.local_addr().unwrap().port();
-    drop(metrics_listener);
-
     // Spawn proxy
-    let mut proxy_child = spawn_proxy(upstream_port, proxy_port, metrics_port);
+    let mut proxy_child = spawn_proxy(upstream_port, proxy_port);
 
     // Wait for proxy to respond
     let proxy_url = format!("http://127.0.0.1:{proxy_port}/test");
@@ -168,7 +166,7 @@ async fn test_proxy_end_to_end() {
         .expect("Second request failed");
 
     // Fetch metrics
-    let metrics_url = format!("http://127.0.0.1:{metrics_port}/metrics");
+    let metrics_url = format!("http://127.0.0.1:{proxy_port}/metrics");
     let metrics_output = fetch_metrics(&metrics_url)
         .await
         .expect("metrics fetch failed");
