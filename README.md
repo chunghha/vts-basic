@@ -7,7 +7,17 @@ Quick highlights:
 - Theme switcher powered by DaisyUI themes
 - Countries page powered by REST Countries + TanStack Query
 - Tailwind + DaisyUI styling and component examples
+- Rust proxy server for production serving
+- Docker support with multi-stage builds
+- Build validation to catch asset mismatches
 - Modern dev scripts using bun
+
+## Documentation
+
+- [Documentation Index](docs/0000_index.md) - Central documentation hub
+- [Docker Quick Start](docs/docker-quickstart.md) - Quick reference for Docker commands
+- [Docker Deployment Guide](docs/rationale/0001_docker_deployment.md) - Complete guide for building and deploying with Docker
+- [Build Validation](#build-validation) - Automatic asset validation after builds
 
 ---
 
@@ -41,15 +51,97 @@ bun run dev
 bun run build
 ```
 
-- Run tests (Vitest):
+- Build production assets (Vite + Rust proxy):
 ```vts-basic/README.md#L14-16
+bun run build:prod
+```
+
+- Validate build assets:
+```vts-basic/README.md#L17-19
+bun run validate
+```
+
+- Serve production build:
+```vts-basic/README.md#L20-22
+bun run serve:prod
+```
+
+- Build and serve production:
+```vts-basic/README.md#L23-25
+bun run start:prod
+```
+
+- Run tests (Vitest):
+```vts-basic/README.md#L26-28
 bun run test
 ```
 
 - Lint / format (Biome or configured tooling):
-```vts-basic/README.md#L17-19
+```vts-basic/README.md#L29-31
 bun run lint
 bun run format
+```
+
+---
+
+## Build Validation
+
+The project includes a build validation script (`validate-build.js`) that checks for asset hash mismatches after building. This ensures that all asset references in the server manifest match the actual files in the `dist/client` directory.
+
+### Running Validation
+
+```vts-basic/README.md#L1-3
+bun run validate
+```
+
+The script will:
+- Check that all assets referenced in manifest files exist
+- Identify missing assets and suggest similar files
+- Exit with an error if any mismatches are found
+
+**Note**: The `build:prod` script automatically runs validation after building. If validation fails, the build process will stop before compiling the Rust proxy.
+
+### What It Checks
+
+- Asset references in `dist/server/assets/*-manifest*.js` files
+- Actual files in `dist/client/assets/`
+- JavaScript, CSS, and other static assets
+
+If you see validation errors, try:
+1. Clean build: `rm -rf dist .tanstack node_modules/.cache && bun run build`
+2. Reinstall dependencies: `rm -rf node_modules && bun install && bun run build`
+
+---
+
+## Proxy Server
+
+The project includes a Rust-based proxy server (`proxy/`) that serves static assets and proxies requests to the Bun server in production. This architecture provides:
+
+- Efficient static file serving
+- Request proxying to the Bun SSR server on port 8081
+- Production-ready performance
+
+### Running the Proxy
+
+In development, you typically don't need the proxy - just use `bun run dev`.
+
+For production:
+1. Build everything: `bun run build:prod`
+   - Builds the Vite frontend
+   - Compiles the Rust proxy in release mode
+2. Run both servers: `bun run serve:prod`
+   - Bun server runs on port 8081 (SSR)
+   - Rust proxy runs on port 3000 (public-facing)
+
+Access the application at `http://localhost:3000`.
+
+### Docker Support
+
+A multi-stage Dockerfile is included for containerized deployments:
+
+```vts-basic/README.md#L1-3
+docker build -t vts-basic:latest .
+docker run -p 3000:3000 -p 8081:8081 vts-basic:latest
 ```
 
 ---
@@ -60,6 +152,9 @@ bun run format
   - `src/pages/` — page-level components: `Home.tsx`, `about/`, `country/`, error pages
   - `src/components/` — shared UI (if present)
   - `src/routes/` — TanStack Router file-based routes (if applicable)
+- `proxy/` — Rust proxy server
+  - `proxy/src/main.rs` — main proxy server implementation
+  - `proxy/Cargo.toml` — Rust dependencies
 - `public/manifest.json` — PWA manifest, updated to "VTS Basic"
 
 ---
@@ -114,6 +209,20 @@ bun run format
 - If styles don't show up, confirm Tailwind is compiling and the dev server is running.
 - If a page is blank, check the browser console for runtime errors (missing env vars, failed fetches).
 - Network or CORS errors when fetching countries are usually transient — verify connectivity and the external API.
+- **Asset validation failures**: If `bun run validate` fails with missing asset errors:
+  1. Clean build artifacts: `rm -rf dist .tanstack node_modules/.cache`
+  2. Rebuild: `bun run build`
+  3. Validate again: `bun run validate`
+  
+  If the issue persists, try reinstalling dependencies: `rm -rf node_modules && bun install && bun run build`
+  
+- **CSS 404 errors in Docker**: If you see "styles-XXX.css net::ERR_ABORTED 404" errors when running in Docker:
+  1. Stop and remove the container: `docker stop vts-basic-app && docker rm vts-basic-app`
+  2. Clean local build artifacts: `rm -rf dist .tanstack node_modules/.cache`
+  3. Rebuild fresh: `docker build --pull --no-cache -t vts-basic:latest .`
+  4. Run again: `./run_on_local_docker.sh`
+  
+  The `build:prod` script includes validation to catch these issues before deployment. Ensure your `.dockerignore` file excludes `dist/`, `.tanstack/`, and `node_modules/`.
 
 ---
 
