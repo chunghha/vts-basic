@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite dev --port 3000",
     "build": "vite build",
+    "validate": "node validate-build.js",
     "serve": "vite preview",
     "test": "vitest run",
     "coverage": "vitest run --coverage",
@@ -13,7 +14,12 @@
     "lint": "biome lint",
     "check": "biome check",
     "check:unsafe": "biome check --write --unsafe",
-    "check:all": "bun check && bun coverage"
+    "check:all": "bun check && bun coverage",
+    "build:prod": "bun run build && bun run validate && cargo build --release --manifest-path proxy/Cargo.toml",
+    "serve:prod": "concurrently \"PORT=8081 bun run dist/server/server.js\" \"./start-proxy.sh\"",
+    "start:prod": "bun run build:prod && bun run serve:prod",
+    "precompress": "bun run precompress-assets.js",
+    "postcss:hint": "echo \"Run: npm i -D @tailwindcss/postcss && update postcss.config.js to use require('@tailwindcss/postcss')\""
   },
   "dependencies": {
     "@tanstack/react-devtools": "^0.8.1",
@@ -36,6 +42,7 @@
     "@fontsource/ibm-plex-mono": "^5.2.7",
     "@fontsource/ibm-plex-sans": "^5.2.8",
     "@fontsource/ibm-plex-serif": "^5.2.7",
+    "@tailwindcss/postcss": "^4.1.17",
     "@tailwindcss/vite": "^4.1.17",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/react": "^16.3.0",
@@ -45,6 +52,7 @@
     "@vitejs/plugin-react": "^5.1.1",
     "@vitest/coverage-v8": "^4.0.9",
     "autoprefixer": "^10.4.22",
+    "concurrently": "^9.2.1",
     "daisyui": "^5.5.5",
     "happy-dom": "^20.0.10",
     "postcss": "^8.5.6",
