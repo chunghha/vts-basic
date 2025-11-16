@@ -1,71 +1,102 @@
-# Stage 1: Build Rust proxy
-FROM rust:1.91-trixie AS rust-builder
+# --------------------------------------------------------------------
+# Multi-stage build: Rust + Bun build phases, unified minimal runtime
+# --------------------------------------------------------------------
+
+# Stage 1: Build Rust proxy (glibc build on a consistent base image)
+FROM debian:trixie-slim AS rust-builder
+
+# Install build dependencies and Rust toolchain
+RUN apt-get update && \
+  apt-get install -y --no-install-recommends curl build-essential ca-certificates && \
+  rm -rf /var/lib/apt/lists/*
+
+# Install rustup and set default toolchain
+ENV RUSTUP_HOME=/usr/local/rustup \
+  CARGO_HOME=/usr/local/cargo \
+  PATH=/usr/local/cargo/bin:$PATH
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.91.0 && \
+  ls -l "$CARGO_HOME"/bin && \
+  find / -name cargo 2>/dev/null
 
 WORKDIR /app
 
-# Copy Rust proxy files
+# Copy Rust proxy manifest files first (cache dependencies)
 COPY proxy/Cargo.toml proxy/Cargo.lock ./proxy/
 
-# Create a dummy main.rs to cache dependencies
-RUN mkdir -p proxy/src && \
-  echo "fn main() {}" > proxy/src/main.rs && \
-  cd proxy && \
-  cargo build --release && \
-  rm -rf src
-
-# Copy actual source code and build
+# Copy actual source and build release binary
 COPY proxy/src ./proxy/src
-RUN cd proxy && \
+ARG CACHEBUST=1
+RUN echo "Rust cache bust: ${CACHEBUST}" && \
+  cd proxy && \
   cargo build --release
 
-# Stage 2: Build Vite frontend with Bun
-FROM oven/bun:1.3-slim AS node-builder
+# Stage 2: Build Bun/Vite assets (client + server)
+FROM oven/bun:1.3-slim AS bun-builder
 
 WORKDIR /app
 
-# Copy package files
+# Copy dependency manifests
 COPY package.json bun.lock ./
 
-# Install dependencies
+# Install all deps (include dev for build)
 RUN bun install --frozen-lockfile
 
-# Copy source files
+# Copy source
 COPY . .
 
-# Clear any cached build artifacts and rebuild fresh
+# Clean any stale build artifacts
 RUN rm -rf dist .tanstack node_modules/.cache
 
-# Build the Vite project
+# Build SSR + client
 RUN bun run build
 
-# Stage 3: Production runtime
-FROM oven/bun:1.3-slim
+# Stage 3: Unified runtime (Debian slim + Bun + proxy binary)
+FROM debian:trixie-slim AS runtime
+
+# Set non-interactive
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install runtime necessities: curl (for healthcheck), CA certs, minimal libs
+RUN apt-get update && \
+  apt-get install -y --no-install-recommends bash curl ca-certificates libssl3 unzip && \
+  rm -rf /var/lib/apt/lists/*
+
+# Install Bun (download official binary)
+RUN curl -fsSL https://bun.sh/install | bash && \
+  cp /root/.bun/bin/bun /usr/local/bin/bun && \
+  chmod 755 /usr/local/bin/bun
 
 WORKDIR /app
 
-# Install runtime dependencies only
+# Environment defaults
+ENV NODE_ENV=production \
+  PORT=8081 \
+  RUST_LOG=info
+
+# Copy production dependency manifests & install prod deps only
 COPY package.json bun.lock ./
 RUN bun install --production --frozen-lockfile
 
-# Copy built artifacts from previous stages
+# Copy built application artifacts
+COPY --from=bun-builder /app/dist ./dist
+# Copy proxy release binary (glibc build)
 COPY --from=rust-builder /app/proxy/target/release/proxy ./proxy/target/release/proxy
-COPY --from=node-builder /app/dist ./dist
 
-# Copy proxy startup script
-COPY start-proxy.sh ./start-proxy.sh
-RUN chmod +x ./start-proxy.sh
+# Create non-root user for security
+RUN useradd -r -u 1001 -d /app -s /usr/sbin/nologin appuser && \
+  chown -R appuser:appuser /app
 
-# Expose ports
-# Port 8081 for Bun server (SSR)
-# Port 3000 for Rust proxy (public-facing)
-EXPOSE 8081 3000
+# Copy standalone entrypoint script (kept in repository root)
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
-# Set environment variables
-ENV NODE_ENV=production
-ENV PORT=8081
+# Expose public (proxy) and internal (SSR) ports
+EXPOSE 3000 8081
 
-# Install concurrently for running both processes
-RUN bun add concurrently
+# Healthcheck targets proxy (public interface)
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+  CMD curl -fs http://127.0.0.1:3000/ || exit 1
 
-# Start both Bun server and Rust proxy
-CMD ["bun", "run", "serve:prod"]
+USER appuser
+
+ENTRYPOINT ["/app/entrypoint.sh"]

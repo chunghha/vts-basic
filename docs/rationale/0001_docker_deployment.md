@@ -108,7 +108,7 @@ Benefits:
 Created `Dockerfile` with three stages:
 
 **Stage 1: Rust Builder** (`rust:1.91-trixie`)
-- Compiles proxy in release mode
+- Compiles the Rust proxy in release mode. The `trixie` base image uses the standard GNU toolchain (glibc), not MUSL, for broader compatibility.
 - Uses dependency caching (dummy build → real build)
 - Strips binary for smaller size (removed later for debugging)
 

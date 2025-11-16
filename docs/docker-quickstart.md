@@ -1,5 +1,11 @@
 # Docker Quick Start Guide
 
+This guide reflects the updated runtime architecture:
+- Multi-stage build produces a Rust proxy binary and Bun-built SSR/client assets.
+- Final runtime image is based on `debian:trixie-slim` (not the Bun slim image).
+- Bun is installed manually and a non-root user (`appuser`) is used.
+- A standalone `entrypoint.sh` supervises both the Bun SSR server (port 8081) and the Rust proxy (port 3000).
+
 Quick reference for common Docker commands and workflows with VTS Basic.
 
 ## Build and Run
@@ -261,12 +267,23 @@ docker-compose up -d --build
 
 ## Success Indicators
 
-When the container is running correctly, you should see:
+When the container is running correctly, you should see logs similar to:
 ```
+[startup] Starting Bun SSR on port 8081
+[startup] Bun SSR PID: 8
+[wait] Port 8081 on 127.0.0.1 is ready
+[startup] Starting Rust proxy on port 3000
+[startup] Rust proxy PID: 39
+[monitor] Supervising processes (SSR=8, PROXY=39)
 Proxy server listening on http://localhost:3000
 Proxying requests to http://127.0.0.1:8081
 Started server: http://localhost:8081
 ```
+
+Key points:
+- The Bun SSR process is started first and probed for readiness by `entrypoint.sh`.
+- Only after the SSR port responds does the proxy start.
+- The supervision loop exits the container if either process terminates unexpectedly.
 
 ## Quick Links
 

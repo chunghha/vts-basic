@@ -20,6 +20,7 @@ Rationale documents explain _why_ decisions were made and _how_ they were implem
 ### Current Rationale Documents
 
 - [0001: Docker Deployment](rationale/0001_docker_deployment.md) - Multi-stage Docker build, Rust proxy server, and containerization strategy
+- [0002: Precompressed Assets & Observability](rationale/0002_precompressed_assets_and_observability.md) - Precompression (gzip+br), caching, metrics, structured logging, graceful shutdown
 
 ## Guides
 
@@ -34,6 +35,7 @@ Rationale documents explain _why_ decisions were made and _how_ they were implem
 ### Architecture
 - [Proxy Server](rationale/0001_docker_deployment.md#architecture-decision) - Why we use a Rust proxy
 - [Multi-Process Architecture](rationale/0001_docker_deployment.md#multi-process-architecture) - How Bun and Rust work together
+- `entrypoint.sh` Supervisor (see Docker Deployment rationale) - Starts Bun SSR (port 8081), waits for readiness, then launches the Rust proxy (port 3000), monitors both processes, and forwards termination signals
 
 ## Project Structure
 

@@ -109,7 +109,18 @@ fi
 
 # -------- Start Proxy (Rust) --------
 log "[startup] Starting Rust proxy on port ${PROXY_PORT}"
-./proxy/target/release/proxy &
+
+# --- Pre-flight checks for proxy binary ---
+log "[debug] Current user: $(id)"
+log "[debug] Working directory: $(pwd)"
+log "[debug] Checking for proxy binary..."
+ls -la ./proxy/target/release/
+log "[debug] Checking dynamic dependencies..."
+ldd ./proxy/target/release/proxy || log "[error] ldd command failed. Is it installed?"
+# --- End pre-flight checks ---
+
+# Redirect proxy stderr to a log file for inspection on failure
+./proxy/target/release/proxy 2> /tmp/proxy.log &
 PROXY_PID=$!
 log "[startup] Rust proxy PID: ${PROXY_PID}"
 
@@ -127,17 +138,21 @@ while :; do
       wait "${PROXY_PID}" 2>/dev/null || true
     fi
     wait "${SSR_PID}" 2>/dev/null || true
-    fatal "SSR exited unexpectedly" 1
+    log "[fatal] SSR exited unexpectedly. Container will sleep for debugging."
+    sleep infinity
   fi
 
   # If proxy exited
   if ! kill -0 "${PROXY_PID}" 2>/dev/null; then
     log "[monitor] Proxy process exited"
+    log "[error] Proxy log output:"
+    cat /tmp/proxy.log
     if kill -0 "${SSR_PID}" 2>/dev/null; then
       kill "${SSR_PID}" 2>/dev/null || true
       wait "${SSR_PID}" 2>/dev/null || true
     fi
-    fatal "Proxy exited unexpectedly" 2
+    log "[fatal] Proxy exited unexpectedly. Container will sleep for debugging."
+    sleep infinity
   fi
 
   sleep 1
