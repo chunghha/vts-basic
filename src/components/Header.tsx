@@ -26,6 +26,9 @@ export default function Header() {
 						<Link to="/country" className="btn btn-ghost">
 							Country
 						</Link>
+						<Link to="/metrics" className="btn btn-ghost">
+							Metrics
+						</Link>
 					</div>
 
 					<div className="flex-none ml-2">
@@ -68,6 +71,15 @@ export default function Header() {
 									className="btn btn-ghost w-full text-left"
 								>
 									Country
+								</Link>
+							</li>
+							<li>
+								<Link
+									to="/metrics"
+									onClick={() => setOpen(false)}
+									className="btn btn-ghost w-full text-left"
+								>
+									Metrics
 								</Link>
 							</li>
 							<li className="pt-2">

@@ -178,6 +178,10 @@ async fn proxy_fallback(
             let status = resp.status();
             span.record("status", status.as_u16());
             histogram!("proxy_upstream_latency_seconds").record(elapsed.as_secs_f64());
+            let _ = counter!(
+                "proxy_responses_total",
+                "status" => status.as_u16().to_string()
+            );
             resp.headers_mut()
                 .insert("x-proxy", "rust-proxy".parse().unwrap());
             resp.into_response()
@@ -203,6 +207,10 @@ async fn main() {
     // Describe metrics so Prometheus exporter includes HELP/TYPE lines
     describe_counter!("proxy_requests_total", "Total number of proxy requests");
     describe_counter!("proxy_errors_total", "Total number of proxy errors");
+    describe_counter!(
+        "proxy_responses_total",
+        "Total number of proxy responses by status code"
+    );
     describe_histogram!(
         "proxy_upstream_latency_seconds",
         "Proxy upstream request latency in seconds"
@@ -234,7 +242,7 @@ async fn main() {
     let app = Router::new()
         // Metrics endpoint (same port as proxy)
         .route(
-            "/metrics",
+            "/api/metrics",
             get({
                 let recorder = recorder.clone();
                 move || async move { recorder.render() }
