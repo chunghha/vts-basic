@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { Menu, X } from 'lucide-react'
 import { useState } from 'react'
+import { NAV_CONFIG } from '../constants/config'
 import ThemeSwitcher from './ThemeSwitcher'
 
 export default function Header() {
@@ -17,18 +18,11 @@ export default function Header() {
 					</div>
 
 					<div className="hidden md:flex items-center gap-2">
-						<Link to="/" className="btn btn-ghost">
-							Home
-						</Link>
-						<Link to="/about" className="btn btn-ghost">
-							About
-						</Link>
-						<Link to="/country" className="btn btn-ghost">
-							Country
-						</Link>
-						<Link to="/metrics" className="btn btn-ghost">
-							Metrics
-						</Link>
+						{NAV_CONFIG.LINKS.map((link) => (
+							<Link key={link.to} to={link.to} className="btn btn-ghost">
+								{link.label}
+							</Link>
+						))}
 					</div>
 
 					<div className="flex-none ml-2">
@@ -50,38 +44,17 @@ export default function Header() {
 				{open && (
 					<nav className="md:hidden pb-4">
 						<ul className="menu menu-compact bg-base-100 rounded-box p-2 shadow-md space-y-1">
-							<li>
-								<Link to="/" onClick={() => setOpen(false)}>
-									Home
-								</Link>
-							</li>
-							<li>
-								<Link
-									to="/about"
-									onClick={() => setOpen(false)}
-									className="btn btn-ghost w-full text-left"
-								>
-									About
-								</Link>
-							</li>
-							<li>
-								<Link
-									to="/country"
-									onClick={() => setOpen(false)}
-									className="btn btn-ghost w-full text-left"
-								>
-									Country
-								</Link>
-							</li>
-							<li>
-								<Link
-									to="/metrics"
-									onClick={() => setOpen(false)}
-									className="btn btn-ghost w-full text-left"
-								>
-									Metrics
-								</Link>
-							</li>
+							{NAV_CONFIG.LINKS.map((link) => (
+								<li key={link.to}>
+									<Link
+										to={link.to}
+										onClick={() => setOpen(false)}
+										className="btn btn-ghost w-full text-left"
+									>
+										{link.label}
+									</Link>
+								</li>
+							))}
 							<li className="pt-2">
 								<button
 									type="button"

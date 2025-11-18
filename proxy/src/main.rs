@@ -120,23 +120,9 @@ async fn main() -> anyhow::Result<()> {
 
     let config = Arc::new(Config::load("proxy/proxy.ron".as_ref())?);
 
-    let proxy_port: u16 = env::var("PROXY_PORT")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(3000);
-
-    let upstream_host = env::var("SSR_UPSTREAM_HOST").unwrap_or_else(|_| "127.0.0.1".into());
-
-    let upstream_port: u16 = env::var("SSR_UPSTREAM_PORT")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(8081);
-
-    let upstream_base = format!("http://{upstream_host}:{upstream_port}");
-
-    let asset_dir = env::var("ASSET_DIR").unwrap_or_else(|_| "dist/client".into());
-
-    tracing::info!(%upstream_base, %asset_dir, "Configuration loaded");
+    let upstream_base = config.upstream_base();
+    let asset_dir = config.asset_dir.clone();
+    let proxy_port = config.proxy_port;
 
     let client = Client::builder(hyper_util::rt::TokioExecutor::new()).build(HttpConnector::new());
 

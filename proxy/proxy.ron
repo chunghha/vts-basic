@@ -1,1 +1,7 @@
-(country_api_url: "https://restcountries.com/v3.1/all?fields=name,cca2,region,flags,population",)
+(
+    country_api_url: "https://restcountries.com/v3.1/all?fields=name,cca2,region,flags,population",
+    proxy_port: 3000,
+    upstream_host: "127.0.0.1",
+    upstream_port: 8081,
+    asset_dir: "dist/client",
+)

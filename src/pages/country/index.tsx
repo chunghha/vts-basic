@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useId, useMemo, useState } from 'react'
+import { QUERY_CONFIG, UI_CONFIG } from '../../constants/config'
 
 type Country = {
 	code: string
@@ -51,7 +52,10 @@ async function fetchCountries(): Promise<Country[]> {
 /* ---------- Presentational components ---------- */
 
 function LoadingGrid() {
-	const PLACEHOLDERS = ['ph-0', 'ph-1', 'ph-2', 'ph-3', 'ph-4', 'ph-5']
+	const PLACEHOLDERS = Array.from(
+		{ length: UI_CONFIG.LOADING_PLACEHOLDERS },
+		(_, i) => `ph-${i}`,
+	)
 
 	return (
 		<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -172,8 +176,8 @@ export default function Country() {
 	const { data, isLoading, isError, error } = useQuery<Country[], Error>({
 		queryKey: ['countries'],
 		queryFn: fetchCountries,
-		staleTime: 1000 * 60 * 60,
-		cacheTime: 1000 * 60 * 60,
+		staleTime: QUERY_CONFIG.COUNTRIES_STALE_TIME,
+		gcTime: QUERY_CONFIG.COUNTRIES_GC_TIME,
 	})
 
 	const countries = data ?? []

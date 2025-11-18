@@ -1,19 +1,11 @@
 import { Check, Palette } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { THEME_CONFIG, type ThemeId } from '../constants/config'
+import { getStorageItem, setStorageItem } from '../utils/storage'
 
-const THEMES = [
-	{ id: 'light', label: 'Light' },
-	{ id: 'milkshake', label: 'Milkshake' },
-	{ id: 'dark', label: 'Dark' },
-	{ id: 'mindful', label: 'Mindful' },
-	{ id: 'polar', label: 'Polar' },
-	{ id: 'pursuit', label: 'Pursuit' },
-] as const
-
-type ThemeId = (typeof THEMES)[number]['id']
-
-const STORAGE_KEY = 'theme'
-const DEFAULT_THEME: ThemeId = 'polar'
+const THEMES = THEME_CONFIG.AVAILABLE_THEMES
+const STORAGE_KEY = THEME_CONFIG.STORAGE_KEY
+const DEFAULT_THEME = THEME_CONFIG.DEFAULT_THEME
 
 /**
  * ThemeSwitcher
@@ -28,15 +20,9 @@ const DEFAULT_THEME: ThemeId = 'polar'
  * - Clicking outside closes the dropdown.
  */
 export default function ThemeSwitcher() {
-	const [theme, setTheme] = useState<ThemeId>(() => {
-		try {
-			if (typeof window === 'undefined') return DEFAULT_THEME
-			const stored = localStorage.getItem(STORAGE_KEY) as ThemeId | null
-			return (stored ?? DEFAULT_THEME) as ThemeId
-		} catch {
-			return DEFAULT_THEME
-		}
-	})
+	const [theme, setTheme] = useState<ThemeId>(() =>
+		getStorageItem(STORAGE_KEY, DEFAULT_THEME),
+	)
 
 	const [open, setOpen] = useState(false)
 	const buttonRef = useRef<HTMLButtonElement | null>(null)
@@ -49,12 +35,8 @@ export default function ThemeSwitcher() {
 	)
 
 	useEffect(() => {
-		try {
-			document.documentElement.setAttribute('data-theme', theme)
-			localStorage.setItem(STORAGE_KEY, theme)
-		} catch {
-			// ignore storage errors
-		}
+		document.documentElement.setAttribute('data-theme', theme)
+		setStorageItem(STORAGE_KEY, theme)
 	}, [theme])
 
 	const focusMenuItem = useCallback((index: number) => {

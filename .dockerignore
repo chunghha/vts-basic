@@ -1,56 +1,98 @@
-# Node modules
+# Dependencies
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
 # Build artifacts
 dist/
+.tanstack/
 coverage/
 .vite/
 .cache/
+*.tsbuildinfo
 
 # Rust build artifacts
 proxy/target/
+proxy/Cargo.lock
 
-# Git
+# Development
 .git/
 .gitignore
+.gitattributes
+.editorconfig
 
-# IDE
+# IDE and editors
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
+.project
+.classpath
+.settings/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
 
 # Logs
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# OS
-.DS_Store
-Thumbs.db
+logs/
 
 # Test files
 *.test.ts
 *.test.tsx
+*.test.js
+*.test.jsx
 *.spec.ts
 *.spec.tsx
+*.spec.js
+*.spec.jsx
+__tests__/
 vitest.config.ts
+jest.config.js
 
-# Documentation
+# Documentation (keep essential docs)
 README.md
+CHANGELOG.md
+CONTRIBUTING.md
+LICENSE
+docs/
 *.md
 
 # Environment files
 .env
 .env.local
-.env*.local
+.env.*.local
+.env.development
+.env.test
 
-# Tanstack cache
-.tanstack/
-*.tsbuildinfo
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
 
-# Lock files (we'll copy these explicitly)
-# bun.lock
-# Cargo.lock
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Debug files
+debug.log
+npm-debug.log
+
+# Scripts (development only)
+scripts/
+debug_docker.sh
+run_on_local_docker.sh
+
+# Other
+.prettierrc
+.eslintrc*
+.babelrc
+tsconfig.json
+biome.json

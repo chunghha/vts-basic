@@ -31,6 +31,11 @@ export const getRouter = () => {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({ route: event.toLocation.pathname }),
+		}).catch((error) => {
+			// Silently fail or log in development to avoid breaking the app
+			if (import.meta.env.DEV) {
+				console.warn('Failed to track route event:', error)
+			}
 		})
 	})
 
