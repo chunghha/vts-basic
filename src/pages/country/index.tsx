@@ -10,21 +10,18 @@ type Country = {
 }
 
 async function fetchCountries(): Promise<Country[]> {
-	const res = await fetch(
-		'https://restcountries.com/v3.1/all?fields=name,cca2,region,flags,population',
-	)
+	const res = await fetch('/api/country')
 	if (!res.ok) {
 		throw new Error(`Failed to fetch countries: ${res.statusText}`)
 	}
-	type RawCountry = {
-		cca2?: string | null
-		name?: { common?: string } | null
+	type ProxyCountry = {
+		code?: string | null
+		name?: string | null
 		region?: string | null
 		population?: number | null
 		flag?: string | null
-		flags?: { png?: string } | null
 	}
-	const data = (await res.json()) as RawCountry[]
+	const data = (await res.json()) as ProxyCountry[]
 
 	const toEmoji = (cca2?: string | null): string => {
 		if (!cca2 || cca2.length !== 2) return ''
@@ -38,11 +35,13 @@ async function fetchCountries(): Promise<Country[]> {
 
 	return data
 		.map((c) => {
-			const code = (c.cca2 || '').toUpperCase()
-			const name = c?.name?.common ?? code ?? 'Unknown'
+			const code = (c.code || '').toUpperCase()
+			const name = c?.name ?? code ?? 'Unknown'
 			const region = c?.region ?? 'Unknown'
 			const population = typeof c?.population === 'number' ? c.population : 0
-			const flagEmoji = toEmoji(code) || (c?.flag ?? '')
+			// Prefer a flag emoji derived from the country code; the proxy returns a `flag` PNG URL
+			// which the UI doesn't currently use in this list – keep behavior similar by using emoji.
+			const flagEmoji = toEmoji(code) || ''
 			return { code, name, region, population, flagEmoji } as Country
 		})
 		.filter(Boolean)
@@ -170,7 +169,7 @@ export default function Country() {
 	const [sortKey, setSortKey] = useState<'name' | 'population'>('name')
 	const [descending, setDescending] = useState(false)
 
-	const { data, isLoading, isError, error } = useQuery({
+	const { data, isLoading, isError, error } = useQuery<Country[], Error>({
 		queryKey: ['countries'],
 		queryFn: fetchCountries,
 		staleTime: 1000 * 60 * 60,

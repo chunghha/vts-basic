@@ -2,6 +2,38 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 export function getContext() {
 	const queryClient = new QueryClient()
+
+	// Small typed shim to avoid using `any` repeatedly while preserving
+	// compatibility with code that expects `defaultQueryOptions` on the instance.
+	type MaybeQueryClient = QueryClient & {
+		defaultQueryOptions?: (opts?: unknown) => unknown
+		getDefaultOptions?: () => unknown
+		setDefaultOptions?: (opts?: unknown) => void
+		defaultOptions?: unknown
+	}
+
+	const qc = queryClient as MaybeQueryClient
+
+	if (typeof qc.defaultQueryOptions !== 'function') {
+		qc.defaultQueryOptions = (opts?: unknown) => {
+			try {
+				if (opts && typeof qc.setDefaultOptions === 'function') {
+					qc.setDefaultOptions(opts)
+				}
+			} catch (_) {
+				// ignore setter errors
+			}
+
+			if (typeof qc.getDefaultOptions === 'function') {
+				return qc.getDefaultOptions()
+			}
+
+			if (qc.defaultOptions) return qc.defaultOptions
+
+			return {}
+		}
+	}
+
 	return {
 		queryClient,
 	}

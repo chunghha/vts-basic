@@ -10,7 +10,7 @@
 
 use axum::{
     Router,
-    body::Body,
+    body::Body as AxumBody,
     extract::{Path, State},
     http::{HeaderMap, Request, Response, StatusCode, Uri, header},
     response::IntoResponse,
@@ -28,7 +28,7 @@ use metrics_exporter_prometheus::PrometheusBuilder;
 use tracing::{field, info_span};
 use tracing_subscriber::{EnvFilter, Registry, layer::SubscriberExt, util::SubscriberInitExt};
 
-type HttpClient = Client<HttpConnector, Body>;
+type HttpClient = Client<HttpConnector, AxumBody>;
 
 #[derive(Clone)]
 struct AppState {
@@ -141,15 +141,106 @@ async fn serve_asset(
     }
 
     resp_builder
-        .body(Body::from(bytes))
+        .body(AxumBody::from(bytes))
         .unwrap()
         .into_response()
+}
+
+/// Fetches countries from restcountries.com via reqwest, simplifies the JSON, and returns it.
+async fn api_countries(State(_state): State<AppState>) -> impl IntoResponse {
+    let url = "https://restcountries.com/v3.1/all?fields=name,cca2,region,flags,population";
+
+    let client = reqwest::Client::new();
+    match client.get(url).send().await {
+        Ok(resp) => {
+            if !resp.status().is_success() {
+                tracing::error!(status = %resp.status(), "Upstream returned non-200");
+                return (StatusCode::BAD_GATEWAY, "Upstream error").into_response();
+            }
+
+            // Parse body as JSON array of values
+            let parsed: Vec<serde_json::Value> = match resp.json().await {
+                Ok(v) => v,
+                Err(e) => {
+                    tracing::error!(%e, "Failed to parse upstream JSON");
+                    return (
+                        StatusCode::INTERNAL_SERVER_ERROR,
+                        "Failed to parse upstream JSON",
+                    )
+                        .into_response();
+                }
+            };
+
+            // Map to simplified structure
+            let mut simplified: Vec<serde_json::Value> = Vec::with_capacity(parsed.len());
+            for item in parsed.into_iter() {
+                let cca2 = item
+                    .get("cca2")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("")
+                    .to_uppercase();
+                let name = item
+                    .get("name")
+                    .and_then(|n| n.get("common"))
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("")
+                    .to_string();
+                let region = item
+                    .get("region")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("")
+                    .to_string();
+                let population = item.get("population").and_then(|v| v.as_u64()).unwrap_or(0);
+                let flag_png = item
+                    .get("flags")
+                    .and_then(|f| f.get("png"))
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("")
+                    .to_string();
+
+                simplified.push(serde_json::json!({
+                    "code": cca2,
+                    "name": if name.is_empty() { cca2.clone() } else { name },
+                    "region": region,
+                    "population": population,
+                    "flag": flag_png,
+                }));
+            }
+
+            // Sort by name
+            simplified.sort_by(|a, b| {
+                let na = a.get("name").and_then(|v| v.as_str()).unwrap_or("");
+                let nb = b.get("name").and_then(|v| v.as_str()).unwrap_or("");
+                na.cmp(nb)
+            });
+
+            let resp_body = match serde_json::to_vec(&simplified) {
+                Ok(b) => b,
+                Err(e) => {
+                    tracing::error!(%e, "Failed to serialize simplified JSON");
+                    return (StatusCode::INTERNAL_SERVER_ERROR, "Serialization error")
+                        .into_response();
+                }
+            };
+
+            Response::builder()
+                .status(StatusCode::OK)
+                .header(header::CONTENT_TYPE, "application/json")
+                .body(AxumBody::from(resp_body))
+                .unwrap()
+                .into_response()
+        }
+        Err(e) => {
+            tracing::error!(%e, "Failed to fetch countries upstream");
+            (StatusCode::BAD_GATEWAY, "Upstream request failed").into_response()
+        }
+    }
 }
 
 /// Reverse-proxies unmatched requests to the upstream SSR server.
 async fn proxy_fallback(
     State(state): State<AppState>,
-    mut req: Request<Body>,
+    mut req: Request<AxumBody>,
 ) -> impl IntoResponse {
     let start = std::time::Instant::now();
     let orig_uri = req.uri().clone();
@@ -240,6 +331,8 @@ async fn main() {
                 move || async move { recorder.render() }
             }),
         )
+        // API endpoint for country data (served by Rust proxy)
+        .route("/api/country", get(api_countries))
         .route("/assets/{*path}", get(serve_asset))
         .route_service(
             "/favicon.ico",

@@ -25,9 +25,9 @@
 //! Uses only existing dependencies (tokio, axum, hyper) to avoid adding
 //! extra dev-dependencies.
 
-use axum::{body::Body, Router, routing::get};
-use hyper_util::client::legacy::{Client, connect::HttpConnector};
+use axum::{Router, body::Body, routing::get};
 use http_body_util::BodyExt;
+use hyper_util::client::legacy::{Client, connect::HttpConnector};
 use std::{
     env, fs,
     path::Path,
@@ -100,14 +100,17 @@ fn spawn_proxy(upstream_port: u16, proxy_port: u16) -> Child {
 
 /// Poll an HTTP GET until success or timeout.
 async fn wait_for_get_ok(url: &str, timeout: Duration) -> Result<Vec<u8>, String> {
-    let client: Client<_, Body> = Client::builder(hyper_util::rt::TokioExecutor::new()).build(HttpConnector::new());
+    let client: Client<_, Body> =
+        Client::builder(hyper_util::rt::TokioExecutor::new()).build(HttpConnector::new());
     let start = std::time::Instant::now();
 
     loop {
         match client.get(url.parse().unwrap()).await {
             Ok(resp) => {
                 if resp.status().is_success() {
-                    let body_bytes = resp.into_body().collect()
+                    let body_bytes = resp
+                        .into_body()
+                        .collect()
                         .await
                         .map_err(|e| format!("Body read error: {e}"))?
                         .to_bytes();
@@ -125,7 +128,8 @@ async fn wait_for_get_ok(url: &str, timeout: Duration) -> Result<Vec<u8>, String
 
 /// Read metrics endpoint text.
 async fn fetch_metrics(url: &str) -> Result<String, String> {
-    let client: Client<_, Body> = Client::builder(hyper_util::rt::TokioExecutor::new()).build(HttpConnector::new());
+    let client: Client<_, Body> =
+        Client::builder(hyper_util::rt::TokioExecutor::new()).build(HttpConnector::new());
     let resp = client
         .get(url.parse().unwrap())
         .await
@@ -133,7 +137,9 @@ async fn fetch_metrics(url: &str) -> Result<String, String> {
     if !resp.status().is_success() {
         return Err(format!("Metrics non-200: {}", resp.status()));
     }
-    let bytes = resp.into_body().collect()
+    let bytes = resp
+        .into_body()
+        .collect()
         .await
         .map_err(|e| e.to_string())?
         .to_bytes();
