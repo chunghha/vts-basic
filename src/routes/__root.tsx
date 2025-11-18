@@ -6,6 +6,7 @@ import {
 	Scripts,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
+import { Toaster } from 'react-hot-toast'
 import packageJson from '../../package.json'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 import Header from '../components/Header'
@@ -65,10 +66,37 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body className="bg-base-100 font-sans">
+				<a href="#main-content" className="skip-link">
+					Skip to main content
+				</a>
 				<ErrorBoundary>
 					<Header />
 					{children}
 				</ErrorBoundary>
+				<Toaster
+					position="bottom-left"
+					toastOptions={{
+						// Default options for all toasts
+						duration: 3000,
+						style: {
+							background: 'var(--color-base-100)',
+							color: 'var(--color-base-content)',
+							border: '1px solid var(--color-base-300)',
+						},
+						success: {
+							iconTheme: {
+								primary: 'var(--color-success)',
+								secondary: 'var(--color-success-content)',
+							},
+						},
+						error: {
+							iconTheme: {
+								primary: 'var(--color-error)',
+								secondary: 'var(--color-error-content)',
+							},
+						},
+					}}
+				/>
 				<TanStackDevtools
 					config={{
 						position: 'bottom-right',

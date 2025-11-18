@@ -138,13 +138,15 @@ describe('Header', () => {
 		const toggle = screen.getByRole('button', { name: /open menu/i })
 		expect(toggle).toBeTruthy()
 
-		// Initially the mobile nav should not be visible
-		expect(screen.queryByRole('navigation')).toBeNull()
+		// Initially the mobile nav should not be visible (query by aria-label)
+		expect(
+			screen.queryByRole('navigation', { name: /mobile navigation/i }),
+		).toBeNull()
 
 		// Click to open
 		fireEvent.click(toggle)
 		// Now the mobile menu content should be visible
-		const nav = screen.getByRole('navigation')
+		const nav = screen.getByRole('navigation', { name: /mobile navigation/i })
 		expect(nav).toBeTruthy()
 		// Desktop and mobile both include an "About" link — assert there are multiple matches
 		const aboutMatches = screen.getAllByText('About')
@@ -158,6 +160,8 @@ describe('Header', () => {
 		if (mobileHomeLink) {
 			fireEvent.click(mobileHomeLink)
 		}
-		expect(screen.queryByRole('navigation')).toBeNull()
+		expect(
+			screen.queryByRole('navigation', { name: /mobile navigation/i }),
+		).toBeNull()
 	})
 })

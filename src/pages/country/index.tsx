@@ -161,7 +161,10 @@ export default function CountryPage() {
 	const nf = useMemo(() => new Intl.NumberFormat(), [])
 
 	return (
-		<main className="min-h-screen bg-base-100 text-base-content py-12 px-4">
+		<main
+			id="main-content"
+			className="min-h-screen bg-base-100 text-base-content py-12 px-4"
+		>
 			<div className="max-w-7xl mx-auto">
 				<header className="flex items-center justify-between mb-6">
 					<div>

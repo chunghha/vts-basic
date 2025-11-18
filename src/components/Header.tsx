@@ -31,13 +31,16 @@ export default function Header() {
 						</div>
 					</div>
 
-					<div className="hidden md:flex items-center gap-2">
+					<nav
+						className="hidden md:flex items-center gap-2"
+						aria-label="Main navigation"
+					>
 						{NAV_CONFIG.LINKS.map((link) => (
 							<Link key={link.to} to={link.to} className="btn btn-ghost">
 								{link.label}
 							</Link>
 						))}
-					</div>
+					</nav>
 
 					<div className="flex-none ml-2">
 						<div className="hidden md:flex items-center gap-2">
@@ -57,7 +60,7 @@ export default function Header() {
 				</div>
 
 				{open && (
-					<nav className="md:hidden pb-4">
+					<nav className="md:hidden pb-4" aria-label="Mobile navigation">
 						<ul className="menu menu-compact bg-base-100 rounded-box p-2 shadow-md space-y-1">
 							{NAV_CONFIG.LINKS.map((link) => (
 								<li key={link.to}>

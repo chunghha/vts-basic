@@ -1,5 +1,6 @@
 import { Check, Palette } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import toast from 'react-hot-toast'
 import { THEME_CONFIG, type ThemeId } from '../constants/config'
 import { getStorageItem, setStorageItem } from '../utils/storage'
 
@@ -66,8 +67,15 @@ export default function ThemeSwitcher() {
 	}, [])
 
 	const applyTheme = useCallback((id: ThemeId) => {
+		const selectedTheme = THEMES.find((t) => t.id === id)
 		setTheme(id)
 		setOpen(false)
+		// Show toast notification
+		if (selectedTheme) {
+			toast.success(`Switched to ${selectedTheme.label} theme`, {
+				duration: 2000,
+			})
+		}
 		// update active index for keyboard nav
 		activeIndexRef.current = Math.max(
 			0,

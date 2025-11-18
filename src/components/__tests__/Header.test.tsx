@@ -47,14 +47,16 @@ describe('Header', () => {
 		expect(toggle).toBeTruthy()
 
 		// Mobile menu should be closed at first
-		// Check that mobile nav is not visible
-		expect(screen.queryByRole('navigation')).toBeNull()
+		// Check that mobile nav is not visible (query by aria-label)
+		expect(
+			screen.queryByRole('navigation', { name: /mobile navigation/i }),
+		).toBeNull()
 
 		// Open mobile menu
 		fireEvent.click(toggle)
 
 		// Mobile menu content should now be visible
-		const nav = screen.getByRole('navigation')
+		const nav = screen.getByRole('navigation', { name: /mobile navigation/i })
 		expect(nav).toBeTruthy()
 
 		// Because the desktop and mobile nav both include 'About', ensure multiple matches exist
@@ -65,6 +67,8 @@ describe('Header', () => {
 		fireEvent.click(toggle)
 
 		// After clicking toggle, mobile content should be removed
-		expect(screen.queryByRole('navigation')).toBeNull()
+		expect(
+			screen.queryByRole('navigation', { name: /mobile navigation/i }),
+		).toBeNull()
 	})
 })
