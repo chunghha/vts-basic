@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useId, useMemo } from 'react'
+import { VirtualizedCountryList } from '../../components/VirtualizedCountryList'
 import { QUERY_CONFIG, UI_CONFIG } from '../../constants/config'
 import { type Country, useCountryFilters } from '../../hooks/useCountryFilters'
 
@@ -86,7 +87,7 @@ function ErrorAlert({ message }: { message: string }) {
 				<div>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
-						className="stroke-current flex-shrink-0 h-6 w-6"
+						className="stroke-current shrink-0 h-6 w-6"
 						fill="none"
 						viewBox="0 0 24 24"
 					>
@@ -102,56 +103,6 @@ function ErrorAlert({ message }: { message: string }) {
 				</div>
 			</div>
 		</div>
-	)
-}
-
-function CountryCard({ c, nf }: { c: Country; nf: Intl.NumberFormat }) {
-	return (
-		<article className="card bg-base-100 shadow-md overflow-hidden">
-			<div className="p-4 border-b border-base-300/10 flex items-start gap-4">
-				<div className="avatar">
-					<div className="w-16 h-16 rounded-full bg-base-200 flex items-center justify-center text-2xl">
-						{c.flagEmoji || '🏳️'}
-					</div>
-				</div>
-
-				<div className="flex-1 min-w-0">
-					<h3 className="card-title text-lg truncate">{c.name}</h3>
-					<div className="text-xs text-base-content/60 truncate">
-						{c.code} • {c.region}
-					</div>
-				</div>
-
-				<div className="text-right text-sm text-base-content/70">
-					<div className="text-xs">Population</div>
-					<div className="font-semibold">{nf.format(c.population)}</div>
-				</div>
-			</div>
-
-			<div className="card-body">
-				<p className="text-sm text-base-content/70 mb-4">
-					Explore {c.name}. Click details to learn more or open a quick search.
-				</p>
-
-				<div className="card-actions justify-end">
-					<button
-						type="button"
-						className="btn btn-ghost btn-sm"
-						aria-label={`Open details for ${c.name}`}
-					>
-						Details
-					</button>
-					<a
-						href={`https://www.google.com/search?q=${encodeURIComponent(c.name)}`}
-						target="_blank"
-						rel="noreferrer"
-						className="btn btn-primary btn-sm"
-					>
-						Search
-					</a>
-				</div>
-			</div>
-		</article>
 	)
 }
 
@@ -315,11 +266,7 @@ export default function CountryPage() {
 					) : filtered.length === 0 ? (
 						<EmptyState />
 					) : (
-						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-							{filtered.map((c) => (
-								<CountryCard key={c.code} c={c} nf={nf} />
-							))}
-						</div>
+						<VirtualizedCountryList countries={filtered} nf={nf} />
 					)}
 				</section>
 			</div>
