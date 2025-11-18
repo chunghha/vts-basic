@@ -27,7 +27,7 @@ const DEFAULT_THEME: ThemeId = 'polar'
  * - Dropdown is keyboard navigable. Arrow keys navigate, Enter selects, Esc closes.
  * - Clicking outside closes the dropdown.
  */
-export default function ThemeSwitcher(): JSX.Element {
+export default function ThemeSwitcher() {
 	const [theme, setTheme] = useState<ThemeId>(() => {
 		try {
 			if (typeof window === 'undefined') return DEFAULT_THEME

@@ -1,6 +1,6 @@
 import { useId } from 'react'
 
-export default function About(): JSX.Element {
+export default function About() {
 	const year = new Date().getFullYear()
 	const contactId = useId()
 

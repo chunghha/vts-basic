@@ -1,6 +1,6 @@
 import { useId } from 'react'
 
-export default function NotFound(): JSX.Element {
+export default function NotFound() {
 	const year = new Date().getFullYear()
 	const searchId = useId()
 

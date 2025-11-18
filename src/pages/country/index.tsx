@@ -51,7 +51,7 @@ async function fetchCountries(): Promise<Country[]> {
 
 /* ---------- Presentational components ---------- */
 
-function LoadingGrid(): JSX.Element {
+function LoadingGrid() {
 	const PLACEHOLDERS = ['ph-0', 'ph-1', 'ph-2', 'ph-3', 'ph-4', 'ph-5']
 
 	return (
@@ -70,7 +70,7 @@ function LoadingGrid(): JSX.Element {
 	)
 }
 
-function EmptyState(): JSX.Element {
+function EmptyState() {
 	return (
 		<div className="card bg-base-100 shadow-sm">
 			<div className="card-body">
@@ -83,7 +83,7 @@ function EmptyState(): JSX.Element {
 	)
 }
 
-function ErrorAlert({ message }: { message: string }): JSX.Element {
+function ErrorAlert({ message }: { message: string }) {
 	return (
 		<div className="mb-6">
 			<div className="alert alert-error shadow-sm">
@@ -109,13 +109,7 @@ function ErrorAlert({ message }: { message: string }): JSX.Element {
 	)
 }
 
-function CountryCard({
-	c,
-	nf,
-}: {
-	c: Country
-	nf: Intl.NumberFormat
-}): JSX.Element {
+function CountryCard({ c, nf }: { c: Country; nf: Intl.NumberFormat }) {
 	return (
 		<article className="card bg-base-100 shadow-sm overflow-hidden">
 			<div className="p-4 border-b border-base-300/10 flex items-start gap-4">
@@ -167,7 +161,7 @@ function CountryCard({
 
 /* ---------- Country page (main) ---------- */
 
-export default function Country(): JSX.Element {
+export default function Country() {
 	const searchId = useId()
 	const regionId = useId()
 	const sortId = useId()

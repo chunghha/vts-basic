@@ -1,4 +1,4 @@
-export default function ErrorPage(): JSX.Element {
+export default function ErrorPage() {
 	return (
 		<main className="min-h-screen bg-base-100 text-base-content flex items-center justify-center p-6">
 			<div className="max-w-3xl w-full">
