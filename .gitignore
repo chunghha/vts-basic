@@ -12,3 +12,6 @@ count.txt
 todos.json
 coverage
 proxy/target
+
+# Log files
+*.log
