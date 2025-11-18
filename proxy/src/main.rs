@@ -30,8 +30,8 @@ use tracing_subscriber::{EnvFilter, Registry, layer::SubscriberExt, util::Subscr
 use crate::{
     config::Config,
     handlers::{
-        api_countries::api_countries, api_events::api_events, metrics::metrics_handler,
-        proxy_fallback::proxy_fallback, serve_asset::serve_asset,
+        api_countries::api_countries, api_events::api_events, health_check::health_check,
+        metrics::metrics_handler, proxy_fallback::proxy_fallback, serve_asset::serve_asset,
     },
     state::AppState,
 };
@@ -137,6 +137,8 @@ async fn main() -> anyhow::Result<()> {
     };
 
     let app = Router::new()
+        // Health check endpoint
+        .route("/isHealthy", get(health_check))
         // Metrics endpoint (same port as proxy)
         .route(
             "/api/metrics",
@@ -158,10 +160,7 @@ async fn main() -> anyhow::Result<()> {
             "/robots.txt",
             ServeFile::new(format!("{asset_dir}/robots.txt")),
         )
-        .route_service(
-            "/sw.js",
-            ServeFile::new(format!("{asset_dir}/sw.js")),
-        )
+        .route_service("/sw.js", ServeFile::new(format!("{asset_dir}/sw.js")))
         .route_service(
             "/manifest.webmanifest",
             ServeFile::new(format!("{asset_dir}/manifest.webmanifest")),
