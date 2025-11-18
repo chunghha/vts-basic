@@ -11,7 +11,7 @@ type Country = {
 
 async function fetchCountries(): Promise<Country[]> {
 	const res = await fetch(
-		'https://restcountries.com/v3.1/all?fields=name,cca2,region,flags,population',
+		'/api/countries',
 	)
 	if (!res.ok) {
 		throw new Error(`Failed to fetch countries: ${res.statusText}`)
@@ -179,7 +179,7 @@ export default function Country(): JSX.Element {
 	const { data, isLoading, isError, error } = useQuery({
 		queryKey: ['countries'],
 		queryFn: fetchCountries,
-		staleTime: 1000 * 60 * 60,
+		staleTime: 0, // NOTE: Set to 0 for demonstration purposes to ensure metrics are always updated. In production, this would typically be a higher value for caching.
 		cacheTime: 1000 * 60 * 60,
 	})
 

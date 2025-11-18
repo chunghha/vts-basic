@@ -9,26 +9,29 @@
 //! - Strong caching headers for versioned assets
 
 use axum::{
-    Router,
     body::Body,
     extract::{Path, State},
-    http::{HeaderMap, Request, Response, StatusCode, Uri, header},
+    http::{header, HeaderMap, Request, Response, StatusCode, Uri},
     response::IntoResponse,
-    routing::get,
+    routing::{any, get},
+    Router,
 };
-use hyper_util::client::legacy::{Client, connect::HttpConnector};
+use hyper_rustls::HttpsConnectorBuilder;
+use hyper_util::client::legacy::{connect::HttpConnector, Client};
 use sha2::{Digest, Sha256};
 use std::{env, net::SocketAddr, sync::Arc};
 use tokio::{fs, signal};
 use tower::ServiceBuilder;
-use tower_http::{compression::CompressionLayer, services::ServeFile, trace::TraceLayer};
+use tower_http::{
+    compression::CompressionLayer, services::ServeFile, trace::TraceLayer,
+};
 
 use metrics::{counter, describe_counter, describe_histogram, histogram};
 use metrics_exporter_prometheus::PrometheusBuilder;
 use tracing::{field, info_span};
 use tracing_subscriber::{EnvFilter, Registry, layer::SubscriberExt, util::SubscriberInitExt};
 
-type HttpClient = Client<HttpConnector, Body>;
+type HttpClient = Client<hyper_rustls::HttpsConnector<HttpConnector>, Body>;
 
 #[derive(Clone)]
 struct AppState {
@@ -146,6 +149,56 @@ async fn serve_asset(
         .into_response()
 }
 
+/// Reverse-proxies requests to the countries API.
+async fn proxy_countries(
+    State(state): State<AppState>,
+    mut req: Request<Body>,
+) -> impl IntoResponse {
+    let start = std::time::Instant::now();
+    let orig_uri = req.uri().clone();
+
+    let target_uri = "https://restcountries.com/v3.1/all?fields=name,cca2,region,flags,population".to_string();
+
+    let span = info_span!(
+        "proxy_request",
+        method = %req.method(),
+        path = %orig_uri.path(),
+        upstream = %target_uri,
+        status = field::Empty
+    );
+    let _enter = span.enter();
+
+    let _ = counter!("proxy_requests_total", "path" => orig_uri.path().to_string());
+
+    *req.uri_mut() = Uri::try_from(&target_uri).unwrap();
+    req.headers_mut().remove(hyper::header::HOST);
+    req.headers_mut().insert(hyper::header::HOST, "restcountries.com".parse().unwrap());
+
+
+    match state.client.request(req).await {
+        Ok(mut resp) => {
+            let elapsed = start.elapsed();
+            let status = resp.status();
+            span.record("status", status.as_u16());
+            histogram!("proxy_upstream_latency_seconds").record(elapsed.as_secs_f64());
+            let _ = counter!(
+                "proxy_responses_total",
+                "status" => status.as_u16().to_string()
+            );
+            resp.headers_mut()
+                .insert("x-proxy", "rust-proxy".parse().unwrap());
+            resp.into_response()
+        }
+        Err(error) => {
+            let elapsed = start.elapsed();
+            tracing::error!(%error, "Upstream server error");
+            histogram!("proxy_upstream_latency_seconds").record(elapsed.as_secs_f64());
+            let _ = counter!("proxy_errors_total", "error_type" => "upstream_error".to_string());
+            (StatusCode::INTERNAL_SERVER_ERROR, "Internal Server Error").into_response()
+        }
+    }
+}
+
 /// Reverse-proxies unmatched requests to the upstream SSR server.
 async fn proxy_fallback(
     State(state): State<AppState>,
@@ -178,6 +231,10 @@ async fn proxy_fallback(
             let status = resp.status();
             span.record("status", status.as_u16());
             histogram!("proxy_upstream_latency_seconds").record(elapsed.as_secs_f64());
+            let _ = counter!(
+                "proxy_responses_total",
+                "status" => status.as_u16().to_string()
+            );
             resp.headers_mut()
                 .insert("x-proxy", "rust-proxy".parse().unwrap());
             resp.into_response()
@@ -203,6 +260,10 @@ async fn main() {
     // Describe metrics so Prometheus exporter includes HELP/TYPE lines
     describe_counter!("proxy_requests_total", "Total number of proxy requests");
     describe_counter!("proxy_errors_total", "Total number of proxy errors");
+    describe_counter!(
+        "proxy_responses_total",
+        "Total number of proxy responses by status code"
+    );
     describe_histogram!(
         "proxy_upstream_latency_seconds",
         "Proxy upstream request latency in seconds"
@@ -224,7 +285,14 @@ async fn main() {
 
     tracing::info!(%upstream_base, %asset_dir, "Configuration loaded");
 
-    let client = Client::builder(hyper_util::rt::TokioExecutor::new()).build(HttpConnector::new());
+    let client = Client::builder(hyper_util::rt::TokioExecutor::new()).build(
+        HttpsConnectorBuilder::new()
+            .with_native_roots()
+            .expect("failed to load native TLS roots")
+            .https_or_http()
+            .enable_http1()
+            .build(),
+    );
     let state = AppState {
         client,
         upstream_base: Arc::new(upstream_base),
@@ -232,9 +300,10 @@ async fn main() {
     };
 
     let app = Router::new()
+        .route("/api/countries", any(proxy_countries))
         // Metrics endpoint (same port as proxy)
         .route(
-            "/metrics",
+            "/api/metrics",
             get({
                 let recorder = recorder.clone();
                 move || async move { recorder.render() }

@@ -4,6 +4,7 @@
  * - Provide a minimal `matchMedia` polyfill used by some UI libraries.
  * - Set the React act environment flag so React's testing behavior is correct.
  */
+import '@testing-library/jest-dom'
 
 if (typeof window !== 'undefined' && !window.matchMedia) {
 	Object.defineProperty(window, 'matchMedia', {

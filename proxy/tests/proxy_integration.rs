@@ -166,7 +166,7 @@ async fn test_proxy_end_to_end() {
         .expect("Second request failed");
 
     // Fetch metrics
-    let metrics_url = format!("http://127.0.0.1:{proxy_port}/metrics");
+    let metrics_url = format!("http://127.0.0.1:{proxy_port}/api/metrics");
     let metrics_output = fetch_metrics(&metrics_url)
         .await
         .expect("metrics fetch failed");
@@ -175,6 +175,10 @@ async fn test_proxy_end_to_end() {
     assert!(
         metrics_output.contains("proxy_requests_total"),
         "Expected proxy_requests_total in metrics output"
+    );
+    assert!(
+        metrics_output.contains(r#"proxy_responses_total{status="200"}"#),
+        "Expected proxy_responses_total with 200 status"
     );
 
     // Ensure upstream latency histogram recorded
