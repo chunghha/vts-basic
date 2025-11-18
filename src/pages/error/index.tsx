@@ -2,7 +2,7 @@ export default function ErrorPage() {
 	return (
 		<main className="min-h-screen bg-base-100 text-base-content flex items-center justify-center p-6">
 			<div className="max-w-3xl w-full">
-				<div className="card bg-base-100/5 border border-base-300/20 shadow-sm">
+				<div className="card bg-base-100/5 border border-base-300/20 shadow-md">
 					<div className="card-body text-center p-10">
 						<div className="mb-4">
 							<span className="text-6xl md:text-7xl font-extrabold tracking-tight">

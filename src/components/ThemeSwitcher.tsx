@@ -151,7 +151,7 @@ export default function ThemeSwitcher() {
 					ref={menuRef}
 					aria-label="Theme options"
 					tabIndex={-1}
-					className="absolute right-0 mt-2 w-44 bg-base-100 border border-base-300 rounded-md shadow-sm p-2 z-50"
+					className="absolute right-0 mt-2 w-44 bg-base-100 border border-base-300 rounded-md shadow-md p-2 z-50"
 				>
 					{THEMES.map((t, _i) => {
 						const selected = t.id === theme

@@ -49,7 +49,7 @@ export default function Header() {
 
 				{open && (
 					<nav className="md:hidden pb-4">
-						<ul className="menu menu-compact bg-base-100 rounded-box p-2 shadow-sm space-y-1">
+						<ul className="menu menu-compact bg-base-100 rounded-box p-2 shadow-md space-y-1">
 							<li>
 								<Link to="/" onClick={() => setOpen(false)}>
 									Home

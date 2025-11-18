@@ -56,7 +56,7 @@ function LoadingGrid() {
 	return (
 		<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 			{PLACEHOLDERS.map((id) => (
-				<div key={id} className="card bg-base-100 shadow-sm animate-pulse">
+				<div key={id} className="card bg-base-100 shadow-md animate-pulse">
 					<div className="card-body">
 						<div className="h-12 w-12 bg-base-200 rounded-full mb-4" />
 						<div className="h-6 bg-base-200 rounded mb-2 w-3/4" />
@@ -71,7 +71,7 @@ function LoadingGrid() {
 
 function EmptyState() {
 	return (
-		<div className="card bg-base-100 shadow-sm">
+		<div className="card bg-base-100 shadow-md">
 			<div className="card-body">
 				<h2 className="card-title">No countries found</h2>
 				<p className="text-base-content/60">
@@ -85,7 +85,7 @@ function EmptyState() {
 function ErrorAlert({ message }: { message: string }) {
 	return (
 		<div className="mb-6">
-			<div className="alert alert-error shadow-sm">
+			<div className="alert alert-error shadow-md">
 				<div>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -110,7 +110,7 @@ function ErrorAlert({ message }: { message: string }) {
 
 function CountryCard({ c, nf }: { c: Country; nf: Intl.NumberFormat }) {
 	return (
-		<article className="card bg-base-100 shadow-sm overflow-hidden">
+		<article className="card bg-base-100 shadow-md overflow-hidden">
 			<div className="p-4 border-b border-base-300/10 flex items-start gap-4">
 				<div className="avatar">
 					<div className="w-16 h-16 rounded-full bg-base-200 flex items-center justify-center text-2xl">

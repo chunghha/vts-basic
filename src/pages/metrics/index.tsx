@@ -135,7 +135,7 @@ export default function MetricsPage() {
 					</p>
 				</header>
 				<div className="grid grid-cols-1 gap-8">
-					<div className="card bg-base-100 shadow-sm">
+					<div className="card bg-base-100 shadow-md">
 						<div className="card-body">
 							<h2 className="card-title">Requests and Latency Over Time</h2>
 							<div style={{ width: '100%', height: 400 }}>
@@ -183,7 +183,7 @@ export default function MetricsPage() {
 							</div>
 						</div>
 					</div>
-					<div className="card bg-base-100 shadow-sm">
+					<div className="card bg-base-100 shadow-md">
 						<div className="card-body">
 							<h2 className="card-title">Route Visits</h2>
 							<div style={{ width: '100%', height: 400 }}>

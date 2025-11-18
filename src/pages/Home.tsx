@@ -55,7 +55,7 @@ export default function Home() {
 					</div>
 
 					<div className="w-full lg:w-1/2">
-						<div className="card bg-base-100 shadow-sm border border-base-300/10">
+						<div className="card bg-base-100 shadow-md border border-base-300/10">
 							<div className="card-body">
 								<div className="flex items-center justify-between">
 									<div>
@@ -131,7 +131,7 @@ export default function Home() {
 					</header>
 
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-						<div className="card bg-base-100 shadow-sm border border-base-300/10">
+						<div className="card bg-base-100 shadow-md border border-base-300/10">
 							<div className="card-body">
 								<h3 className="card-title">Buttons</h3>
 								<p className="text-sm text-base-content/70">
@@ -152,7 +152,7 @@ export default function Home() {
 							</div>
 						</div>
 
-						<div className="card bg-base-100 shadow-sm border border-base-300/10">
+						<div className="card bg-base-100 shadow-md border border-base-300/10">
 							<div className="card-body">
 								<h3 className="card-title">Form</h3>
 								<p className="text-sm text-base-content/70">
@@ -173,7 +173,7 @@ export default function Home() {
 							</div>
 						</div>
 
-						<div className="card bg-base-100 shadow-sm border border-base-300/10">
+						<div className="card bg-base-100 shadow-md border border-base-300/10">
 							<div className="card-body">
 								<h3 className="card-title">Cards</h3>
 								<p className="text-sm text-base-content/70">
@@ -223,7 +223,7 @@ export default function Home() {
 							(t) => (
 								<fieldset
 									key={t}
-									className="rounded-lg p-4 bg-base-100 border border-base-300/10 shadow-sm"
+									className="rounded-lg p-4 bg-base-100 border border-base-300/10 shadow-md"
 									aria-label={`Theme preview ${t}`}
 								>
 									<legend className="sr-only">Theme preview {t}</legend>

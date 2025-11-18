@@ -7,7 +7,7 @@ export default function About() {
 	return (
 		<main className="min-h-screen bg-base-100 text-base-content py-16 px-6">
 			<div className="max-w-6xl mx-auto">
-				<div className="card bg-base-100/5 border border-base-300/10 shadow-sm overflow-hidden">
+				<div className="card bg-base-100/5 border border-base-300/10 shadow-md overflow-hidden">
 					<div className="card-body p-8 md:p-12">
 						<header className="mb-6 md:mb-8">
 							<h1 className="text-4xl md:text-5xl font-extrabold leading-tight">
