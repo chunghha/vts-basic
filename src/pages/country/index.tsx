@@ -1,15 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 import { useId, useMemo } from 'react'
+import { getAllCountries } from '../../api/countries'
 import { Skeleton } from '../../components/Skeleton'
 import { VirtualizedCountryList } from '../../components/VirtualizedCountryList'
 import { QUERY_CONFIG, UI_CONFIG } from '../../constants/config'
 import { type Country, useCountryFilters } from '../../hooks/useCountryFilters'
 
 async function fetchCountries(): Promise<Country[]> {
-	const res = await fetch('/api/country')
-	if (!res.ok) {
-		throw new Error(`Failed to fetch countries: ${res.statusText}`)
-	}
 	type ProxyCountry = {
 		code?: string | null
 		name?: string | null
@@ -17,7 +14,7 @@ async function fetchCountries(): Promise<Country[]> {
 		population?: number | null
 		flag?: string | null
 	}
-	const data = (await res.json()) as ProxyCountry[]
+	const data = (await getAllCountries()) as unknown as ProxyCountry[]
 
 	const toEmoji = (cca2?: string | null): string => {
 		if (!cca2 || cca2.length !== 2) return ''
