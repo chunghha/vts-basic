@@ -20,7 +20,6 @@ function CountryCard({ c, nf }: CountryCardProps) {
 			<div className="p-4 border-b border-base-300/10 flex items-start gap-4">
 				<div className="avatar">
 					<CountryFlag
-						code={c.code}
 						name={c.name}
 						flagUrl={c.flagUrl}
 						flagEmoji={c.flagEmoji}

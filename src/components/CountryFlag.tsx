@@ -4,8 +4,6 @@ import { useState } from 'react'
  * Props for the CountryFlag component
  */
 interface CountryFlagProps {
-	/** Country code (e.g., 'US', 'GB') */
-	code: string
 	/** Country name for alt text */
 	name: string
 	/** Optional URL to flag image */
@@ -23,17 +21,11 @@ interface CountryFlagProps {
  * - Falls back to emoji if image fails to load
  * - Prevents layout shift with fixed dimensions
  *
- * @param code - Country code
  * @param name - Country name for accessibility
  * @param flagUrl - Optional URL to flag image
  * @param flagEmoji - Emoji flag as fallback
  */
-export function CountryFlag({
-	code,
-	name,
-	flagUrl,
-	flagEmoji,
-}: CountryFlagProps) {
+export function CountryFlag({ name, flagUrl, flagEmoji }: CountryFlagProps) {
 	const [imageError, setImageError] = useState(false)
 	const [imageLoaded, setImageLoaded] = useState(false)
 

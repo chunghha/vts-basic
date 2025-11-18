@@ -158,6 +158,14 @@ async fn main() -> anyhow::Result<()> {
             "/robots.txt",
             ServeFile::new(format!("{asset_dir}/robots.txt")),
         )
+        .route_service(
+            "/sw.js",
+            ServeFile::new(format!("{asset_dir}/sw.js")),
+        )
+        .route_service(
+            "/manifest.webmanifest",
+            ServeFile::new(format!("{asset_dir}/manifest.webmanifest")),
+        )
         .fallback(proxy_fallback)
         .with_state(state)
         .layer(
