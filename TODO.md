@@ -169,10 +169,11 @@
 
 ## Priority 9 - Documentation
 
-- [ ] **Add Architecture Decision Records** (`docs/adr/`)
+- [x] **Add Architecture Decision Records** (`docs/rationale/`)
   - Create ADR template
   - Document key decisions (Rust proxy, TanStack Start, etc.)
-  - Estimated: 1 hour
+  - COMPLETED: Created 3 ADRs documenting major architectural decisions
+  - Located in docs/rationale/ with 0001_ prefix naming convention
 
 - [ ] **Update README with new features** (`README.md`)
   - Document new features as they're added
@@ -184,13 +185,13 @@
 ## Progress Tracking
 
 **Total Items**: 30  
-**Completed**: 21  
+**Completed**: 22  
 **In Progress**: 0  
-**Remaining**: 9  
+**Remaining**: 8  
 
 **Estimated Total Time**: ~18 hours  
-**Time Spent**: ~12.25 hours  
-**Time Remaining**: ~5.75 hours
+**Time Spent**: ~13.25 hours  
+**Time Remaining**: ~4.75 hours
 
 ---
 

@@ -15,6 +15,7 @@ Quick highlights:
 ## Documentation
 
 - [Documentation Index](docs/0000_index.md) - Central documentation hub
+- [Architecture Decision Records](docs/rationale/0000_ADR_INDEX.md) - Technical decisions and rationale
 - [Docker Quick Start](docs/docker-quickstart.md) - Quick reference for Docker commands
 - [Docker Deployment Guide](docs/rationale/0001_docker_deployment.md) - Complete guide for building and deploying with Docker
 - [Build Validation](#build-validation) - Automatic asset validation after builds

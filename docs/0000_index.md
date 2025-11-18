@@ -19,8 +19,18 @@ Rationale documents explain _why_ decisions were made and _how_ they were implem
 
 ### Current Rationale Documents
 
+See [rationale/0000_ADR_INDEX.md](rationale/0000_ADR_INDEX.md) for the complete index of Architecture Decision Records.
+
+**Infrastructure & Deployment**:
 - [0001: Docker Deployment](rationale/0001_docker_deployment.md) - Multi-stage Docker build, Rust proxy server, and containerization strategy
 - [0002: Precompressed Assets & Observability](rationale/0002_precompressed_assets_and_observability.md) - Precompression (gzip+br), caching, metrics, structured logging, graceful shutdown
+
+**Frontend Stack**:
+- [0003: Use TanStack Start](rationale/0003_use_tanstack_start.md) - React framework with SSR and type-safe routing
+- [0005: Use DaisyUI](rationale/0005_use_daisyui.md) - Tailwind CSS component library
+
+**Backend Stack**:
+- [0004: Use Rust Proxy](rationale/0004_use_rust_proxy.md) - Rust-based proxy server with Axum framework
 
 ## Guides
 
