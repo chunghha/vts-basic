@@ -8,36 +8,36 @@
 //! - Pre-compressed static asset serving (br/gz)
 //! - Strong caching headers for versioned assets
 
+mod config;
+mod handlers;
+mod state;
+
+use anyhow::Context;
 use axum::{
     Router,
-    body::Body as AxumBody,
-    extract::{Path, State},
-    http::{HeaderMap, Request, Response, StatusCode, Uri, header},
-    response::IntoResponse,
-    routing::get,
+    routing::{get, post},
 };
 use hyper_util::client::legacy::{Client, connect::HttpConnector};
-use sha2::{Digest, Sha256};
 use std::{env, net::SocketAddr, sync::Arc};
-use tokio::{fs, signal};
+use tokio::signal;
 use tower::ServiceBuilder;
 use tower_http::{compression::CompressionLayer, services::ServeFile, trace::TraceLayer};
 
-use metrics::{counter, describe_counter, describe_histogram, histogram};
+use metrics::{describe_counter, describe_histogram};
 use metrics_exporter_prometheus::PrometheusBuilder;
-use tracing::{field, info_span};
 use tracing_subscriber::{EnvFilter, Registry, layer::SubscriberExt, util::SubscriberInitExt};
 
-type HttpClient = Client<HttpConnector, AxumBody>;
-
-#[derive(Clone)]
-struct AppState {
-    client: HttpClient,
-    upstream_base: Arc<String>,
-    asset_root: Arc<String>,
-}
+use crate::{
+    config::Config,
+    handlers::{
+        api_countries::api_countries, frontend_metrics::handle_frontend_events,
+        metrics::metrics_handler, proxy_fallback::proxy_fallback, serve_asset::serve_asset,
+    },
+    state::AppState,
+};
 
 /// Initializes tracing with optional JSON formatting.
+
 fn init_tracing() {
     let filter =
         EnvFilter::try_from_default_env().unwrap_or_else(|_| "proxy=info,tower_http=info".into());
@@ -51,16 +51,19 @@ fn init_tracing() {
             .with_target(true)
             .with_timer(tracing_subscriber::fmt::time::SystemTime)
             .json();
+
         subscriber.with(fmt_layer).init();
     } else {
         let fmt_layer = tracing_subscriber::fmt::layer()
             .with_target(true)
             .with_timer(tracing_subscriber::fmt::time::SystemTime);
+
         subscriber.with(fmt_layer).init();
     }
 }
 
 /// Graceful shutdown signal future.
+
 async fn shutdown_signal() {
     let ctrl_c = async {
         signal::ctrl_c()
@@ -80,257 +83,86 @@ async fn shutdown_signal() {
     let terminate = std::future::pending::<()>();
 
     tokio::select! {
+
         _ = ctrl_c => tracing::info!("Received Ctrl+C, starting graceful shutdown"),
+
         _ = terminate => tracing::info!("Received SIGTERM, starting graceful shutdown"),
-    }
-}
 
-/// Serves a static asset, handling pre-compressed variants.
-async fn serve_asset(
-    State(state): State<AppState>,
-    Path(path): Path<String>,
-    headers: HeaderMap,
-) -> impl IntoResponse {
-    let base_path = format!("{}/assets/{}", state.asset_root, path);
-    let accept_encoding = headers
-        .get(header::ACCEPT_ENCODING)
-        .and_then(|v| v.to_str().ok())
-        .unwrap_or("");
-
-    let (serve_path, content_encoding) = if accept_encoding.contains("br")
-        && fs::metadata(format!("{base_path}.br")).await.is_ok()
-    {
-        (format!("{base_path}.br"), Some("br"))
-    } else if accept_encoding.contains("gzip")
-        && fs::metadata(format!("{base_path}.gz")).await.is_ok()
-    {
-        (format!("{base_path}.gz"), Some("gzip"))
-    } else {
-        (base_path.clone(), None)
-    };
-
-    let bytes = match fs::read(&serve_path).await {
-        Ok(b) => b,
-        Err(_) => return (StatusCode::NOT_FOUND, "Not Found").into_response(),
-    };
-
-    let mime = mime_guess::from_path(&base_path)
-        .first_or_octet_stream()
-        .to_string();
-
-    let is_hashed = base_path
-        .split('.')
-        .any(|part| part.len() >= 8 && part.chars().all(|c| c.is_ascii_hexdigit()));
-    let cache_control = if is_hashed {
-        "public, max-age=31536000, immutable"
-    } else {
-        "no-cache"
-    };
-
-    let etag = format!("W/\"{:x}\"", Sha256::digest(&bytes));
-
-    let mut resp_builder = Response::builder()
-        .status(StatusCode::OK)
-        .header(header::CONTENT_TYPE, mime)
-        .header(header::CACHE_CONTROL, cache_control)
-        .header(header::ETAG, etag)
-        .header(header::VARY, "Accept-Encoding");
-
-    if let Some(enc) = content_encoding {
-        resp_builder = resp_builder.header(header::CONTENT_ENCODING, enc);
-    }
-
-    resp_builder
-        .body(AxumBody::from(bytes))
-        .unwrap()
-        .into_response()
-}
-
-/// Fetches countries from restcountries.com via reqwest, simplifies the JSON, and returns it.
-async fn api_countries(State(_state): State<AppState>) -> impl IntoResponse {
-    let url = "https://restcountries.com/v3.1/all?fields=name,cca2,region,flags,population";
-
-    let client = reqwest::Client::new();
-    match client.get(url).send().await {
-        Ok(resp) => {
-            if !resp.status().is_success() {
-                tracing::error!(status = %resp.status(), "Upstream returned non-200");
-                return (StatusCode::BAD_GATEWAY, "Upstream error").into_response();
-            }
-
-            // Parse body as JSON array of values
-            let parsed: Vec<serde_json::Value> = match resp.json().await {
-                Ok(v) => v,
-                Err(e) => {
-                    tracing::error!(%e, "Failed to parse upstream JSON");
-                    return (
-                        StatusCode::INTERNAL_SERVER_ERROR,
-                        "Failed to parse upstream JSON",
-                    )
-                        .into_response();
-                }
-            };
-
-            // Map to simplified structure
-            let mut simplified: Vec<serde_json::Value> = Vec::with_capacity(parsed.len());
-            for item in parsed.into_iter() {
-                let cca2 = item
-                    .get("cca2")
-                    .and_then(|v| v.as_str())
-                    .unwrap_or("")
-                    .to_uppercase();
-                let name = item
-                    .get("name")
-                    .and_then(|n| n.get("common"))
-                    .and_then(|v| v.as_str())
-                    .unwrap_or("")
-                    .to_string();
-                let region = item
-                    .get("region")
-                    .and_then(|v| v.as_str())
-                    .unwrap_or("")
-                    .to_string();
-                let population = item.get("population").and_then(|v| v.as_u64()).unwrap_or(0);
-                let flag_png = item
-                    .get("flags")
-                    .and_then(|f| f.get("png"))
-                    .and_then(|v| v.as_str())
-                    .unwrap_or("")
-                    .to_string();
-
-                simplified.push(serde_json::json!({
-                    "code": cca2,
-                    "name": if name.is_empty() { cca2.clone() } else { name },
-                    "region": region,
-                    "population": population,
-                    "flag": flag_png,
-                }));
-            }
-
-            // Sort by name
-            simplified.sort_by(|a, b| {
-                let na = a.get("name").and_then(|v| v.as_str()).unwrap_or("");
-                let nb = b.get("name").and_then(|v| v.as_str()).unwrap_or("");
-                na.cmp(nb)
-            });
-
-            let resp_body = match serde_json::to_vec(&simplified) {
-                Ok(b) => b,
-                Err(e) => {
-                    tracing::error!(%e, "Failed to serialize simplified JSON");
-                    return (StatusCode::INTERNAL_SERVER_ERROR, "Serialization error")
-                        .into_response();
-                }
-            };
-
-            Response::builder()
-                .status(StatusCode::OK)
-                .header(header::CONTENT_TYPE, "application/json")
-                .body(AxumBody::from(resp_body))
-                .unwrap()
-                .into_response()
-        }
-        Err(e) => {
-            tracing::error!(%e, "Failed to fetch countries upstream");
-            (StatusCode::BAD_GATEWAY, "Upstream request failed").into_response()
-        }
-    }
-}
-
-/// Reverse-proxies unmatched requests to the upstream SSR server.
-async fn proxy_fallback(
-    State(state): State<AppState>,
-    mut req: Request<AxumBody>,
-) -> impl IntoResponse {
-    let start = std::time::Instant::now();
-    let orig_uri = req.uri().clone();
-    let path_and_query = orig_uri
-        .path_and_query()
-        .map(|v| v.as_str())
-        .unwrap_or(orig_uri.path());
-    let target_uri = format!("{}{}", state.upstream_base, path_and_query);
-
-    let span = info_span!(
-        "proxy_request",
-        method = %req.method(),
-        path = %orig_uri.path(),
-        upstream = %target_uri,
-        status = field::Empty
-    );
-    let _enter = span.enter();
-
-    let _ = counter!("proxy_requests_total", "path" => orig_uri.path().to_string());
-
-    *req.uri_mut() = Uri::try_from(target_uri).unwrap();
-
-    match state.client.request(req).await {
-        Ok(mut resp) => {
-            let elapsed = start.elapsed();
-            let status = resp.status();
-            span.record("status", status.as_u16());
-            histogram!("proxy_upstream_latency_seconds").record(elapsed.as_secs_f64());
-            resp.headers_mut()
-                .insert("x-proxy", "rust-proxy".parse().unwrap());
-            resp.into_response()
-        }
-        Err(error) => {
-            let elapsed = start.elapsed();
-            tracing::error!(%error, "Upstream server error");
-            histogram!("proxy_upstream_latency_seconds").record(elapsed.as_secs_f64());
-            let _ = counter!("proxy_errors_total", "error_type" => "upstream_error".to_string());
-            (StatusCode::INTERNAL_SERVER_ERROR, "Internal Server Error").into_response()
-        }
     }
 }
 
 #[tokio::main]
-async fn main() {
+
+async fn main() -> anyhow::Result<()> {
     init_tracing();
+
     // Initialize Prometheus metrics recorder (served via /metrics on main port)
+
     let recorder = PrometheusBuilder::new()
         .install_recorder()
         .expect("failed to install Prometheus recorder");
 
     // Describe metrics so Prometheus exporter includes HELP/TYPE lines
+
     describe_counter!("proxy_requests_total", "Total number of proxy requests");
+
     describe_counter!("proxy_errors_total", "Total number of proxy errors");
+
     describe_histogram!(
         "proxy_upstream_latency_seconds",
         "Proxy upstream request latency in seconds"
     );
 
+    describe_counter!(
+        "frontend_events_total",
+        "Total number of frontend events received"
+    );
+
     tracing::info!("Initializing proxy server");
+
+    let config = Arc::new(Config::load("proxy/proxy.ron".as_ref())?);
 
     let proxy_port: u16 = env::var("PROXY_PORT")
         .ok()
         .and_then(|v| v.parse().ok())
         .unwrap_or(3000);
+
     let upstream_host = env::var("SSR_UPSTREAM_HOST").unwrap_or_else(|_| "127.0.0.1".into());
+
     let upstream_port: u16 = env::var("SSR_UPSTREAM_PORT")
         .ok()
         .and_then(|v| v.parse().ok())
         .unwrap_or(8081);
+
     let upstream_base = format!("http://{upstream_host}:{upstream_port}");
+
     let asset_dir = env::var("ASSET_DIR").unwrap_or_else(|_| "dist/client".into());
 
     tracing::info!(%upstream_base, %asset_dir, "Configuration loaded");
 
     let client = Client::builder(hyper_util::rt::TokioExecutor::new()).build(HttpConnector::new());
+
     let state = AppState {
         client,
+
         upstream_base: Arc::new(upstream_base),
+
         asset_root: Arc::new(asset_dir.clone()),
+
+        config,
     };
 
     let app = Router::new()
         // Metrics endpoint (same port as proxy)
         .route(
-            "/metrics",
+            "/api/metrics",
             get({
                 let recorder = recorder.clone();
-                move || async move { recorder.render() }
+
+                move || metrics_handler(recorder)
             }),
         )
+        .route("/api/events", post(handle_frontend_events))
         // API endpoint for country data (served by Rust proxy)
         .route("/api/country", get(api_countries))
         .route("/assets/{*path}", get(serve_asset))
@@ -351,22 +183,21 @@ async fn main() {
         );
 
     let addr = SocketAddr::from(([0, 0, 0, 0], proxy_port));
+
     tracing::info!(listen_addr = %addr, "Binding proxy listener");
 
     let listener = tokio::net::TcpListener::bind(addr)
         .await
-        .unwrap_or_else(|e| {
-            tracing::error!(error = %e, "Failed to bind listener");
-            std::process::exit(1);
-        });
+        .context("Failed to bind listener")?;
 
-    if let Err(e) = axum::serve(listener, app.into_make_service())
+    tracing::info!(listen_addr = %addr, "Listening for requests");
+
+    axum::serve(listener, app.into_make_service())
         .with_graceful_shutdown(shutdown_signal())
         .await
-    {
-        tracing::error!(error = %e, "Server error");
-        std::process::exit(2);
-    }
+        .context("Server error")?;
 
     tracing::info!("Server stopped gracefully");
+
+    Ok(())
 }
