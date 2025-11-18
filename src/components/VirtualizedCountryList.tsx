@@ -1,6 +1,7 @@
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { useEffect, useRef, useState } from 'react'
 import type { Country } from '../hooks/useCountryFilters'
+import { CountryFlag } from './CountryFlag'
 
 /**
  * Props for the CountryCard component
@@ -18,9 +19,12 @@ function CountryCard({ c, nf }: CountryCardProps) {
 		<article className="card bg-base-100 shadow-md overflow-hidden h-full">
 			<div className="p-4 border-b border-base-300/10 flex items-start gap-4">
 				<div className="avatar">
-					<div className="w-16 h-16 rounded-full bg-base-200 flex items-center justify-center text-2xl">
-						{c.flagEmoji || '🏳️'}
-					</div>
+					<CountryFlag
+						code={c.code}
+						name={c.name}
+						flagUrl={c.flagUrl}
+						flagEmoji={c.flagEmoji}
+					/>
 				</div>
 
 				<div className="flex-1 min-w-0">

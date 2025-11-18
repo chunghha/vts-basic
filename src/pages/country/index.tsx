@@ -34,10 +34,9 @@ async function fetchCountries(): Promise<Country[]> {
 			const name = c?.name ?? code ?? 'Unknown'
 			const region = c?.region ?? 'Unknown'
 			const population = typeof c?.population === 'number' ? c.population : 0
-			// Prefer a flag emoji derived from the country code; the proxy returns a `flag` PNG URL
-			// which the UI doesn't currently use in this list – keep behavior similar by using emoji.
 			const flagEmoji = toEmoji(code) || ''
-			return { code, name, region, population, flagEmoji } as Country
+			const flagUrl = c.flag || undefined
+			return { code, name, region, population, flagEmoji, flagUrl } as Country
 		})
 		.filter(Boolean)
 		.sort((a, b) => a.name.localeCompare(b.name))

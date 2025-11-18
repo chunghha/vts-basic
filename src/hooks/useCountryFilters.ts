@@ -5,6 +5,7 @@ export type Country = {
 	name: string
 	region: string
 	flagEmoji: string
+	flagUrl?: string
 	population: number
 }
 
