@@ -25,6 +25,9 @@ use tower_http::{compression::CompressionLayer, services::ServeFile, trace::Trac
 
 use metrics::{describe_counter, describe_histogram};
 use metrics_exporter_prometheus::PrometheusBuilder;
+use tower_governor::{
+    governor::GovernorConfigBuilder, key_extractor::GlobalKeyExtractor, GovernorLayer,
+};
 use tracing_subscriber::{EnvFilter, Registry, layer::SubscriberExt, util::SubscriberInitExt};
 
 use crate::{
@@ -123,6 +126,8 @@ async fn main() -> anyhow::Result<()> {
     let upstream_base = config.upstream_base();
     let asset_dir = config.asset_dir.clone();
     let proxy_port = config.proxy_port;
+    let rate_limit_per_second = config.rate_limit_per_second;
+    let rate_limit_burst_size = config.rate_limit_burst_size;
 
     let client = Client::builder(hyper_util::rt::TokioExecutor::new()).build(HttpConnector::new());
 
@@ -170,8 +175,26 @@ async fn main() -> anyhow::Result<()> {
         .layer(
             ServiceBuilder::new()
                 .layer(TraceLayer::new_for_http())
-                .layer(CompressionLayer::new()),
+                .layer(CompressionLayer::new())
+                .layer({
+                    // Rate limiting configured from proxy.ron (global limit)
+                    let governor_conf = Arc::new(
+                        GovernorConfigBuilder::default()
+                            .per_second(rate_limit_per_second)
+                            .burst_size(rate_limit_burst_size)
+                            .key_extractor(GlobalKeyExtractor)
+                            .finish()
+                            .unwrap(),
+                    );
+                    GovernorLayer::new(governor_conf)
+                }),
         );
+
+    tracing::info!(
+        rate_limit_per_second,
+        rate_limit_burst_size,
+        "Rate limiting enabled"
+    );
 
     let addr = SocketAddr::from(([0, 0, 0, 0], proxy_port));
 
