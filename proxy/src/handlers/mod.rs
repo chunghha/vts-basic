@@ -1,5 +1,5 @@
 pub mod api_countries;
-pub mod frontend_metrics;
+pub mod api_events;
 pub mod metrics;
 pub mod proxy_fallback;
 pub mod serve_asset;

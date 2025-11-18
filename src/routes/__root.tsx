@@ -48,7 +48,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			<head>
 				<HeadContent />
 			</head>
-			<body className="font-sans">
+			<body className="bg-base-100 font-sans">
 				<Header />
 				{children}
 				<TanStackDevtools

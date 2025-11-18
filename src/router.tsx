@@ -24,5 +24,15 @@ export const getRouter = () => {
 
 	setupRouterSsrQueryIntegration({ router, queryClient: rqContext.queryClient })
 
+	router.subscribe('onResolved', (event) => {
+		fetch('/api/events', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ route: event.toLocation.pathname }),
+		})
+	})
+
 	return router
 }

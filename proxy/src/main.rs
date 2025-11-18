@@ -30,14 +30,13 @@ use tracing_subscriber::{EnvFilter, Registry, layer::SubscriberExt, util::Subscr
 use crate::{
     config::Config,
     handlers::{
-        api_countries::api_countries, frontend_metrics::handle_frontend_events,
-        metrics::metrics_handler, proxy_fallback::proxy_fallback, serve_asset::serve_asset,
+        api_countries::api_countries, api_events::api_events, metrics::metrics_handler,
+        proxy_fallback::proxy_fallback, serve_asset::serve_asset,
     },
     state::AppState,
 };
 
 /// Initializes tracing with optional JSON formatting.
-
 fn init_tracing() {
     let filter =
         EnvFilter::try_from_default_env().unwrap_or_else(|_| "proxy=info,tower_http=info".into());
@@ -63,7 +62,6 @@ fn init_tracing() {
 }
 
 /// Graceful shutdown signal future.
-
 async fn shutdown_signal() {
     let ctrl_c = async {
         signal::ctrl_c()
@@ -162,7 +160,7 @@ async fn main() -> anyhow::Result<()> {
                 move || metrics_handler(recorder)
             }),
         )
-        .route("/api/events", post(handle_frontend_events))
+        .route("/api/events", post(api_events))
         // API endpoint for country data (served by Rust proxy)
         .route("/api/country", get(api_countries))
         .route("/assets/{*path}", get(serve_asset))
