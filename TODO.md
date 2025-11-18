@@ -35,14 +35,16 @@
   - COMPLETED: Added comprehensive CSP headers
 
 - [ ] **Add rate limiting to proxy** (`proxy/src/main.rs`)
-  - Add tower-governor dependency
+  - Add tower_governor dependency
   - Configure rate limits for API endpoints
-  - Estimated: 30 minutes
+  - BLOCKED: Version conflict between tower_governor and axum 0.8
+  - Note: Requires tower_governor update or alternative solution
+  - Estimated: 30 minutes (when compatible version available)
 
-- [ ] **Extract business logic from components** (`src/pages/country/index.tsx`)
+- [x] **Extract business logic from components** (`src/pages/country/index.tsx`)
   - Create useCountryFilters hook
   - Move filtering/sorting logic
-  - Estimated: 1 hour
+  - COMPLETED: Created src/hooks/useCountryFilters.ts
 
 ## Priority 2 - Code Quality
 
@@ -169,13 +171,13 @@
 ## Progress Tracking
 
 **Total Items**: 30  
-**Completed**: 10  
+**Completed**: 11  
 **In Progress**: 0  
-**Remaining**: 20  
+**Remaining**: 19  
 
 **Estimated Total Time**: ~18 hours  
-**Time Spent**: ~2.5 hours  
-**Time Remaining**: ~15.5 hours
+**Time Spent**: ~3.5 hours  
+**Time Remaining**: ~14.5 hours
 
 ---
 

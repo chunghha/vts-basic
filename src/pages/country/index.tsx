@@ -1,14 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
-import { useId, useMemo, useState } from 'react'
+import { useId, useMemo } from 'react'
 import { QUERY_CONFIG, UI_CONFIG } from '../../constants/config'
-
-type Country = {
-	code: string
-	name: string
-	region: string
-	flagEmoji: string
-	population: number
-}
+import { type Country, useCountryFilters } from '../../hooks/useCountryFilters'
 
 async function fetchCountries(): Promise<Country[]> {
 	const res = await fetch('/api/country')
@@ -164,14 +157,10 @@ function CountryCard({ c, nf }: { c: Country; nf: Intl.NumberFormat }) {
 
 /* ---------- Country page (main) ---------- */
 
-export default function Country() {
+export default function CountryPage() {
 	const searchId = useId()
 	const regionId = useId()
 	const sortId = useId()
-	const [query, setQuery] = useState('')
-	const [regionFilter, setRegionFilter] = useState<'All' | string>('All')
-	const [sortKey, setSortKey] = useState<'name' | 'population'>('name')
-	const [descending, setDescending] = useState(false)
 
 	const { data, isLoading, isError, error } = useQuery<Country[], Error>({
 		queryKey: ['countries'],
@@ -182,32 +171,20 @@ export default function Country() {
 
 	const countries = data ?? []
 
-	const regions = useMemo(() => {
-		const set = new Set(countries.map((c) => c.region).filter(Boolean))
-		return ['All', ...Array.from(set).sort()]
-	}, [countries])
-
-	const filtered = useMemo(() => {
-		const q = query.trim().toLowerCase()
-		let list = countries.filter((c) => {
-			if (regionFilter !== 'All' && c.region !== regionFilter) return false
-			if (!q) return true
-			return (
-				c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q)
-			)
-		})
-
-		list = list.sort((a, b) => {
-			if (sortKey === 'name') {
-				return a.name.localeCompare(b.name)
-			} else {
-				return a.population - b.population
-			}
-		})
-
-		if (descending) list = list.reverse()
-		return list
-	}, [countries, query, regionFilter, sortKey, descending])
+	// Use custom hook for all filtering/sorting logic
+	const {
+		query,
+		regionFilter,
+		sortKey,
+		descending,
+		regions,
+		filtered,
+		setQuery,
+		setRegionFilter,
+		setSortKey,
+		setDescending,
+		reset,
+	} = useCountryFilters(countries)
 
 	const nf = useMemo(() => new Intl.NumberFormat(), [])
 
@@ -308,12 +285,7 @@ export default function Country() {
 					<div className="space-x-2">
 						<button
 							type="button"
-							onClick={() => {
-								setQuery('')
-								setRegionFilter('All')
-								setSortKey('name')
-								setDescending(false)
-							}}
+							onClick={reset}
 							className="btn btn-ghost btn-sm"
 						>
 							Reset
