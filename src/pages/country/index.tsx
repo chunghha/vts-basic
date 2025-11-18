@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useId, useMemo } from 'react'
+import { Skeleton } from '../../components/Skeleton'
 import { VirtualizedCountryList } from '../../components/VirtualizedCountryList'
 import { QUERY_CONFIG, UI_CONFIG } from '../../constants/config'
 import { type Country, useCountryFilters } from '../../hooks/useCountryFilters'
@@ -44,6 +45,9 @@ async function fetchCountries(): Promise<Country[]> {
 
 /* ---------- Presentational components ---------- */
 
+/**
+ * Loading skeleton for country cards with shimmer animation
+ */
 function LoadingGrid() {
 	const PLACEHOLDERS = Array.from(
 		{ length: UI_CONFIG.LOADING_PLACEHOLDERS },
@@ -53,12 +57,30 @@ function LoadingGrid() {
 	return (
 		<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 			{PLACEHOLDERS.map((id) => (
-				<div key={id} className="card bg-base-100 shadow-md animate-pulse">
+				<div key={id} className="card bg-base-100 shadow-md">
 					<div className="card-body">
-						<div className="h-12 w-12 bg-base-200 rounded-full mb-4" />
-						<div className="h-6 bg-base-200 rounded mb-2 w-3/4" />
-						<div className="h-4 bg-base-200 rounded mb-1 w-1/2" />
-						<div className="mt-4 h-8 bg-base-200 rounded w-full" />
+						{/* Flag skeleton */}
+						<div className="flex items-center gap-3 mb-4">
+							<Skeleton variant="circular" width={48} height={48} />
+							<div className="flex-1">
+								<Skeleton
+									variant="text"
+									width="60%"
+									height={20}
+									className="mb-2"
+								/>
+								<Skeleton variant="text" width="40%" height={16} />
+							</div>
+						</div>
+
+						{/* Country name skeleton */}
+						<Skeleton variant="text" width="80%" height={24} className="mb-2" />
+
+						{/* Region skeleton */}
+						<Skeleton variant="text" width="50%" height={16} className="mb-4" />
+
+						{/* Population skeleton */}
+						<Skeleton variant="rectangular" width="100%" height={32} />
 					</div>
 				</div>
 			))}

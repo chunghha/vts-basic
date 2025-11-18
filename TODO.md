@@ -113,10 +113,11 @@
 
 ## Priority 5 - UI/UX
 
-- [ ] **Add better loading skeletons** (`src/pages/country/index.tsx`)
+- [x] **Add better loading skeletons** (`src/pages/country/index.tsx`)
   - Create shimmer animation
   - Improve skeleton structure
-  - Estimated: 30 minutes
+  - COMPLETED: Created Skeleton component with shimmer animation
+  - Matches actual card structure with circular, text, and rectangular variants
 
 - [ ] **Add accessibility improvements** (Multiple files)
   - Add skip to main content link
@@ -179,13 +180,13 @@
 ## Progress Tracking
 
 **Total Items**: 30  
-**Completed**: 17  
+**Completed**: 18  
 **In Progress**: 0  
-**Remaining**: 13  
+**Remaining**: 12  
 
 **Estimated Total Time**: ~18 hours  
-**Time Spent**: ~9.5 hours  
-**Time Remaining**: ~8.5 hours
+**Time Spent**: ~10 hours  
+**Time Remaining**: ~8 hours
 
 ---
 
