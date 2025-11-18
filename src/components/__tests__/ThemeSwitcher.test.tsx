@@ -135,23 +135,29 @@ describe('Header', () => {
 		render(<Header />)
 
 		// The toggle button has an accessible name
-		const toggle = screen.getByRole('button', { name: /toggle menu/i })
+		const toggle = screen.getByRole('button', { name: /open menu/i })
 		expect(toggle).toBeTruthy()
 
 		// Initially the mobile nav should not be visible
-		expect(screen.queryByText('Get started')).toBeNull()
+		expect(screen.queryByRole('navigation')).toBeNull()
 
 		// Click to open
 		fireEvent.click(toggle)
 		// Now the mobile menu content should be visible
-		expect(screen.getByText('Get started')).toBeTruthy()
+		const nav = screen.getByRole('navigation')
+		expect(nav).toBeTruthy()
 		// Desktop and mobile both include an "About" link — assert there are multiple matches
 		const aboutMatches = screen.getAllByText('About')
 		expect(aboutMatches.length).toBeGreaterThanOrEqual(2)
 
-		// Clicking the "Get started" button should close the menu since it sets open=false
-		const getStartedBtn = screen.getByText('Get started')
-		fireEvent.click(getStartedBtn)
-		expect(screen.queryByText('Get started')).toBeNull()
+		// Clicking a navigation link should close the menu
+		const homeLinks = screen.getAllByText('Home')
+		const mobileHomeLink = homeLinks.find((link) =>
+			link.classList.contains('w-full'),
+		)
+		if (mobileHomeLink) {
+			fireEvent.click(mobileHomeLink)
+		}
+		expect(screen.queryByRole('navigation')).toBeNull()
 	})
 })

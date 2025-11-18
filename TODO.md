@@ -59,10 +59,10 @@
   - Add better error handling
   - COMPLETED: Created src/utils/storage.ts with type-safe utilities
 
-- [ ] **Add prop validation and JSDoc** (All components)
+- [x] **Add prop validation and JSDoc** (All components)
   - Add JSDoc comments to components
   - Document props and examples
-  - Estimated: 1 hour
+  - COMPLETED: Added comprehensive JSDoc to all components
 
 - [x] **Consolidate duplicate navigation logic** (`src/components/Header.tsx`)
   - Extract NAV_LINKS constant
@@ -74,12 +74,15 @@
 - [ ] **Add integration tests for Country page** (`src/pages/country/__tests__/`)
   - Test data fetching success/error states
   - Test filtering and sorting
+  - Note: Skipped in favor of E2E tests
   - Estimated: 1 hour
 
-- [ ] **Add E2E tests with Playwright** (`e2e/`)
+- [x] **Add E2E tests with Playwright** (`e2e/`)
   - Install Playwright
   - Create country flow test
-  - Estimated: 1.5 hours
+  - COMPLETED: Comprehensive E2E tests for Country page
+  - Note: Run `bun run start:prod` first, then `bun run test:e2e`
+  - Documentation: E2E_TESTING.md
 
 - [ ] **Increase test coverage for edge cases** (Test files)
   - Add localStorage error handling tests
@@ -171,13 +174,13 @@
 ## Progress Tracking
 
 **Total Items**: 30  
-**Completed**: 11  
+**Completed**: 13  
 **In Progress**: 0  
-**Remaining**: 19  
+**Remaining**: 17  
 
 **Estimated Total Time**: ~18 hours  
-**Time Spent**: ~3.5 hours  
-**Time Remaining**: ~14.5 hours
+**Time Spent**: ~6 hours  
+**Time Remaining**: ~12 hours
 
 ---
 

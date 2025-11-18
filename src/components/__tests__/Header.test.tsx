@@ -42,28 +42,29 @@ describe('Header', () => {
 	it('toggles the mobile menu and closes it when actions are taken', () => {
 		render(<Header />)
 
-		// The mobile toggle has an accessible name "Toggle menu"
-		const toggle = screen.getByRole('button', { name: /toggle menu/i })
+		// The mobile toggle has an accessible name "Open menu"
+		const toggle = screen.getByRole('button', { name: /open menu/i })
 		expect(toggle).toBeTruthy()
 
-		// Mobile menu should be closed at first (no mobile 'Get started' button present)
-		expect(screen.queryByText('Get started')).toBeNull()
+		// Mobile menu should be closed at first
+		// Check that mobile nav is not visible
+		expect(screen.queryByRole('navigation')).toBeNull()
 
 		// Open mobile menu
 		fireEvent.click(toggle)
 
 		// Mobile menu content should now be visible
-		expect(screen.getByText('Get started')).toBeTruthy()
+		const nav = screen.getByRole('navigation')
+		expect(nav).toBeTruthy()
 
 		// Because the desktop and mobile nav both include 'About', ensure multiple matches exist
 		const aboutMatches = screen.getAllByText('About')
 		expect(aboutMatches.length).toBeGreaterThanOrEqual(2)
 
-		// Clicking the 'Get started' button (mobile CTA) should close the mobile menu
-		const getStarted = screen.getByText('Get started')
-		fireEvent.click(getStarted)
+		// Click toggle again to close
+		fireEvent.click(toggle)
 
-		// After clicking the CTA, mobile content should be removed
-		expect(screen.queryByText('Get started')).toBeNull()
+		// After clicking toggle, mobile content should be removed
+		expect(screen.queryByRole('navigation')).toBeNull()
 	})
 })

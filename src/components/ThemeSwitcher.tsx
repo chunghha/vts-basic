@@ -19,6 +19,25 @@ const DEFAULT_THEME = THEME_CONFIG.DEFAULT_THEME
  * - Dropdown is keyboard navigable. Arrow keys navigate, Enter selects, Esc closes.
  * - Clicking outside closes the dropdown.
  */
+/**
+ * ThemeSwitcher component that allows users to select and persist theme preferences.
+ *
+ * Features:
+ * - Dropdown menu with available themes
+ * - Persists selection to localStorage
+ * - Updates data-theme attribute on document element
+ * - Keyboard navigation support (Arrow keys, Enter, Escape)
+ * - Click-outside-to-close behavior
+ * - Accessible with proper ARIA attributes
+ *
+ * Themes are loaded from THEME_CONFIG and include:
+ * - Light, Dark, Milkshake, Mindful, Polar, Pursuit
+ *
+ * @example
+ * ```tsx
+ * <ThemeSwitcher />
+ * ```
+ */
 export default function ThemeSwitcher() {
 	const [theme, setTheme] = useState<ThemeId>(() =>
 		getStorageItem(STORAGE_KEY, DEFAULT_THEME),

@@ -4,6 +4,20 @@ import { useState } from 'react'
 import { NAV_CONFIG } from '../constants/config'
 import ThemeSwitcher from './ThemeSwitcher'
 
+/**
+ * Header component that provides site navigation and theme switching.
+ *
+ * Features:
+ * - Responsive navigation with mobile menu
+ * - Theme switcher integration
+ * - Sticky positioning with backdrop blur
+ * - Navigation links from centralized config
+ *
+ * @example
+ * ```tsx
+ * <Header />
+ * ```
+ */
 export default function Header() {
 	const [open, setOpen] = useState(false)
 
@@ -32,11 +46,12 @@ export default function Header() {
 
 						<button
 							type="button"
-							className="md:hidden btn btn-square btn-ghost"
-							aria-label="Toggle menu"
-							onClick={() => setOpen((v) => !v)}
+							className="btn btn-ghost md:hidden"
+							onClick={() => setOpen(!open)}
+							aria-label={open ? 'Close menu' : 'Open menu'}
+							aria-expanded={open}
 						>
-							{open ? <X size={18} /> : <Menu size={18} />}
+							{open ? <X size={24} /> : <Menu size={24} />}
 						</button>
 					</div>
 				</div>
@@ -56,13 +71,9 @@ export default function Header() {
 								</li>
 							))}
 							<li className="pt-2">
-								<button
-									type="button"
-									className="btn btn-block btn-primary"
-									onClick={() => setOpen(false)}
-								>
-									Get started
-								</button>
+								<div className="px-2">
+									<ThemeSwitcher />
+								</div>
 							</li>
 						</ul>
 					</nav>

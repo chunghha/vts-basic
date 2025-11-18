@@ -1,34 +1,48 @@
-import { Component, type ReactNode } from 'react'
+import { Component, type ErrorInfo, type ReactNode } from 'react'
 
-interface Props {
+/**
+ * Props for the ErrorBoundary component
+ */
+interface ErrorBoundaryProps {
+	/** Child components to render and protect with error boundary */
 	children: ReactNode
+	/** Optional fallback UI to show when an error occurs. If not provided, uses default error UI */
 	fallback?: ReactNode
 }
 
-interface State {
+/**
+ * State for the ErrorBoundary component
+ */
+interface ErrorBoundaryState {
+	/** Whether an error has been caught */
 	hasError: boolean
-	error?: Error
+	/** The error that was caught, if any */
+	error: Error | null
+	/** Additional error information from React */
+	errorInfo: ErrorInfo | null
 }
 
 /**
- * ErrorBoundary catches React component errors and displays a fallback UI
- * instead of crashing the entire application.
+ * ErrorBoundary component that catches JavaScript errors anywhere in the child component tree
+ * and displays a fallback UI instead of crashing the entire application.
  *
  * @example
  * ```tsx
  * <ErrorBoundary>
- *   <App />
  * </ErrorBoundary>
  * ```
  */
-export class ErrorBoundary extends Component<Props, State> {
-	constructor(props: Props) {
+export class ErrorBoundary extends Component<
+	ErrorBoundaryProps,
+	ErrorBoundaryState
+> {
+	constructor(props: ErrorBoundaryProps) {
 		super(props)
-		this.state = { hasError: false }
+		this.state = { hasError: false, error: null, errorInfo: null }
 	}
 
-	static getDerivedStateFromError(error: Error): State {
-		return { hasError: true, error }
+	static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+		return { hasError: true, error, errorInfo: null }
 	}
 
 	componentDidCatch(error: Error, errorInfo: unknown) {
@@ -78,7 +92,11 @@ export class ErrorBoundary extends Component<Props, State> {
 										type="button"
 										className="btn btn-ghost"
 										onClick={() =>
-											this.setState({ hasError: false, error: undefined })
+											this.setState({
+												hasError: false,
+												error: null,
+												errorInfo: null,
+											})
 										}
 									>
 										Try Again

@@ -1,0 +1,44 @@
+import { defineConfig, devices } from '@playwright/test'
+
+/**
+ * Playwright configuration for E2E tests
+ * @see https://playwright.dev/docs/test-configuration
+ */
+export default defineConfig({
+	testDir: './e2e',
+	fullyParallel: true,
+	forbidOnly: !!process.env.CI,
+	retries: process.env.CI ? 2 : 0,
+	workers: process.env.CI ? 1 : undefined,
+	reporter: 'html',
+	use: {
+		baseURL: 'http://localhost:3000',
+		trace: 'on-first-retry',
+		screenshot: 'only-on-failure',
+	},
+
+	projects: [
+		{
+			name: 'chromium',
+			use: { ...devices['Desktop Chrome'] },
+		},
+		{
+			name: 'firefox',
+			use: { ...devices['Desktop Firefox'] },
+		},
+		{
+			name: 'webkit',
+			use: { ...devices['Desktop Safari'] },
+		},
+	],
+
+	// E2E tests should be run after starting the production server
+	// Run: bun run start:prod
+	// Then: bun run test:e2e
+	webServer: {
+		command: 'echo "Please start the production server with: bun run start:prod"',
+		url: 'http://localhost:3000',
+		reuseExistingServer: true,
+		timeout: 5000,
+	},
+})
