@@ -175,23 +175,24 @@
   - COMPLETED: Created 3 ADRs documenting major architectural decisions
   - Located in docs/rationale/ with 0001_ prefix naming convention
 
-- [ ] **Update README with new features** (`README.md`)
+- [x] **Update README with new features** (`README.md`)
   - Document new features as they're added
   - Update troubleshooting section
-  - Estimated: 30 minutes
+  - COMPLETED: Comprehensive features section and enhanced troubleshooting
+  - Added accessibility section and PWA documentation
 
 ---
 
 ## Progress Tracking
 
 **Total Items**: 30  
-**Completed**: 22  
+**Completed**: 23  
 **In Progress**: 0  
-**Remaining**: 8  
+**Remaining**: 7  
 
 **Estimated Total Time**: ~18 hours  
-**Time Spent**: ~13.25 hours  
-**Time Remaining**: ~4.75 hours
+**Time Spent**: ~13.75 hours  
+**Time Remaining**: ~4.25 hours
 
 ---
 

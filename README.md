@@ -1,16 +1,41 @@
 # VTS Basic
 
-VTS Basic is a lightweight React starter that combines Tailwind CSS and DaisyUI with TanStack Router and TanStack Query. It provides a minimal, opinionated structure for quickly prototyping UI, exploring DaisyUI themes, and integrating live data (see the Countries page).
+VTS Basic is a production-ready React application that combines modern web technologies with best practices for performance, accessibility, and developer experience. Built with TanStack Start, it provides a solid foundation for building fast, accessible web applications.
 
-Quick highlights:
-- Clean, small route surface: `/`, `/about`, `/country`
-- Theme switcher powered by DaisyUI themes
-- Countries page powered by REST Countries + TanStack Query
-- Tailwind + DaisyUI styling and component examples
-- Rust proxy server for production serving
-- Docker support with multi-stage builds
-- Build validation to catch asset mismatches
-- Modern dev scripts using bun
+## Features
+
+### Core Stack
+- **Framework**: TanStack Start with SSR and type-safe routing
+- **Styling**: Tailwind CSS + DaisyUI with theme switching
+- **State Management**: TanStack Query for server state
+- **Language**: TypeScript for type safety
+- **Runtime**: Bun for fast development and builds
+
+### User Experience
+- **PWA Support**: Service Worker with offline capabilities and intelligent caching
+- **Accessibility**: WCAG 2.1 AA compliant with keyboard navigation and screen reader support
+- **Toast Notifications**: User feedback with theme-aware notifications
+- **Loading States**: Shimmer-animated skeletons for better perceived performance
+- **Theme Switching**: Multiple DaisyUI themes with persistent selection
+
+### Performance
+- **Virtual Scrolling**: Efficient rendering of large country lists
+- **Optimized Images**: Lazy loading and caching for flag images
+- **API Client**: Centralized HTTP client with retry logic and error handling
+- **Service Worker**: Advanced caching strategies (NetworkFirst, StaleWhileRevalidate, CacheFirst)
+
+### Developer Experience
+- **Architecture Decision Records**: Documented technical decisions in `docs/rationale/`
+- **Comprehensive Testing**: Unit tests with Vitest (86%+ coverage)
+- **E2E Testing**: Playwright for browser automation
+- **Build Validation**: Automatic asset validation to catch deployment issues
+- **Docker Support**: Multi-stage builds with Rust proxy server
+
+### Production Ready
+- **Rust Proxy**: High-performance proxy server for static assets and API requests
+- **Docker Deployment**: Containerized with multi-stage builds
+- **Metrics**: Prometheus-compatible metrics endpoint
+- **Error Handling**: Centralized error handling with retry logic
 
 ## Documentation
 
@@ -192,6 +217,48 @@ Routes are typically file-based (see `src/routes` if used) and the root layout i
 
 ---
 
+## Accessibility
+
+VTS Basic is built with accessibility as a core principle, meeting WCAG 2.1 AA standards.
+
+### Keyboard Navigation
+- **Skip Link**: Press `Tab` on any page to reveal a "Skip to main content" link
+- **Focus Indicators**: Clear visual indicators for all interactive elements
+- **Tab Order**: Logical tab order throughout the application
+- **Keyboard Shortcuts**: All functionality accessible via keyboard
+
+### Screen Reader Support
+- **Semantic HTML**: Proper use of HTML5 semantic elements (`<main>`, `<nav>`, `<header>`)
+- **ARIA Labels**: Descriptive labels for navigation regions
+- **Landmark Regions**: Screen readers can navigate by landmarks
+- **Alt Text**: All images have descriptive alt text
+
+### Visual Accessibility
+- **High Contrast**: Support for `prefers-contrast: high` media query
+- **Focus Visible**: Enhanced focus indicators for keyboard users
+- **Color Contrast**: All text meets WCAG AA contrast requirements
+- **Theme Support**: Multiple themes with accessible color combinations
+
+### Motion Preferences
+- **Reduced Motion**: Respects `prefers-reduced-motion` setting
+- **Animations**: Can be disabled for users with vestibular disorders
+- **Transitions**: Minimal or instant transitions when motion is reduced
+
+### Testing Accessibility
+```bash
+# Test with keyboard navigation
+# - Press Tab to navigate
+# - Press Enter/Space to activate
+# - Press Escape to close modals
+
+# Test with screen reader (macOS)
+# - Enable VoiceOver: Cmd + F5
+# - Navigate by landmarks: Ctrl + Option + U
+# - Navigate by headings: Ctrl + Option + Cmd + H
+```
+
+---
+
 ## Contributing
 
 - Keep changes small and documented.
@@ -207,9 +274,12 @@ bun run format
 
 ## Troubleshooting
 
-- If styles don't show up, confirm Tailwind is compiling and the dev server is running.
-- If a page is blank, check the browser console for runtime errors (missing env vars, failed fetches).
-- Network or CORS errors when fetching countries are usually transient — verify connectivity and the external API.
+### General Issues
+- **Styles don't show up**: Confirm Tailwind is compiling and the dev server is running
+- **Blank page**: Check browser console for runtime errors (missing env vars, failed fetches)
+- **Network/CORS errors**: Usually transient — verify connectivity and external API availability
+
+### Build & Deployment
 - **Asset validation failures**: If `bun run validate` fails with missing asset errors:
   1. Clean build artifacts: `rm -rf dist .tanstack node_modules/.cache`
   2. Rebuild: `bun run build`
@@ -217,13 +287,43 @@ bun run format
   
   If the issue persists, try reinstalling dependencies: `rm -rf node_modules && bun install && bun run build`
   
-- **CSS 404 errors in Docker**: If you see "styles-XXX.css net::ERR_ABORTED 404" errors when running in Docker:
+- **CSS 404 errors in Docker**: If you see "styles-XXX.css net::ERR_ABORTED 404" errors:
   1. Stop and remove the container: `docker stop vts-basic-app && docker rm vts-basic-app`
   2. Clean local build artifacts: `rm -rf dist .tanstack node_modules/.cache`
   3. Rebuild fresh: `docker build --pull --no-cache -t vts-basic:latest .`
   4. Run again: `./run_on_local_docker.sh`
   
-  The `build:prod` script includes validation to catch these issues before deployment. Ensure your `.dockerignore` file excludes `dist/`, `.tanstack/`, and `node_modules/`.
+  The `build:prod` script includes validation to catch these issues before deployment.
+
+### PWA & Service Worker
+- **Old content showing**: Service Worker may be caching old assets
+  1. Open DevTools → Application → Service Workers
+  2. Click "Unregister" for the service worker
+  3. Hard refresh: `Cmd+Shift+R` (Mac) or `Ctrl+Shift+R` (Windows/Linux)
+  
+- **Offline mode not working**: 
+  1. Check that Service Worker is registered (DevTools → Application → Service Workers)
+  2. Verify you're using HTTPS or localhost (Service Workers require secure context)
+  3. Check browser console for Service Worker errors
+
+### Toast Notifications
+- **Toasts not appearing**: 
+  1. Check that `<Toaster />` is rendered in `__root.tsx`
+  2. Verify `react-hot-toast` is installed: `bun install react-hot-toast`
+  3. Check browser console for errors
+
+- **Toasts appear in wrong position**: 
+  - Position is set to `bottom-left` in `__root.tsx`
+  - Modify the `position` prop on `<Toaster />` to change location
+
+### Accessibility
+- **Skip link not appearing**: 
+  - Press `Tab` key to focus the skip link
+  - It's visually hidden until focused (this is intentional)
+
+- **Focus indicators not visible**: 
+  - Check that `focus-visible` styles are loaded from `styles.css`
+  - Verify you're using keyboard navigation (Tab key), not mouse clicks
 
 ---
 
