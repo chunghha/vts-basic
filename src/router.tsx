@@ -24,19 +24,27 @@ export const getRouter = () => {
 
 	setupRouterSsrQueryIntegration({ router, queryClient: rqContext.queryClient })
 
-	router.subscribe('onResolved', (event) => {
-		fetch('/api/events', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({ route: event.toLocation.pathname }),
-		}).catch((error) => {
-			// Silently fail or log in development to avoid breaking the app
-			if (import.meta.env.DEV) {
-				console.warn('Failed to track route event:', error)
-			}
-		})
+	// Track route visits only on actual navigation (not on data refetches)
+	router.subscribe('onBeforeNavigate', (event) => {
+		// Only track if the pathname is actually changing
+		// fromLocation can be undefined on initial navigation
+		if (
+			!event.fromLocation ||
+			event.fromLocation.pathname !== event.toLocation.pathname
+		) {
+			fetch('/api/events', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ route: event.toLocation.pathname }),
+			}).catch((error) => {
+				// Silently fail or log in development to avoid breaking the app
+				if (import.meta.env.DEV) {
+					console.warn('Failed to track route event:', error)
+				}
+			})
+		}
 	})
 
 	return router

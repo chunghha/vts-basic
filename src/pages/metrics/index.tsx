@@ -199,20 +199,7 @@ export default function MetricsPage() {
 											dataKey="route"
 											type="category"
 											width={120}
-											yAxisId="left"
 											interval={0}
-										/>
-										<YAxis
-											yAxisId="right"
-											orientation="right"
-											tick={false}
-											tickLine={false}
-											axisLine={false}
-											label={{
-												value: '\u00A0',
-												angle: 90,
-												position: 'insideRight',
-											}}
 										/>
 										<Tooltip />
 										<Legend />
