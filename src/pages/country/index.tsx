@@ -204,7 +204,7 @@ export default function CountryPage() {
 							id={regionId}
 							value={regionFilter}
 							onChange={(e) => setRegionFilter(e.target.value)}
-							className="select select-bordered w-full bg-transparent"
+							className="select select-bordered w-full"
 							aria-label="Filter by region"
 						>
 							{regions.map((r) => (
@@ -226,7 +226,7 @@ export default function CountryPage() {
 								onChange={(e) =>
 									setSortKey(e.target.value as 'name' | 'population')
 								}
-								className="select select-bordered w-full bg-transparent"
+								className="select select-bordered w-full"
 								aria-label="Sort key"
 							>
 								<option value="name">Name</option>
