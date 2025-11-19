@@ -40,6 +40,7 @@ export const THEME_CONFIG = {
 		{ id: 'mindful', label: 'Mindful' },
 		{ id: 'polar', label: 'Polar' },
 		{ id: 'pursuit', label: 'Pursuit' },
+		{ id: 'smartflame', label: 'Smartflame' },
 	] as const,
 } as const
 

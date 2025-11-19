@@ -219,26 +219,32 @@ export default function Home() {
 					</header>
 
 					<div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
-						{['light', 'milkshake', 'dark', 'mindful', 'polar', 'pursuit'].map(
-							(t) => (
-								<fieldset
-									key={t}
-									className="rounded-lg p-4 bg-base-100 border border-base-300/10 shadow-md"
-									aria-label={`Theme preview ${t}`}
-								>
-									<legend className="sr-only">Theme preview {t}</legend>
-									<div className="font-semibold capitalize">{t}</div>
-									<div className="mt-2 text-sm text-base-content/60">
-										Color preview for {t}.
-									</div>
-									<div className="mt-4 flex gap-2">
-										<div className="h-6 w-6 rounded bg-primary" />
-										<div className="h-6 w-6 rounded bg-secondary" />
-										<div className="h-6 w-6 rounded bg-accent" />
-									</div>
-								</fieldset>
-							),
-						)}
+						{[
+							'light',
+							'milkshake',
+							'dark',
+							'mindful',
+							'polar',
+							'pursuit',
+							'smartflame',
+						].map((t) => (
+							<fieldset
+								key={t}
+								className="rounded-lg p-4 bg-base-100 border border-base-300/10 shadow-md"
+								aria-label={`Theme preview ${t}`}
+							>
+								<legend className="sr-only">Theme preview {t}</legend>
+								<div className="font-semibold capitalize">{t}</div>
+								<div className="mt-2 text-sm text-base-content/60">
+									Color preview for {t}.
+								</div>
+								<div className="mt-4 flex gap-2">
+									<div className="h-6 w-6 rounded bg-primary" />
+									<div className="h-6 w-6 rounded bg-secondary" />
+									<div className="h-6 w-6 rounded bg-accent" />
+								</div>
+							</fieldset>
+						))}
 					</div>
 				</div>
 			</section>

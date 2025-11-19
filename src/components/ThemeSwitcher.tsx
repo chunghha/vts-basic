@@ -32,7 +32,7 @@ const DEFAULT_THEME = THEME_CONFIG.DEFAULT_THEME
  * - Accessible with proper ARIA attributes
  *
  * Themes are loaded from THEME_CONFIG and include:
- * - Light, Dark, Milkshake, Mindful, Polar, Pursuit
+ * - Light, Dark, Milkshake, Mindful, Polar, Pursuit, Smartflame
  *
  * @example
  * ```tsx
