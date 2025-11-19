@@ -18,6 +18,8 @@ pub struct Config {
     pub rate_limit_per_second: u64,
     #[serde(default = "default_rate_limit_burst_size")]
     pub rate_limit_burst_size: u32,
+    #[serde(default = "default_themes_css_path")]
+    pub themes_css_path: String,
 }
 
 fn default_proxy_port() -> u16 {
@@ -44,6 +46,10 @@ fn default_rate_limit_burst_size() -> u32 {
     10
 }
 
+fn default_themes_css_path() -> String {
+    "src/styles.css".to_string()
+}
+
 impl Config {
     /// Load configuration from RON file with validation
     pub fn load(path: &Path) -> Result<Self> {
@@ -59,6 +65,7 @@ impl Config {
             upstream_port = config.upstream_port,
             asset_dir = %config.asset_dir,
             country_api_url = %config.country_api_url,
+            themes_css_path = %config.themes_css_path,
             rate_limit_per_second = config.rate_limit_per_second,
             rate_limit_burst_size = config.rate_limit_burst_size,
             "Configuration loaded and validated"

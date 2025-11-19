@@ -33,7 +33,7 @@ use tracing_subscriber::{EnvFilter, Registry, layer::SubscriberExt, util::Subscr
 use crate::{
     config::Config,
     handlers::{
-        api_countries::api_countries, api_events::api_events, health_check::health_check,
+        api_countries::api_countries, api_events::api_events, api_themes::api_themes, health_check::health_check,
         metrics::metrics_handler, proxy_fallback::proxy_fallback, serve_asset::serve_asset,
     },
     state::AppState,
@@ -156,6 +156,7 @@ async fn main() -> anyhow::Result<()> {
         .route("/api/events", post(api_events))
         // API endpoint for country data (served by Rust proxy)
         .route("/api/country", get(api_countries))
+        .route("/api/themes", get(api_themes))
         .route("/assets/{*path}", get(serve_asset))
         .route_service(
             "/favicon.ico",

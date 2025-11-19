@@ -1,10 +1,13 @@
+import { useLoaderData } from '@tanstack/react-router'
 import { useId } from 'react'
 import { APP_VERSION } from '../routes/__root'
 
 export default function Home() {
+	const { themes } = useLoaderData({ from: '/' })
 	const emailId = useId()
 	const componentsId = useId()
 	const themesId = useId()
+
 	return (
 		<main className="min-h-screen bg-base-100 text-base-content">
 			{/* Hero */}
@@ -219,29 +222,44 @@ export default function Home() {
 					</header>
 
 					<div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
-						{[
-							'light',
-							'milkshake',
-							'dark',
-							'mindful',
-							'polar',
-							'pursuit',
-							'smartflame',
-						].map((t) => (
+						{themes?.map((t) => (
 							<fieldset
-								key={t}
-								className="rounded-lg p-4 bg-base-100 border border-base-300/10 shadow-md"
-								aria-label={`Theme preview ${t}`}
+								key={t.name}
+								className="rounded-lg p-4 border border-base-300/10 shadow-md"
+								style={{ backgroundColor: t.base100 }}
+								aria-label={`Theme preview ${t.name}`}
 							>
-								<legend className="sr-only">Theme preview {t}</legend>
-								<div className="font-semibold capitalize">{t}</div>
-								<div className="mt-2 text-sm text-base-content/60">
-									Color preview for {t}.
+								<legend className="sr-only">Theme preview {t.name}</legend>
+
+								<div
+									className="font-semibold capitalize"
+									style={{ color: t.baseContent }}
+								>
+									{t.name}
 								</div>
+
+								<div
+									className="mt-2 text-sm text-base-content/60"
+									style={{ color: t.baseContent }}
+								>
+									Color preview for {t.name}.
+								</div>
+
 								<div className="mt-4 flex gap-2">
-									<div className="h-6 w-6 rounded bg-primary" />
-									<div className="h-6 w-6 rounded bg-secondary" />
-									<div className="h-6 w-6 rounded bg-accent" />
+									<div
+										className="h-6 w-6 rounded"
+										style={{ backgroundColor: t.primary }}
+									/>
+
+									<div
+										className="h-6 w-6 rounded"
+										style={{ backgroundColor: t.secondary }}
+									/>
+
+									<div
+										className="h-6 w-6 rounded"
+										style={{ backgroundColor: t.accent }}
+									/>
 								</div>
 							</fieldset>
 						))}

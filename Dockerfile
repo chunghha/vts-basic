@@ -82,6 +82,10 @@ COPY --from=bun-builder /app/dist ./dist
 # Copy proxy release binary (glibc build)
 COPY --from=rust-builder /app/proxy/target/release/proxy ./proxy/target/release/proxy
 
+# Ensure the Rust proxy can read the source CSS used for theme parsing.
+# We copy the original src/styles.css into the runtime image at ./src/styles.css.
+COPY src/styles.css ./src/styles.css
+
 # Create non-root user for security
 RUN useradd -r -u 1001 -d /app -s /usr/sbin/nologin appuser && \
   chown -R appuser:appuser /app

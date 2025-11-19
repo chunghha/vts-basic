@@ -1393,7 +1393,7 @@ dependencies = [
 
 [[package]]
 name = "proxy"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "axum",
@@ -1401,6 +1401,7 @@ dependencies = [
  "metrics",
  "metrics-exporter-prometheus",
  "mime_guess",
+ "regex",
  "reqwest",
  "ron",
  "serde",

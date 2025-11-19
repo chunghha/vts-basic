@@ -1,7 +1,19 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 export function getContext() {
-	const queryClient = new QueryClient()
+	const queryClient = new QueryClient({
+		defaultOptions: {
+			queries: {
+				staleTime: Infinity,
+				// Reduce noisy refetch behavior during navigation / focus
+				refetchOnWindowFocus: false,
+				refetchOnMount: false,
+				refetchOnReconnect: false,
+				// Single retry for transient failures
+				retry: 1,
+			},
+		},
+	})
 
 	// Small typed shim to avoid using `any` repeatedly while preserving
 	// compatibility with code that expects `defaultQueryOptions` on the instance.

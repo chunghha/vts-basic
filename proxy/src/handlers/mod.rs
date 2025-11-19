@@ -1,5 +1,6 @@
 pub mod api_countries;
 pub mod api_events;
+pub mod api_themes;
 pub mod health_check;
 pub mod metrics;
 pub mod proxy_fallback;
