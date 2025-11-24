@@ -1,8 +1,8 @@
 import { useEffect, useId } from 'react'
+import { Footer } from '../../components/Footer'
 import { APP_VERSION } from '../../constants/appVersion'
 
 export default function About() {
-	const year = new Date().getFullYear()
 	const contactId = useId()
 
 	// Scroll Animation Logic (matching Home page)
@@ -220,36 +220,7 @@ export default function About() {
 				</div>
 			</div>
 
-			{/* Footer */}
-			<footer
-				id={contactId}
-				className="border-t border-base-300/20 py-8 px-6 mt-12 bg-base-200/30"
-			>
-				<div className="max-w-6xl mx-auto">
-					<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-sm text-base-content/70">
-						<div>
-							Built with{' '}
-							<span className="text-primary font-semibold">Tailwind CSS</span> +{' '}
-							<span className="text-secondary font-semibold">DaisyUI</span>. ©{' '}
-							{year} VTS Basic.
-						</div>
-						<div className="flex gap-4">
-							<a
-								className="text-base-content/60 hover:text-primary underline transition-colors"
-								href="/"
-							>
-								Return home
-							</a>
-							<a
-								className="text-base-content/60 hover:text-secondary underline transition-colors"
-								href="/country"
-							>
-								View countries
-							</a>
-						</div>
-					</div>
-				</div>
-			</footer>
+			<Footer page="about" />
 		</main>
 	)
 }
