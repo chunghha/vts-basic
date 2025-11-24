@@ -7,17 +7,17 @@ import {
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { Toaster } from 'react-hot-toast'
-import packageJson from '../../package.json'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 import Header from '../components/Header'
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 import appCss from '../styles.css?url'
+// Client-side emoji replacer to provide consistent emoji images across platforms
+// (replaces inline <span class="emoji">...</span> with Twemoji SVG images)
+import '../client/emoji'
 
 interface MyRouterContext {
 	queryClient: QueryClient
 }
-
-export const APP_VERSION = packageJson.version
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
 	head: () => ({
@@ -130,7 +130,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 										console.log('[SW Cleanup] No service workers found');
 									}
 								});
-								
+
 								// Clear all caches
 								if ('caches' in window) {
 									caches.keys().then(function(cacheNames) {

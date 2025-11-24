@@ -1,21 +1,5 @@
 @import "tailwindcss";
 
-/* Fontsource Font Imports */
-@import "@fontsource/ibm-plex-sans/400.css";
-@import "@fontsource/ibm-plex-sans/500.css";
-@import "@fontsource/ibm-plex-sans/600.css";
-@import "@fontsource/ibm-plex-sans/700.css";
-
-@import "@fontsource/ibm-plex-serif/400.css";
-@import "@fontsource/ibm-plex-serif/500.css";
-@import "@fontsource/ibm-plex-serif/600.css";
-@import "@fontsource/ibm-plex-serif/700.css";
-
-@import "@fontsource/ibm-plex-mono/400.css";
-@import "@fontsource/ibm-plex-mono/500.css";
-@import "@fontsource/ibm-plex-mono/600.css";
-@import "@fontsource/ibm-plex-mono/700.css";
-
 @plugin "daisyui" {
   logs: false;
   themes:
@@ -234,6 +218,12 @@ body {
   @apply m-0;
   background-color: var(--color-base-100);
   color: var(--color-base-content, #111827);
+  font-family:
+    "IBM Plex Sans",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
 }
 
 /* Code styling */
@@ -250,7 +240,9 @@ h3,
 h4,
 h5,
 h6 {
-  @apply font-serif;
+  font-family: "IBM Plex Serif", Georgia, serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 /* Shimmer animation for skeleton loading */
@@ -266,6 +258,17 @@ h6 {
 @layer utilities {
   .animate-shimmer {
     animation: shimmer 2s infinite;
+  }
+
+  /* Custom gradient text utility */
+  .bg-linear-to-r {
+    background: linear-gradient(
+      to right,
+      var(--color-primary),
+      var(--color-secondary)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
   }
 }
 
@@ -334,4 +337,618 @@ textarea:focus-visible {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ========================================
+   ATMOSPHERIC ENHANCEMENTS - Iteration 2
+   ======================================== */
+
+/* Gradient Hero Background */
+.hero {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    var(--color-base-100) 0%,
+    var(--color-base-200) 50%,
+    var(--color-base-100) 100%
+  );
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(
+      circle at 20% 50%,
+      var(--color-primary) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      var(--color-secondary) 0%,
+      transparent 50%
+    );
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+/* Decorative blob shapes in hero */
+.hero::after {
+  content: "";
+  position: absolute;
+  top: -10%;
+  right: -5%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, var(--color-accent) 0%, transparent 70%);
+  opacity: 0.08;
+  border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  animation: blob-float 20s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes blob-float {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  }
+  33% {
+    transform: translate(30px, -30px) scale(1.05);
+    border-radius: 50% 50% 60% 40% / 60% 40% 50% 50%;
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.95);
+    border-radius: 60% 40% 50% 50% / 50% 60% 40% 60%;
+  }
+}
+
+/* Enhanced Cards with Depth and Colored Accents */
+.card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--color-base-300);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Add subtle top border accent to cards */
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--color-primary),
+    var(--color-secondary),
+    var(--color-accent)
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.15),
+    0 10px 10px -5px rgba(0, 0, 0, 0.08);
+  border-color: var(--color-primary);
+}
+
+/* Component showcase cards - Individual styling */
+/* Replaced pseudo-element emoji with inline spans so Twemoji (or a client replacer)
+   can swap them for consistent images across platforms. Add the emoji in markup:
+     <h3 class="card-title"><span class="emoji">🎯</span>Buttons</h3>
+   instead of relying on ::before. */
+#components .card:nth-child(1) .card-title .emoji {
+  display: inline-block;
+  margin-right: 0.5rem;
+  line-height: 1;
+  vertical-align: -0.125em;
+}
+
+/* Styles for the generated emoji <img> elements (e.g. Twemoji replacements) */
+.emoji-img {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  vertical-align: -0.125em;
+  margin-right: 0.125rem;
+}
+
+#components .card:nth-child(2) .card-title .emoji {
+  display: inline-block;
+  margin-right: 0.5rem;
+  line-height: 1;
+  vertical-align: -0.125em;
+}
+
+#components .card:nth-child(3) .card-title .emoji {
+  display: inline-block;
+  margin-right: 0.5rem;
+  line-height: 1;
+  vertical-align: -0.125em;
+}
+
+/* Button Enhancements */
+.btn {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.6s,
+    height 0.6s;
+}
+
+.btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.btn-primary {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-secondary) 100%
+  );
+  border: none;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.btn-primary:hover {
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.2),
+    0 10px 10px -5px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(
+    135deg,
+    var(--color-secondary) 0%,
+    var(--color-primary) 100%
+  );
+}
+
+.btn-outline {
+  border: 2px solid var(--color-primary);
+  background: transparent;
+}
+
+.btn-outline:hover {
+  background: var(--color-primary);
+  color: var(--color-primary-content);
+  border-color: var(--color-primary);
+}
+
+/* Geometric Pattern Background for Sections */
+.bg-base-200\/50 {
+  position: relative;
+  background: var(--color-base-200);
+}
+
+.bg-base-200\/50::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    linear-gradient(var(--color-base-300) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-base-300) 1px, transparent 1px);
+  background-size: 50px 50px;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+/* Section Header Enhancements */
+h2 {
+  position: relative;
+  display: inline-block;
+}
+
+h2::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  border-radius: 2px;
+}
+
+/* Smooth Page Transitions */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+main {
+  animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Stagger animation for cards */
+.card:nth-child(1) {
+  animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
+}
+
+.card:nth-child(2) {
+  animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+}
+
+.card:nth-child(3) {
+  animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
+}
+
+/* Enhanced Input Fields */
+.input,
+.textarea,
+.select {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid var(--color-base-300);
+  background: var(--color-base-100);
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  border-color: var(--color-primary);
+  box-shadow:
+    0 0 0 4px rgba(var(--color-primary), 0.1),
+    0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Badge Enhancements */
+.badge {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--color-base-300);
+}
+
+.badge:hover {
+  transform: scale(1.05);
+}
+
+/* Divider Styling */
+.divider {
+  opacity: 0.2;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-base-300),
+    transparent
+  );
+  height: 2px;
+}
+
+/* Link Hover Effects */
+.link-hover {
+  position: relative;
+  transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+}
+
+.link-hover::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.link-hover:hover::after {
+  width: 100%;
+}
+
+.link-hover:hover {
+  color: var(--color-primary);
+}
+
+/* Header Enhancement - Only target top-level sticky header */
+.sticky.top-0 {
+  backdrop-filter: blur(12px) saturate(180%);
+  background-color: rgba(var(--color-base-100), 0.8);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.sticky.top-0::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-primary),
+    var(--color-accent),
+    transparent
+  );
+  opacity: 0.3;
+}
+
+/* Theme preview cards enhancement */
+fieldset {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+fieldset:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow:
+    0 10px 20px -5px rgba(0, 0, 0, 0.2),
+    0 5px 10px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Emoji enhancement for feature lists */
+li span {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+li:hover span {
+  transform: scale(1.2) rotate(5deg);
+}
+
+/* ========================================
+   ITERATION 3 ENHANCEMENTS
+   ======================================== */
+
+/* Pill Badge Styling */
+.inline-flex.rounded-full {
+  box-shadow:
+    0 1px 3px 0 rgba(0, 0, 0, 0.1),
+    0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--color-primary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.inline-flex.rounded-full:hover {
+  transform: scale(1.05);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.15),
+    0 2px 4px -1px rgba(0, 0, 0, 0.08);
+}
+
+/* Enhanced Component Cards with Subtle Gradients */
+#components .card {
+  background: linear-gradient(
+    135deg,
+    var(--color-base-100) 0%,
+    var(--color-base-200) 100%
+  );
+  border-width: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Add subtle shine effect */
+#components .card::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  bottom: -50%;
+  left: -50%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.05),
+    transparent
+  );
+  transform: rotate(45deg);
+  transition: all 0.5s ease;
+  opacity: 0;
+}
+
+#components .card:hover::after {
+  opacity: 1;
+}
+
+#components .card:nth-child(1) {
+  border-color: var(--color-primary);
+}
+
+#components .card:nth-child(2) {
+  border-color: var(--color-secondary);
+}
+
+#components .card:nth-child(3) {
+  border-color: var(--color-accent);
+}
+
+#components .card:nth-child(1):hover {
+  box-shadow:
+    0 20px 25px -5px rgba(var(--color-primary), 0.2),
+    0 10px 10px -5px rgba(var(--color-primary), 0.1),
+    0 0 0 1px var(--color-primary),
+    0 0 20px rgba(var(--color-primary), 0.3);
+}
+
+#components .card:nth-child(2):hover {
+  box-shadow:
+    0 20px 25px -5px rgba(var(--color-secondary), 0.2),
+    0 10px 10px -5px rgba(var(--color-secondary), 0.1),
+    0 0 0 1px var(--color-secondary),
+    0 0 20px rgba(var(--color-secondary), 0.3);
+}
+
+#components .card:nth-child(3):hover {
+  box-shadow:
+    0 20px 25px -5px rgba(var(--color-accent), 0.2),
+    0 10px 10px -5px rgba(var(--color-accent), 0.1),
+    0 0 0 1px var(--color-accent),
+    0 0 20px rgba(var(--color-accent), 0.3);
+}
+
+/* Highlighted Text Styling */
+span.font-semibold.text-primary,
+span.font-semibold.text-secondary {
+  position: relative;
+  padding: 0 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+span.font-semibold.text-primary::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30%;
+  background: var(--color-primary);
+  opacity: 0.1;
+  border-radius: 2px;
+}
+
+/* ========================================
+   ITERATION 6 ENHANCEMENTS
+   ======================================== */
+
+/* Scroll Animations */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+}
+
+.animate-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered delays for children */
+.delay-100 {
+  transition-delay: 100ms;
+}
+.delay-200 {
+  transition-delay: 200ms;
+}
+.delay-300 {
+  transition-delay: 300ms;
+}
+
+/* Button Active State & Ripple */
+.btn:active {
+  transform: scale(0.95);
+}
+
+/* Skeleton Loading */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-base-200) 25%,
+    var(--color-base-300) 50%,
+    var(--color-base-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: var(--radius-box, 0.25rem);
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Theme Card Hover Enhancement */
+fieldset {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+fieldset:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow:
+    0 10px 20px -5px rgba(0, 0, 0, 0.2),
+    0 5px 10px -5px rgba(0, 0, 0, 0.1),
+    0 0 0 1px var(--color-primary); /* Border glow */
+}
+
+/* Footer Polish */
+footer {
+  position: relative;
+}
+
+footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-base-300),
+    transparent
+  );
+}
+
+/* Status card enhancement */
+.card .badge {
+  backdrop-filter: blur(8px);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Button size variations */
+.btn-md {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* Improved transitions for all interactive elements */
+a,
+button {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }

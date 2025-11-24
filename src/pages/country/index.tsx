@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { useId, useMemo } from 'react'
+import { useEffect, useId, useMemo } from 'react'
 import { getAllCountries } from '../../api/countries'
 import { Skeleton } from '../../components/Skeleton'
 import { VirtualizedCountryList } from '../../components/VirtualizedCountryList'
@@ -54,7 +54,10 @@ function LoadingGrid() {
 	return (
 		<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 			{PLACEHOLDERS.map((id) => (
-				<div key={id} className="card bg-base-100 shadow-md">
+				<div
+					key={id}
+					className="card bg-base-100 shadow-md border border-base-300/20"
+				>
 					<div className="card-body">
 						{/* Flag skeleton */}
 						<div className="flex items-center gap-3 mb-4">
@@ -87,9 +90,11 @@ function LoadingGrid() {
 
 function EmptyState() {
 	return (
-		<div className="card bg-base-100 shadow-md">
-			<div className="card-body">
-				<h2 className="card-title">No countries found</h2>
+		<div className="card bg-base-100 shadow-md border border-base-300/20">
+			<div className="card-body text-center">
+				<h2 className="card-title justify-center text-2xl">
+					No countries found
+				</h2>
 				<p className="text-base-content/60">
 					Try clearing filters or searching for a different name or code.
 				</p>
@@ -157,33 +162,61 @@ export default function CountryPage() {
 
 	const nf = useMemo(() => new Intl.NumberFormat(), [])
 
+	// Scroll Animation Logic (matching Home/About)
+	useEffect(() => {
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (entry.isIntersecting) {
+						entry.target.classList.add('is-visible')
+					}
+				}
+			},
+			{ threshold: 0.1 },
+		)
+
+		const elements = document.querySelectorAll('.animate-on-scroll')
+		for (const el of elements) observer.observe(el)
+
+		return () => observer.disconnect()
+	}, [])
+
 	return (
 		<main
 			id="main-content"
-			className="min-h-screen bg-base-100 text-base-content py-12 px-4"
+			className="min-h-screen bg-base-100 text-base-content"
 		>
-			<div className="max-w-7xl mx-auto">
-				<header className="flex items-center justify-between mb-6">
-					<div>
-						<h1 className="text-3xl md:text-4xl font-extrabold">Countries</h1>
-						<p className="text-sm text-base-content/60 mt-1">
-							Browse countries, filter by region, and sort by name or
-							population.
-						</p>
-					</div>
+			{/* Hero Section */}
+			<section className="py-12 px-6 bg-linear-to-b from-base-200/50 to-base-100">
+				<div className="max-w-7xl mx-auto">
+					<div className="flex items-center justify-between mb-6 animate-on-scroll">
+						<div>
+							<h1 className="text-4xl md:text-5xl font-extrabold mb-3">
+								<span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
+									Countries
+								</span>
+							</h1>
+							<p className="text-lg text-base-content/70">
+								Browse countries, filter by region, and sort by name or
+								population.
+							</p>
+						</div>
 
-					<div className="flex items-center gap-3">
-						<a href="/" className="btn btn-ghost" aria-label="Back to home">
-							← Home
-						</a>
+						<div className="flex items-center gap-3">
+							<a href="/" className="btn btn-ghost" aria-label="Back to home">
+								← Home
+							</a>
+						</div>
 					</div>
-				</header>
+				</div>
+			</section>
 
+			<div className="max-w-7xl mx-auto px-6 py-8">
 				{/* Controls */}
-				<section className="mb-6 grid gap-4 md:grid-cols-5 items-end">
+				<section className="mb-6 grid gap-4 md:grid-cols-5 items-end animate-on-scroll">
 					<div className="md:col-span-3">
 						<label htmlFor={searchId} className="label">
-							<span className="label-text">Search</span>
+							<span className="label-text font-semibold">Search</span>
 						</label>
 						<input
 							id={searchId}
@@ -191,20 +224,20 @@ export default function CountryPage() {
 							value={query}
 							onChange={(e) => setQuery(e.target.value)}
 							placeholder="Search by name or code (e.g. 'Canada' or 'CA')"
-							className="input input-bordered w-full bg-transparent"
+							className="input input-bordered w-full bg-transparent focus:border-primary"
 							aria-label="Search countries"
 						/>
 					</div>
 
 					<div>
 						<label htmlFor={regionId} className="label">
-							<span className="label-text">Region</span>
+							<span className="label-text font-semibold">Region</span>
 						</label>
 						<select
 							id={regionId}
 							value={regionFilter}
 							onChange={(e) => setRegionFilter(e.target.value)}
-							className="select select-bordered w-full"
+							className="select select-bordered w-full focus:border-secondary"
 							aria-label="Filter by region"
 						>
 							{regions.map((r) => (
@@ -217,7 +250,7 @@ export default function CountryPage() {
 
 					<div>
 						<label htmlFor={sortId} className="label">
-							<span className="label-text">Sort</span>
+							<span className="label-text font-semibold">Sort</span>
 						</label>
 						<div className="flex gap-2">
 							<select
@@ -226,7 +259,7 @@ export default function CountryPage() {
 								onChange={(e) =>
 									setSortKey(e.target.value as 'name' | 'population')
 								}
-								className="select select-bordered w-full"
+								className="select select-bordered w-full focus:border-accent"
 								aria-label="Sort key"
 							>
 								<option value="name">Name</option>
@@ -236,7 +269,7 @@ export default function CountryPage() {
 							<button
 								type="button"
 								onClick={() => setDescending((v) => !v)}
-								className="btn btn-outline"
+								className="btn btn-outline hover:btn-primary"
 								aria-pressed={descending}
 								aria-label="Toggle descending"
 							>
@@ -247,11 +280,18 @@ export default function CountryPage() {
 				</section>
 
 				{/* Status and actions */}
-				<div className="mb-4 flex items-center justify-between">
-					<div className="text-sm text-base-content/60">
-						{isLoading
-							? 'Loading countries...'
-							: `Showing ${filtered.length} of ${countries.length}`}
+				<div className="mb-6 flex items-center justify-between animate-on-scroll">
+					<div className="flex items-center gap-3">
+						<div className="text-sm text-base-content/60">
+							{isLoading
+								? 'Loading countries...'
+								: `Showing ${filtered.length} of ${countries.length}`}
+						</div>
+						{!isLoading && filtered.length > 0 && (
+							<span className="badge badge-sm bg-primary/10 text-primary border-0">
+								{filtered.length}
+							</span>
+						)}
 					</div>
 
 					<div className="space-x-2">
@@ -281,7 +321,7 @@ export default function CountryPage() {
 				)}
 
 				{/* Content grid */}
-				<section>
+				<section className="animate-on-scroll">
 					{isLoading ? (
 						<LoadingGrid />
 					) : filtered.length === 0 ? (

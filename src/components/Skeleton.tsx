@@ -51,7 +51,7 @@ export function Skeleton({
 			aria-live="polite"
 		>
 			{/* Shimmer effect */}
-			<div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-base-300/50 to-transparent" />
+			<div className="absolute inset-0 -translate-x-full animate-shimmer bg-linear-to-r from-transparent via-base-300/50 to-transparent" />
 		</div>
 	)
 }

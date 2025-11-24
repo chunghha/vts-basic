@@ -29,7 +29,6 @@ vi.mock('@tanstack/react-router', () => {
 	}
 })
 
-import Header from '../Header'
 import ThemeSwitcher from '../ThemeSwitcher'
 
 describe('ThemeSwitcher', () => {
@@ -109,59 +108,5 @@ describe('ThemeSwitcher', () => {
 		expect(dataTheme).toBeTruthy()
 		// they should match
 		expect(persisted).toBe(dataTheme)
-	})
-})
-
-describe('Header', () => {
-	beforeEach(() => {
-		// Clean up any theme changes from other tests
-		localStorage.clear()
-	})
-
-	afterEach(() => {
-		cleanup()
-	})
-
-	it('renders navigation links', () => {
-		render(<Header />)
-
-		// Links provided in the header should render as anchors due to the mocked Link
-		expect(screen.getByText('Home')).toBeTruthy()
-		expect(screen.getByText('About')).toBeTruthy()
-		expect(screen.getByText('Country')).toBeTruthy()
-	})
-
-	it('toggles mobile menu when the toggle button is clicked', () => {
-		render(<Header />)
-
-		// The toggle button has an accessible name
-		const toggle = screen.getByRole('button', { name: /open menu/i })
-		expect(toggle).toBeTruthy()
-
-		// Initially the mobile nav should not be visible (query by aria-label)
-		expect(
-			screen.queryByRole('navigation', { name: /mobile navigation/i }),
-		).toBeNull()
-
-		// Click to open
-		fireEvent.click(toggle)
-		// Now the mobile menu content should be visible
-		const nav = screen.getByRole('navigation', { name: /mobile navigation/i })
-		expect(nav).toBeTruthy()
-		// Desktop and mobile both include an "About" link — assert there are multiple matches
-		const aboutMatches = screen.getAllByText('About')
-		expect(aboutMatches.length).toBeGreaterThanOrEqual(2)
-
-		// Clicking a navigation link should close the menu
-		const homeLinks = screen.getAllByText('Home')
-		const mobileHomeLink = homeLinks.find((link) =>
-			link.classList.contains('w-full'),
-		)
-		if (mobileHomeLink) {
-			fireEvent.click(mobileHomeLink)
-		}
-		expect(
-			screen.queryByRole('navigation', { name: /mobile navigation/i }),
-		).toBeNull()
 	})
 })

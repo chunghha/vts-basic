@@ -2,14 +2,34 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 /**
- * Mock the Link component from @tanstack/react-router so Header can render without a router.
- * We return a simple anchor so queries work the same as in the app.
+ * Provide a minimal mock for @tanstack/react-router so Header and any modules
+ * that import items from the router (like the app root) can be imported safely
+ * during tests.
+ *
+ * We mock:
+ * - `Link` as a simple anchor so queries and clicks behave like the real thing.
+ * - `createRootRouteWithContext` as a no-op factory so modules that call it
+ *   won't throw during test import.
+ * - `HeadContent` and `Scripts` as simple components used by the app root.
  */
 vi.mock('@tanstack/react-router', () => {
 	return {
-		Link: ({ to, children }: { to?: string; children?: unknown }) => (
-			<a href={to}>{children}</a>
+		Link: ({
+			to,
+			children,
+			...props
+		}: {
+			to?: string
+			children?: unknown
+			[k: string]: unknown
+		}) => (
+			<a href={to} {...(props as unknown)}>
+				{children}
+			</a>
 		),
+		createRootRouteWithContext: () => () => (route: unknown) => route,
+		HeadContent: () => null,
+		Scripts: () => null,
 	}
 })
 
@@ -30,13 +50,13 @@ describe('Header', () => {
 		render(<Header />)
 
 		// Desktop nav links are rendered (we use truthy checks to avoid requiring extra matchers)
-		expect(screen.getByText('Home')).toBeTruthy()
+		expect(screen.getAllByText('Home').length).toBeGreaterThanOrEqual(1)
 
 		// The header renders an About link in the desktop nav and another in the mobile menu,
 		// assert that at least one About link exists.
 		expect(screen.getAllByText('About').length).toBeGreaterThanOrEqual(1)
 
-		expect(screen.getByText('Country')).toBeTruthy()
+		expect(screen.getAllByText('Countries').length).toBeGreaterThanOrEqual(1)
 	})
 
 	it('toggles the mobile menu and closes it when actions are taken', () => {
@@ -46,18 +66,24 @@ describe('Header', () => {
 		const toggle = screen.getByRole('button', { name: /open menu/i })
 		expect(toggle).toBeTruthy()
 
-		// Mobile menu should be closed at first
-		// Check that mobile nav is not visible (query by aria-label)
-		expect(
-			screen.queryByRole('navigation', { name: /mobile navigation/i }),
-		).toBeNull()
+		// Mobile menu container should exist but be hidden via classes
+		// We check the container div that wraps the nav
+		const mobileMenuContainer =
+			screen.getByLabelText('Mobile navigation').parentElement
+		expect(mobileMenuContainer).not.toBeNull()
+		expect(mobileMenuContainer?.classList.contains('grid-rows-[0fr]')).toBe(
+			true,
+		)
+		expect(mobileMenuContainer?.classList.contains('opacity-0')).toBe(true)
 
 		// Open mobile menu
 		fireEvent.click(toggle)
 
-		// Mobile menu content should now be visible
-		const nav = screen.getByRole('navigation', { name: /mobile navigation/i })
-		expect(nav).toBeTruthy()
+		// Mobile menu should now be visible
+		expect(mobileMenuContainer?.classList.contains('grid-rows-[1fr]')).toBe(
+			true,
+		)
+		expect(mobileMenuContainer?.classList.contains('opacity-100')).toBe(true)
 
 		// Because the desktop and mobile nav both include 'About', ensure multiple matches exist
 		const aboutMatches = screen.getAllByText('About')
@@ -66,9 +92,10 @@ describe('Header', () => {
 		// Click toggle again to close
 		fireEvent.click(toggle)
 
-		// After clicking toggle, mobile content should be removed
-		expect(
-			screen.queryByRole('navigation', { name: /mobile navigation/i }),
-		).toBeNull()
+		// After clicking toggle, mobile content should be hidden again
+		expect(mobileMenuContainer?.classList.contains('grid-rows-[0fr]')).toBe(
+			true,
+		)
+		expect(mobileMenuContainer?.classList.contains('opacity-0')).toBe(true)
 	})
 })

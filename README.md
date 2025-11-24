@@ -45,7 +45,13 @@ VTS Basic is a production-ready React application that combines modern web techn
 - [Docker Deployment Guide](docs/rationale/0001_docker_deployment.md) - Complete guide for building and deploying with Docker
 - [Build Validation](#build-validation) - Automatic asset validation after builds
 
+## Credits
+
+- The file `docs/design_iterator.md` is credited to EveryInc — original source:
+  https://github.com/EveryInc/claude_commands/blob/main/agents/design-iterator.md
+
 ---
+
 
 ## Quickstart
 

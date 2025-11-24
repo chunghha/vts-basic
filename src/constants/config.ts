@@ -52,7 +52,7 @@ export const NAV_CONFIG = {
 	LINKS: [
 		{ to: '/', label: 'Home' },
 		{ to: '/about', label: 'About' },
-		{ to: '/country', label: 'Country' },
+		{ to: '/country', label: 'Countries' },
 		{ to: '/metrics', label: 'Metrics' },
 	] as const,
 } as const
