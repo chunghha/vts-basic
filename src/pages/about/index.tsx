@@ -1,9 +1,30 @@
-import { useEffect, useId } from 'react'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
+import { useEffect, useId, useRef } from 'react'
 import { Footer } from '../../components/Footer'
 import { APP_VERSION } from '../../constants/appVersion'
 
 export default function About() {
 	const contactId = useId()
+	const vtsBasicRef = useRef<HTMLSpanElement>(null)
+
+	useGSAP(
+		() => {
+			const tl = gsap.timeline({ repeat: -1, yoyo: true })
+			tl.to(vtsBasicRef.current, {
+				y: -10,
+				x: 5,
+				duration: 2,
+				ease: 'power1.inOut',
+			}).to(vtsBasicRef.current, {
+				y: 0,
+				x: -5,
+				duration: 2,
+				ease: 'power1.inOut',
+			})
+		},
+		{ scope: vtsBasicRef },
+	)
 
 	// Scroll Animation Logic (matching Home page)
 	useEffect(() => {
@@ -38,7 +59,13 @@ export default function About() {
 						</div>
 						<h1 className="text-5xl md:text-6xl font-extrabold leading-tight mb-6">
 							<span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
-								About VTS Basic
+								About{' '}
+							</span>
+							<span
+								ref={vtsBasicRef}
+								className="inline-block bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent"
+							>
+								VTS Basic
 							</span>
 						</h1>
 						<p className="text-xl text-base-content/70 max-w-3xl mx-auto leading-relaxed">

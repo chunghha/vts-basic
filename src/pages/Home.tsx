@@ -1,5 +1,7 @@
+import { useGSAP } from '@gsap/react'
 import { useLoaderData } from '@tanstack/react-router'
-import { useEffect, useId, useState } from 'react'
+import gsap from 'gsap'
+import { useEffect, useId, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { Footer } from '../components/Footer'
 import { APP_VERSION } from '../constants/appVersion'
@@ -15,7 +17,25 @@ export default function Home() {
 	const [currentTheme, setCurrentTheme] = useState<string>(() =>
 		getStorageItem(THEME_CONFIG.STORAGE_KEY, THEME_CONFIG.DEFAULT_THEME),
 	)
+	const vtsBasicRef = useRef<HTMLHeadingElement | null>(null)
 
+	useGSAP(
+		() => {
+			const tl = gsap.timeline({ repeat: -1, yoyo: true })
+			tl.to(vtsBasicRef.current, {
+				y: -20,
+				x: 10,
+				duration: 2,
+				ease: 'power1.inOut',
+			}).to(vtsBasicRef.current, {
+				y: 0,
+				x: -10,
+				duration: 2,
+				ease: 'power1.inOut',
+			})
+		},
+		{ scope: vtsBasicRef },
+	)
 	const scrollToTop = () => {
 		window.scrollTo({ top: 0, behavior: 'smooth' })
 	}
@@ -74,7 +94,10 @@ export default function Home() {
 			<section className="hero min-h-[60vh] bg-base-100 animate-on-scroll">
 				<div className="hero-content max-w-5xl w-full flex-col lg:flex-row gap-12">
 					<div className="w-full lg:w-1/2 text-center lg:text-left">
-						<h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent mb-6">
+						<h1
+							ref={vtsBasicRef}
+							className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent mb-6"
+						>
 							VTS Basic
 						</h1>
 						<p className="text-xl md:text-2xl text-base-content/80 leading-relaxed font-medium">
