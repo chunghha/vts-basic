@@ -201,6 +201,13 @@
   --noise: 0;
 }
 
+/* Add your global component styles here */
+@theme {
+  --font-sans: "IBM Plex Sans", "sans-serif";
+  --font-serif: "IBM Plex Serif", "serif";
+  --font-mono: "Google Sans Code", "monospace";
+}
+
 /* Basic app styles */
 html {
   box-sizing: border-box;
@@ -229,7 +236,7 @@ body {
 /* Code styling */
 code {
   font-family:
-    "IBM Plex Mono", source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    "Google Sans Code", source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 

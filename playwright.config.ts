@@ -15,6 +15,7 @@ export default defineConfig({
 		baseURL: 'http://localhost:3000',
 		trace: 'on-first-retry',
 		screenshot: 'only-on-failure',
+		video: 'retain-on-failure',
 	},
 
 	projects: [
@@ -30,15 +31,23 @@ export default defineConfig({
 			name: 'webkit',
 			use: { ...devices['Desktop Safari'] },
 		},
+		{
+			name: 'Mobile Chrome',
+			use: { ...devices['Pixel 5'] },
+		},
+		{
+			name: 'Mobile Safari',
+			use: { ...devices['iPhone 12'] },
+		},
 	],
 
 	// E2E tests should be run after starting the production server
 	// Run: bun run start:prod
 	// Then: bun run test:e2e
 	webServer: {
-		command: 'echo "Please start the production server with: bun run start:prod"',
+		command: 'bun run start:prod',
 		url: 'http://localhost:3000',
-		reuseExistingServer: true,
-		timeout: 5000,
+		reuseExistingServer: !process.env.CI,
+		timeout: 120000,
 	},
 })

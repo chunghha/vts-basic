@@ -35,9 +35,6 @@ test.describe('Country Page E2E Tests', () => {
 		// Wait for filter to apply
 		await page.waitForTimeout(500)
 
-		// Should have fewer countries (or different set)
-		const filteredCount = await page.locator('article').count()
-
 		// Verify we're showing filtered results
 		const countText = await page
 			.locator('text=/Showing \\d+ of \\d+/')
