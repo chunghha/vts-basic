@@ -1,5 +1,20 @@
 # Agents
 
+## Git Commit Guidelines
+
+Follow [Conventional Commits](https://www.conventionalcommits.org/) with lowercase messages:
+
+- Format: `type(scope): description`
+- Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`
+- Use lowercase for the entire commit message
+- Keep the first line under 72 characters
+- Use imperative mood ("add feature" not "added feature")
+
+Examples:
+- `feat(auth): add login validation`
+- `fix(api): handle null response from server`
+- `chore(deps): update dependencies to latest versions`
+
 ## Playwright Agent
 
 ### Core Principles

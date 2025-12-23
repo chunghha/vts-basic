@@ -1,7 +1,7 @@
 export enum ROUTES {
-	ABOUT = 'about',
-	COUNTRY = 'country',
-	ERROR = 'error',
+	ABOUT = '/about',
+	COUNTRY = '/country',
+	ERROR = '/error',
 	HOME = '/',
-	NOTFOUND = 'notfound',
+	NOTFOUND = '/notfound',
 }

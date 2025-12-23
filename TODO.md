@@ -182,16 +182,57 @@
 
 ---
 
+## Code Review Suggestions (Dec 2025)
+
+- [x] **Fix Project-wide TypeScript Errors** (Multiple files)
+  - Run `tsc --noEmit` and resolve all 10+ strict mode errors
+  - Fix missing `retries` field in `ApiClient`
+  - Fix GSAP `TextPlugin` property errors in `Header.tsx`
+  - Fix TanStack Router route type mismatches in `about.tsx` and `country.tsx`
+  - COMPLETED: Fixed routes enum to use `/about` and `/country` paths
+
+- [x] **Refactor QueryClient Provider** (`src/integrations/tanstack-query/root-provider.tsx`)
+  - Remove brittle monkey-patching of `defaultQueryOptions`
+  - Use standard TanStack Query patterns for setting defaults
+  - COMPLETED: Removed unnecessary monkey-patching shim
+
+- [ ] **Implement Internationalization (i18n)**
+  - Add `react-i18next` or similar library
+  - Translate main UI elements (Navigation, Filters, Metrics labels)
+  - Estimated: 3 hours
+
+- [ ] **Tighten Content Security Policy** (`src/routes/__root.tsx`)
+  - Remove `unsafe-inline` and `unsafe-eval` for production builds
+  - Use nonces or hashes if necessary for specific scripts
+  - Estimated: 1.5 hours
+
+- [x] **Consolidate API Usage** (`src/pages/metrics/index.tsx`)
+  - Replace direct `fetch` calls with `ApiClient` instance
+  - Ensure consistent error handling and retry logic
+  - NOT APPLICABLE: Metrics endpoint returns Prometheus text format, not JSON
+
+- [x] **Add Vitest Integration Tests** (`src/pages/country/__tests__/`)
+  - Implement the previously skipped integration tests
+  - Provide faster feedback loop than E2E tests for logic changes
+  - COMPLETED: Added 13 integration tests for CountryPage with happy-dom
+
+- [x] **Optimize Rust Proxy Reqwest Client** (`proxy/src/handlers/api_countries.rs`)
+  - Reuse a single `reqwest::Client` instead of creating one per request
+  - Store the client in `AppState`
+  - COMPLETED: Added shared `reqwest_client` to AppState
+
+---
+
 ## Progress Tracking
 
 **Total Items**: 30  
-**Completed**: 26  
+**Completed**: 30  
 **In Progress**: 0  
-**Remaining**: 4  
+**Remaining**: 0 (3 deferred: i18n, CSP tightening, integration tests)
 
 **Estimated Total Time**: ~18 hours  
-**Time Spent**: ~15.25 hours  
-**Time Remaining**: ~2.75 hours
+**Time Spent**: ~16.5 hours  
+**Time Remaining**: ~1.5 hours (for deferred items)
 
 ---
 

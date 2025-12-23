@@ -7,6 +7,7 @@ import { useRef, useState } from 'react'
 
 import { APP_VERSION } from '../constants/appVersion'
 import { NAV_CONFIG } from '../constants/config'
+import type { SafeAny } from '../types/common'
 import ThemeSwitcher from './ThemeSwitcher'
 
 gsap.registerPlugin(TextPlugin)
@@ -56,7 +57,7 @@ export default function Header() {
 						value: randomString(),
 						chars: scrambleChars,
 						speed: 0.3,
-					},
+					} as SafeAny,
 					ease: 'none',
 				})
 			}
@@ -67,7 +68,7 @@ export default function Header() {
 						value: originalText,
 						chars: scrambleChars,
 						speed: 0.3,
-					},
+					} as SafeAny,
 					ease: 'none',
 				})
 			}

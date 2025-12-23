@@ -130,9 +130,11 @@ async fn main() -> anyhow::Result<()> {
     let rate_limit_burst_size = config.rate_limit_burst_size;
 
     let client = Client::builder(hyper_util::rt::TokioExecutor::new()).build(HttpConnector::new());
+    let reqwest_client = reqwest::Client::new();
 
     let state = AppState {
         client,
+        reqwest_client,
 
         upstream_base: Arc::new(upstream_base),
 
