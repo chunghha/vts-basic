@@ -110,49 +110,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 					]}
 				/>
 				<Scripts />
-				{/* Service Worker - ACTIVELY UNREGISTERING AND CLEARING CACHE */}
-				<script
-					dangerouslySetInnerHTML={{
-						__html: `
-							if ('serviceWorker' in navigator) {
-								// Unregister all service workers
-								navigator.serviceWorker.getRegistrations().then(function(registrations) {
-									if (registrations.length > 0) {
-										console.log('[SW Cleanup] Found', registrations.length, 'service worker(s), unregistering...');
-										for(let registration of registrations) {
-											registration.unregister().then(function(success) {
-												if (success) {
-													console.log('[SW Cleanup] Service worker unregistered successfully');
-												}
-											});
-										}
-									} else {
-										console.log('[SW Cleanup] No service workers found');
-									}
-								});
-
-								// Clear all caches
-								if ('caches' in window) {
-									caches.keys().then(function(cacheNames) {
-										if (cacheNames.length > 0) {
-											console.log('[SW Cleanup] Found', cacheNames.length, 'cache(s), deleting...');
-											return Promise.all(
-												cacheNames.map(function(cacheName) {
-													console.log('[SW Cleanup] Deleting cache:', cacheName);
-													return caches.delete(cacheName);
-												})
-											);
-										} else {
-											console.log('[SW Cleanup] No caches found');
-										}
-									}).then(function() {
-										console.log('[SW Cleanup] All caches cleared');
-									});
-								}
-							}
-						`,
-					}}
-				/>
 			</body>
 		</html>
 	)

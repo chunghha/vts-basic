@@ -1,6 +1,6 @@
 {
   "name": "vts-basic",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "private": true,
   "type": "module",
   "scripts": {
@@ -72,7 +72,6 @@
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3",
     "vite": "^7.3.0",
-    "vite-plugin-pwa": "^1.2.0",
     "vitest": "^4.0.16"
   }
 }
