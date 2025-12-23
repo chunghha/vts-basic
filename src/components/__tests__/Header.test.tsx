@@ -1,5 +1,6 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import type { SafeAny } from '../../types/common'
 
 /**
  * Provide a minimal mock for @tanstack/react-router so Header and any modules
@@ -20,14 +21,14 @@ vi.mock('@tanstack/react-router', () => {
 			...props
 		}: {
 			to?: string
-			children?: unknown
-			[k: string]: unknown
+			children?: React.ReactNode
+			[k: string]: SafeAny
 		}) => (
-			<a href={to} {...(props as unknown)}>
+			<a href={to} {...props}>
 				{children}
 			</a>
 		),
-		createRootRouteWithContext: () => () => (route: unknown) => route,
+		createRootRouteWithContext: () => () => (route: SafeAny) => route,
 		HeadContent: () => null,
 		Scripts: () => null,
 	}

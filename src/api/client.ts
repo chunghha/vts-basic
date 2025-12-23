@@ -35,6 +35,7 @@ interface ApiClientOptions {
 export class ApiClient {
 	private baseURL: string
 	private timeout: number
+	private retries: number
 	private retryDelay: number
 
 	constructor(options: ApiClientOptions = {}) {

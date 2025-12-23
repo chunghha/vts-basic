@@ -27,8 +27,8 @@ pub async fn api_countries(State(state): State<AppState>) -> impl IntoResponse {
 async fn fetch_and_simplify_countries(state: AppState) -> anyhow::Result<Vec<u8>> {
     let url = &state.config.country_api_url;
 
-    let client = reqwest::Client::new();
-    let resp = client
+    let resp = state
+        .reqwest_client
         .get(url)
         .send()
         .await

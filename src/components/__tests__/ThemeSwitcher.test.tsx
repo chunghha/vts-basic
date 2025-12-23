@@ -6,6 +6,7 @@ import {
 	within,
 } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import type { SafeAny } from '../../types/common'
 
 /**
  * These components import router/link helpers that expect a runtime router.
@@ -19,8 +20,8 @@ vi.mock('@tanstack/react-router', () => {
 			...props
 		}: {
 			to?: string
-			children?: unknown
-			[k: string]: unknown
+			children?: React.ReactNode
+			[k: string]: SafeAny
 		}) => (
 			<a href={to} {...props}>
 				{children}
