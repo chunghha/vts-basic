@@ -9,58 +9,112 @@ interface Props {
 
 import { US_STATE_PATHS as STATE_PATHS } from '../data/us-state-paths'
 
-// Map of state codes to approximate overlay positions
+// Map of state codes to edge overlay positions (outside the state)
 const STATE_OVERLAY_POSITIONS: Record<string, { x: string; y: string }> = {
-	AL: { x: '65%', y: '60%' },
-	AK: { x: '10%', y: '75%' },
-	AZ: { x: '25%', y: '45%' },
-	AR: { x: '55%', y: '50%' },
-	CA: { x: '15%', y: '35%' },
-	CO: { x: '35%', y: '38%' },
-	CT: { x: '85%', y: '25%' },
-	DE: { x: '80%', y: '32%' },
-	FL: { x: '72%', y: '72%' },
-	GA: { x: '70%', y: '55%' },
-	HI: { x: '8%', y: '88%' },
-	ID: { x: '20%', y: '25%' },
-	IL: { x: '60%', y: '35%' },
-	IN: { x: '62%', y: '32%' },
-	IA: { x: '52%', y: '30%' },
-	KS: { x: '45%', y: '38%' },
-	KY: { x: '65%', y: '42%' },
-	LA: { x: '55%', y: '62%' },
-	ME: { x: '88%', y: '15%' },
-	MD: { x: '75%', y: '35%' },
-	MA: { x: '85%', y: '22%' },
-	MI: { x: '65%', y: '25%' },
-	MN: { x: '52%', y: '18%' },
-	MS: { x: '58%', y: '52%' },
-	MO: { x: '52%', y: '42%' },
-	MT: { x: '28%', y: '18%' },
-	NE: { x: '45%', y: '32%' },
-	NV: { x: '18%', y: '38%' },
-	NH: { x: '82%', y: '18%' },
-	NJ: { x: '78%', y: '28%' },
-	NM: { x: '32%', y: '48%' },
-	NY: { x: '78%', y: '20%' },
-	NC: { x: '72%', y: '45%' },
-	ND: { x: '45%', y: '18%' },
-	OH: { x: '68%', y: '35%' },
-	OK: { x: '48%', y: '48%' },
-	OR: { x: '12%', y: '28%' },
-	PA: { x: '72%', y: '30%' },
-	RI: { x: '85%', y: '24%' },
-	SC: { x: '72%', y: '52%' },
-	SD: { x: '45%', y: '25%' },
-	TN: { x: '62%', y: '48%' },
-	TX: { x: '45%', y: '58%' },
-	UT: { x: '22%', y: '38%' },
-	VT: { x: '82%', y: '15%' },
-	VA: { x: '72%', y: '40%' },
-	WA: { x: '12%', y: '18%' },
-	WV: { x: '70%', y: '38%' },
-	WI: { x: '60%', y: '22%' },
-	WY: { x: '32%', y: '28%' },
+	AL: { x: '75%', y: '70%' },
+	AK: { x: '2%', y: '85%' },
+	AZ: { x: '15%', y: '55%' },
+	AR: { x: '65%', y: '58%' },
+	CA: { x: '8%', y: '45%' },
+	CO: { x: '42%', y: '28%' },
+	CT: { x: '92%', y: '20%' },
+	DE: { x: '88%', y: '28%' },
+	FL: { x: '82%', y: '82%' },
+	GA: { x: '80%', y: '65%' },
+	HI: { x: '2%', y: '95%' },
+	ID: { x: '12%', y: '15%' },
+	IL: { x: '68%', y: '28%' },
+	IN: { x: '70%', y: '25%' },
+	IA: { x: '58%', y: '22%' },
+	KS: { x: '52%', y: '45%' },
+	KY: { x: '73%', y: '52%' },
+	LA: { x: '62%', y: '72%' },
+	ME: { x: '95%', y: '8%' },
+	MD: { x: '82%', y: '28%' },
+	MA: { x: '92%', y: '15%' },
+	MI: { x: '72%', y: '18%' },
+	MN: { x: '58%', y: '10%' },
+	MS: { x: '65%', y: '60%' },
+	MO: { x: '58%', y: '48%' },
+	MT: { x: '18%', y: '10%' },
+	NE: { x: '52%', y: '38%' },
+	NV: { x: '10%', y: '48%' },
+	NH: { x: '90%', y: '12%' },
+	NJ: { x: '85%', y: '22%' },
+	NM: { x: '22%', y: '58%' },
+	NY: { x: '85%', y: '12%' },
+	NC: { x: '80%', y: '52%' },
+	ND: { x: '52%', y: '10%' },
+	OH: { x: '75%', y: '28%' },
+	OK: { x: '55%', y: '55%' },
+	OR: { x: '5%', y: '35%' },
+	PA: { x: '78%', y: '22%' },
+	RI: { x: '92%', y: '20%' },
+	SC: { x: '82%', y: '60%' },
+	SD: { x: '52%', y: '18%' },
+	TN: { x: '70%', y: '55%' },
+	TX: { x: '52%', y: '68%' },
+	UT: { x: '15%', y: '48%' },
+	VT: { x: '88%', y: '8%' },
+	VA: { x: '80%', y: '48%' },
+	WA: { x: '5%', y: '10%' },
+	WV: { x: '78%', y: '45%' },
+	WI: { x: '65%', y: '15%' },
+	WY: { x: '38%', y: '18%' },
+}
+
+// State-specific colors for when selected
+const STATE_COLORS: Record<string, string> = {
+	AL: '#d4907f', // Terracotta
+	AK: '#8fa8b8', // Steel blue
+	AZ: '#c7845f', // Clay
+	AR: '#9cb896', // Sage
+	CA: '#d4a857', // Gold
+	CO: '#7a9fc3', // Mountain blue
+	CT: '#8b7eb8', // Mauve
+	DE: '#a89a7e', // Taupe
+	FL: '#b8d9e6', // Sky blue
+	GA: '#d4a896', // Peach
+	HI: '#6a8fb8', // Ocean blue
+	ID: '#7ab878', // Forest green
+	IL: '#b8936d', // Chocolate
+	IN: '#9db88b', // Olive
+	IA: '#b8d49a', // Light green
+	KS: '#d4b887', // Wheat
+	KY: '#9db8a6', // Mint
+	LA: '#d49f8f', // Salmon
+	ME: '#7a9fb8', // Slate blue
+	MD: '#8ba89b', // Sea green
+	MA: '#8b7fa6', // Lavender
+	MI: '#6ab8d4', // Lake blue
+	MN: '#7ab8c7', // Ice blue
+	MS: '#b8a68b', // Sandy brown
+	MO: '#9a9b96', // Slate
+	MT: '#8fb8a8', // Seafoam
+	NE: '#b8c478', // Sage green
+	NV: '#d49f78', // Desert sand
+	NH: '#6a9fb8', // Cool blue
+	NJ: '#8b9fb8', // Slate
+	NM: '#d4956f', // Adobe
+	NY: '#7a8fb8', // Navy
+	NC: '#b8a889', // Tan
+	ND: '#8fb8c7', // Powder blue
+	OH: '#8b9b96', // Gray green
+	OK: '#d4a878', // Rust
+	OR: '#7ab8a8', // Teal
+	PA: '#8b8fa6', // Smoky purple
+	RI: '#7a9fc7', // Periwinkle
+	SC: '#b8a896', // Warm tan
+	SD: '#b8d49f', // Light green
+	TN: '#d4a885', // Caramel
+	TX: '#a67c5c', // Velvet (as requested)
+	UT: '#8fa67c', // Sage brown
+	VT: '#78b878', // Pine green
+	VA: '#9b96a6', // Dusty purple
+	WA: '#6ab8a8', // Emerald
+	WV: '#8b8b78', // Stone
+	WI: '#78a6b8', // Cerulean
+	WY: '#b8a878', // Tan gold
 }
 
 /**
@@ -104,12 +158,12 @@ export default function USMapSVG({
 	}
 
 	/**
-	 * Get color based on state's GDP quartile
+	 * Get color based on state's GDP quartile or state-specific color when selected
 	 */
 	const getColorByGDP = useCallback(
 		(state: USState): string => {
 			if (selectedState?.code === state.code) {
-				return GDP_COLORS.selected
+				return STATE_COLORS[state.code] || GDP_COLORS.selected
 			}
 
 			const gdp = state.gdp
@@ -156,7 +210,7 @@ export default function USMapSVG({
 							{states.map((state) => (
 								// biome-ignore lint/a11y/useSemanticElements: Using a <g> element with role='button' is a standard way to make SVG shapes accessible as buttons.
 								<g
-									key={state.code}
+									key={`${state.code}-${selectedState?.code}`}
 									onClick={() => handleStateClick(state.code)}
 									aria-label={`${state.name} - GDP: $${state.gdp}B`}
 									style={{ cursor: 'pointer' }}
@@ -171,13 +225,16 @@ export default function USMapSVG({
 									<path
 										d={STATE_PATHS[state.code]}
 										fill={getColorByGDP(state)}
-										stroke="#ffffff"
-										strokeWidth="2"
+										stroke={
+											selectedState?.code === state.code ? '#1a4d52' : '#ffffff'
+										}
+										strokeWidth={selectedState?.code === state.code ? '4' : '2'}
 										style={{
 											filter:
 												selectedState?.code === state.code
-													? 'brightness(0.9) drop-shadow(0 0 4px rgba(139, 92, 246, 0.5))'
+													? 'drop-shadow(0 0 6px rgba(26, 77, 82, 0.4))'
 													: undefined,
+											willChange: 'fill',
 										}}
 									/>
 								</g>
