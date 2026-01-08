@@ -288,6 +288,40 @@ These can be done quickly for immediate impact:
 
 ---
 
+## Data Sources & APIs
+
+### US State GDP Data
+**Current Status**: Using hardcoded 2024 data from BEA (Bureau of Economic Analysis)
+
+**Available APIs** (optional future enhancement):
+1. **BEA API** - Free, requires API key signup
+   - URL: https://www.bea.gov/resources/for-developers
+   - Format: JSON/XML
+   - Update frequency: Quarterly (not real-time)
+   - Latest data: 2024 (released Sep 2025)
+   
+2. **FRED API** (St. Louis Federal Reserve)
+   - Has state GDP historical data
+   - Free with API key
+   - Update frequency: Quarterly
+
+3. **Census Bureau API**
+   - Population data updates more frequently
+   - URL: https://www.census.gov/data/developers/data-sets.html
+
+**Implementation Options**:
+- **Option A**: Keep hardcoded data (current approach)
+  - Pros: No external dependencies, fast
+  - Cons: Manual updates every quarter
+  
+- **Option B**: Integrate BEA API
+  - Pros: Always latest data
+  - Cons: Requires API calls, quarterly lag, adds complexity
+  
+**Recommendation**: Keep current approach. Quarterly manual updates are sufficient. API integration would add latency with minimal benefit since data only updates 4x/year.
+
+---
+
 ## Notes
 
 - Update this file as items are completed
