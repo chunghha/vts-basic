@@ -4,4 +4,5 @@ export enum ROUTES {
 	ERROR = '/error',
 	HOME = '/',
 	NOTFOUND = '/notfound',
+	US_MAP = '/us-map',
 }

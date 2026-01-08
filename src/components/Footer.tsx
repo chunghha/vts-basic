@@ -1,7 +1,7 @@
 import { useId } from 'react'
 
 interface FooterProps {
-	page?: 'home' | 'about'
+	page?: 'home' | 'about' | 'us-map'
 }
 
 export function Footer({ page }: FooterProps) {

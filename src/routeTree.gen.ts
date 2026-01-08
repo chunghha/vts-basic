@@ -9,11 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UsMapRouteImport } from './routes/us-map'
 import { Route as MetricsRouteImport } from './routes/metrics'
 import { Route as CountryRouteImport } from './routes/country'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
+const UsMapRoute = UsMapRouteImport.update({
+  id: '/us-map',
+  path: '/us-map',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MetricsRoute = MetricsRouteImport.update({
   id: '/metrics',
   path: '/metrics',
@@ -40,12 +46,14 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/country': typeof CountryRoute
   '/metrics': typeof MetricsRoute
+  '/us-map': typeof UsMapRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/country': typeof CountryRoute
   '/metrics': typeof MetricsRoute
+  '/us-map': typeof UsMapRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,14 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/country': typeof CountryRoute
   '/metrics': typeof MetricsRoute
+  '/us-map': typeof UsMapRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/country' | '/metrics'
+  fullPaths: '/' | '/about' | '/country' | '/metrics' | '/us-map'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/country' | '/metrics'
-  id: '__root__' | '/' | '/about' | '/country' | '/metrics'
+  to: '/' | '/about' | '/country' | '/metrics' | '/us-map'
+  id: '__root__' | '/' | '/about' | '/country' | '/metrics' | '/us-map'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,10 +76,18 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   CountryRoute: typeof CountryRoute
   MetricsRoute: typeof MetricsRoute
+  UsMapRoute: typeof UsMapRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/us-map': {
+      id: '/us-map'
+      path: '/us-map'
+      fullPath: '/us-map'
+      preLoaderRoute: typeof UsMapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/metrics': {
       id: '/metrics'
       path: '/metrics'
@@ -107,6 +124,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   CountryRoute: CountryRoute,
   MetricsRoute: MetricsRoute,
+  UsMapRoute: UsMapRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

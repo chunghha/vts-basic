@@ -53,6 +53,7 @@ export const NAV_CONFIG = {
 		{ to: '/', label: 'Home' },
 		{ to: '/about', label: 'About' },
 		{ to: '/country', label: 'Countries' },
+		{ to: '/us-map', label: 'US Map' },
 		{ to: '/metrics', label: 'Metrics' },
 	] as const,
 } as const
