@@ -5,6 +5,8 @@ interface Props {
 	states: USState[]
 	onStateClick: (state: USState | null) => void
 	selectedState?: USState | null
+	displayMode: 'gdp' | 'income'
+	onModeChange: (mode: 'gdp' | 'income') => void
 }
 
 import { US_STATE_PATHS as STATE_PATHS } from '../data/us-state-paths'
@@ -124,6 +126,8 @@ export default function USMapSVG({
 	states,
 	onStateClick,
 	selectedState,
+	displayMode,
+	onModeChange,
 }: Props) {
 	// Auto-dismiss overlay after 5 seconds
 	useEffect(() => {
@@ -136,20 +140,21 @@ export default function USMapSVG({
 		return () => clearTimeout(timer)
 	}, [selectedState, onStateClick])
 
-	// Create GDP quartiles for color grouping
-	const gdpValues = useMemo(() => {
-		return states.map((s) => s.gdp).sort((a, b) => a - b)
-	}, [states])
+	// Create quartiles for current mode
+	const values = useMemo(() => {
+		const data = displayMode === 'gdp' ? states.map((s) => s.gdp) : states.map((s) => s.medianIncome)
+		return data.sort((a, b) => a - b)
+	}, [states, displayMode])
 
 	const quartiles = useMemo(() => {
-		const q1 = gdpValues[Math.floor(gdpValues.length * 0.25)]
-		const q2 = gdpValues[Math.floor(gdpValues.length * 0.5)]
-		const q3 = gdpValues[Math.floor(gdpValues.length * 0.75)]
-		return { q1, q2, q3, max: gdpValues[gdpValues.length - 1] }
-	}, [gdpValues])
+		const q1 = values[Math.floor(values.length * 0.25)]
+		const q2 = values[Math.floor(values.length * 0.5)]
+		const q3 = values[Math.floor(values.length * 0.75)]
+		return { q1, q2, q3, max: values[values.length - 1] }
+	}, [values])
 
-	// Pastel color palette for 4 GDP groups
-	const GDP_COLORS = {
+	// Pastel color palette for 4 groups (used for both GDP and income)
+	const PALETTE_COLORS = {
 		lowest: '#c7d2e8', // Pastel purple/lavender
 		low: '#d9e9c1', // Pastel green/lime
 		medium: '#f5d5b8', // Pastel orange
@@ -158,21 +163,21 @@ export default function USMapSVG({
 	}
 
 	/**
-	 * Get color based on state's GDP quartile or state-specific color when selected
+	 * Get color based on state's metric quartile or state-specific color when selected
 	 */
-	const getColorByGDP = useCallback(
+	const getColor = useCallback(
 		(state: USState): string => {
 			if (selectedState?.code === state.code) {
-				return STATE_COLORS[state.code] || GDP_COLORS.selected
+				return STATE_COLORS[state.code] || PALETTE_COLORS.selected
 			}
 
-			const gdp = state.gdp
-			if (gdp <= quartiles.q1) return GDP_COLORS.lowest
-			if (gdp <= quartiles.q2) return GDP_COLORS.low
-			if (gdp <= quartiles.q3) return GDP_COLORS.medium
-			return GDP_COLORS.high
+			const value = displayMode === 'gdp' ? state.gdp : state.medianIncome
+			if (value <= quartiles.q1) return PALETTE_COLORS.lowest
+			if (value <= quartiles.q2) return PALETTE_COLORS.low
+			if (value <= quartiles.q3) return PALETTE_COLORS.medium
+			return PALETTE_COLORS.high
 		},
-		[selectedState?.code, quartiles],
+		[selectedState?.code, quartiles, displayMode],
 	)
 
 	const handleStateClick = useCallback(
@@ -187,6 +192,66 @@ export default function USMapSVG({
 
 	return (
 		<div className="w-full">
+			{/* Display Mode Toggle */}
+			<div className="mb-6 flex gap-3 justify-center">
+				<button
+					type="button"
+					onClick={() => onModeChange('gdp')}
+					style={{
+						backgroundColor: displayMode === 'gdp' ? '#c7d2e8' : '#f0f0f0',
+						color: '#333333',
+						padding: '0.5rem 1rem',
+						borderRadius: '0.5rem',
+						fontWeight: '600',
+						border: 'none',
+						cursor: 'pointer',
+						boxShadow: displayMode === 'gdp' ? '0 2px 4px rgba(0, 0, 0, 0.1)' : '0 1px 2px rgba(0, 0, 0, 0.05)',
+						transition: 'all 0.3s ease',
+					}}
+					aria-pressed={displayMode === 'gdp'}
+					onMouseEnter={(e) => {
+						if (displayMode === 'gdp') {
+							e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
+						}
+					}}
+					onMouseLeave={(e) => {
+						if (displayMode === 'gdp') {
+							e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+						}
+					}}
+				>
+					GDP
+				</button>
+				<button
+					type="button"
+					onClick={() => onModeChange('income')}
+					style={{
+						backgroundColor: displayMode === 'income' ? '#d9e9c1' : '#f0f0f0',
+						color: '#333333',
+						padding: '0.5rem 1rem',
+						borderRadius: '0.5rem',
+						fontWeight: '600',
+						border: 'none',
+						cursor: 'pointer',
+						boxShadow: displayMode === 'income' ? '0 2px 4px rgba(0, 0, 0, 0.1)' : '0 1px 2px rgba(0, 0, 0, 0.05)',
+						transition: 'all 0.3s ease',
+					}}
+					aria-pressed={displayMode === 'income'}
+					onMouseEnter={(e) => {
+						if (displayMode === 'income') {
+							e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
+						}
+					}}
+					onMouseLeave={(e) => {
+						if (displayMode === 'income') {
+							e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+						}
+					}}
+				>
+					Median Income
+				</button>
+			</div>
+
 			<div
 				className="flex justify-center relative"
 				style={{ width: '100%', maxWidth: '800px', margin: '0 auto' }}
@@ -205,14 +270,14 @@ export default function USMapSVG({
 							height="593"
 							viewBox="0 0 900 600"
 							role="img"
-							aria-label="Interactive United States map showing GDP data by color"
+							aria-label={`Interactive United States map showing ${displayMode === 'gdp' ? 'GDP' : 'Median Income'} data by color`}
 						>
 							{states.map((state) => (
 								// biome-ignore lint/a11y/useSemanticElements: Using a <g> element with role='button' is a standard way to make SVG shapes accessible as buttons.
 								<g
 									key={`${state.code}-${selectedState?.code}`}
 									onClick={() => handleStateClick(state.code)}
-									aria-label={`${state.name} - GDP: $${state.gdp}B`}
+									aria-label={`${state.name} - ${displayMode === 'gdp' ? `GDP: $${state.gdp}B` : `Median Income: $${state.medianIncome.toLocaleString()}`}`}
 									style={{ cursor: 'pointer' }}
 									role="button"
 									tabIndex={0}
@@ -224,7 +289,7 @@ export default function USMapSVG({
 								>
 									<path
 										d={STATE_PATHS[state.code]}
-										fill={getColorByGDP(state)}
+										fill={getColor(state)}
 										stroke={
 											selectedState?.code === state.code ? '#1a4d52' : '#ffffff'
 										}
@@ -286,28 +351,41 @@ export default function USMapSVG({
 											{(selectedState.population / 1_000_000).toFixed(1)}M
 										</span>
 									</div>
-									<div className="flex justify-between">
-										<span style={{ color: 'inherit', opacity: 0.75 }}>
-											GDP:
-										</span>
-										<span className="font-semibold">
-											${selectedState.gdp.toLocaleString()}B
-										</span>
-									</div>
-									<div className="flex justify-between text-xs">
-										<span style={{ color: 'inherit', opacity: 0.65 }}>
-											Per Capita:
-										</span>
-										<span className="font-semibold">
-											$
-											{(
-												(selectedState.gdp * 1_000_000_000) /
-												selectedState.population
-											).toLocaleString('en-US', {
-												maximumFractionDigits: 0,
-											})}
-										</span>
-									</div>
+									{displayMode === 'gdp' ? (
+										<>
+											<div className="flex justify-between">
+												<span style={{ color: 'inherit', opacity: 0.75 }}>
+													GDP:
+												</span>
+												<span className="font-semibold">
+													${selectedState.gdp.toLocaleString()}B
+												</span>
+											</div>
+											<div className="flex justify-between text-xs">
+												<span style={{ color: 'inherit', opacity: 0.65 }}>
+													Per Capita:
+												</span>
+												<span className="font-semibold">
+													$
+													{(
+														(selectedState.gdp * 1_000_000_000) /
+														selectedState.population
+													).toLocaleString('en-US', {
+														maximumFractionDigits: 0,
+													})}
+												</span>
+											</div>
+										</>
+									) : (
+										<div className="flex justify-between">
+											<span style={{ color: 'inherit', opacity: 0.75 }}>
+												Median Income:
+											</span>
+											<span className="font-semibold">
+												${selectedState.medianIncome.toLocaleString()}
+											</span>
+										</div>
+									)}
 								</div>
 							</div>
 						</div>
@@ -320,51 +398,61 @@ export default function USMapSVG({
 				<div className="flex items-center gap-2">
 					<div
 						className="w-6 h-6 rounded-sm border border-gray-300"
-						style={{ backgroundColor: GDP_COLORS.lowest }}
+						style={{ backgroundColor: PALETTE_COLORS.lowest }}
 					/>
 					<span className="text-base-content/70">
-						Lowest GDP
-						<br />
-						<span className="text-xs">${(quartiles.q1 || 0).toFixed(0)}B</span>
-					</span>
-				</div>
-				<div className="flex items-center gap-2">
-					<div
-						className="w-6 h-6 rounded-sm border border-gray-300"
-						style={{ backgroundColor: GDP_COLORS.low }}
-					/>
-					<span className="text-base-content/70">
-						Low GDP
+						{displayMode === 'gdp' ? 'Lowest GDP' : 'Lowest Income'}
 						<br />
 						<span className="text-xs">
-							${(quartiles.q1 || 0).toFixed(0)}-$
-							{(quartiles.q2 || 0).toFixed(0)}B
+							{displayMode === 'gdp'
+								? `$${(quartiles.q1 || 0).toFixed(0)}B`
+								: `$${(quartiles.q1 || 0).toLocaleString()}`}
 						</span>
 					</span>
 				</div>
 				<div className="flex items-center gap-2">
 					<div
 						className="w-6 h-6 rounded-sm border border-gray-300"
-						style={{ backgroundColor: GDP_COLORS.medium }}
+						style={{ backgroundColor: PALETTE_COLORS.low }}
 					/>
 					<span className="text-base-content/70">
-						Medium GDP
+						{displayMode === 'gdp' ? 'Low GDP' : 'Low Income'}
 						<br />
 						<span className="text-xs">
-							${(quartiles.q2 || 0).toFixed(0)}-$
-							{(quartiles.q3 || 0).toFixed(0)}B
+							{displayMode === 'gdp'
+								? `$${(quartiles.q1 || 0).toFixed(0)}B-$${(quartiles.q2 || 0).toFixed(0)}B`
+								: `$${(quartiles.q1 || 0).toLocaleString()}-$${(quartiles.q2 || 0).toLocaleString()}`}
 						</span>
 					</span>
 				</div>
 				<div className="flex items-center gap-2">
 					<div
 						className="w-6 h-6 rounded-sm border border-gray-300"
-						style={{ backgroundColor: GDP_COLORS.high }}
+						style={{ backgroundColor: PALETTE_COLORS.medium }}
 					/>
 					<span className="text-base-content/70">
-						High GDP
+						{displayMode === 'gdp' ? 'Medium GDP' : 'Medium Income'}
 						<br />
-						<span className="text-xs">${(quartiles.q3 || 0).toFixed(0)}B+</span>
+						<span className="text-xs">
+							{displayMode === 'gdp'
+								? `$${(quartiles.q2 || 0).toFixed(0)}B-$${(quartiles.q3 || 0).toFixed(0)}B`
+								: `$${(quartiles.q2 || 0).toLocaleString()}-$${(quartiles.q3 || 0).toLocaleString()}`}
+						</span>
+					</span>
+				</div>
+				<div className="flex items-center gap-2">
+					<div
+						className="w-6 h-6 rounded-sm border border-gray-300"
+						style={{ backgroundColor: PALETTE_COLORS.high }}
+					/>
+					<span className="text-base-content/70">
+						{displayMode === 'gdp' ? 'High GDP' : 'High Income'}
+						<br />
+						<span className="text-xs">
+							{displayMode === 'gdp'
+								? `$${(quartiles.q3 || 0).toFixed(0)}B+`
+								: `$${(quartiles.q3 || 0).toLocaleString()}+`}
+						</span>
 					</span>
 				</div>
 			</div>

@@ -16,6 +16,8 @@ export const US_STATES_DATA_FULL = [
 		population: 5024279,
 		gdp: 392,
 		gdpYear: 2024,
+		medianIncome: 63852,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'AK',
@@ -23,6 +25,8 @@ export const US_STATES_DATA_FULL = [
 		population: 733391,
 		gdp: 70,
 		gdpYear: 2024,
+		medianIncome: 87606,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'AZ',
@@ -30,6 +34,8 @@ export const US_STATES_DATA_FULL = [
 		population: 7151502,
 		gdp: 608,
 		gdpYear: 2024,
+		medianIncome: 78267,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'AR',
@@ -37,6 +43,8 @@ export const US_STATES_DATA_FULL = [
 		population: 3011524,
 		gdp: 220,
 		gdpYear: 2024,
+		medianIncome: 61519,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'CA',
@@ -44,6 +52,8 @@ export const US_STATES_DATA_FULL = [
 		population: 39538223,
 		gdp: 4103,
 		gdpYear: 2024,
+		medianIncome: 91571,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'CO',
@@ -51,6 +61,8 @@ export const US_STATES_DATA_FULL = [
 		population: 5773714,
 		gdp: 655,
 		gdpYear: 2024,
+		medianIncome: 88239,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'CT',
@@ -58,6 +70,8 @@ export const US_STATES_DATA_FULL = [
 		population: 3625216,
 		gdp: 365,
 		gdpYear: 2024,
+		medianIncome: 98814,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'DE',
@@ -65,6 +79,8 @@ export const US_STATES_DATA_FULL = [
 		population: 990837,
 		gdp: 99,
 		gdpYear: 2024,
+		medianIncome: 82645,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'FL',
@@ -72,6 +88,8 @@ export const US_STATES_DATA_FULL = [
 		population: 21538187,
 		gdp: 1706,
 		gdpYear: 2024,
+		medianIncome: 77251,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'GA',
@@ -79,6 +97,8 @@ export const US_STATES_DATA_FULL = [
 		population: 10711908,
 		gdp: 883,
 		gdpYear: 2024,
+		medianIncome: 78866,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'HI',
@@ -86,6 +106,8 @@ export const US_STATES_DATA_FULL = [
 		population: 1435138,
 		gdp: 129,
 		gdpYear: 2024,
+		medianIncome: 90296,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'ID',
@@ -93,6 +115,8 @@ export const US_STATES_DATA_FULL = [
 		population: 1839106,
 		gdp: 173,
 		gdpYear: 2024,
+		medianIncome: 78631,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'IL',
@@ -100,6 +124,8 @@ export const US_STATES_DATA_FULL = [
 		population: 12812508,
 		gdp: 1137,
 		gdpYear: 2024,
+		medianIncome: 81456,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'IN',
@@ -107,6 +133,8 @@ export const US_STATES_DATA_FULL = [
 		population: 6785528,
 		gdp: 609,
 		gdpYear: 2024,
+		medianIncome: 74352,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'IA',
@@ -114,6 +142,8 @@ export const US_STATES_DATA_FULL = [
 		population: 3190369,
 		gdp: 306,
 		gdpYear: 2024,
+		medianIncome: 76918,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'KS',
@@ -121,6 +151,8 @@ export const US_STATES_DATA_FULL = [
 		population: 2937880,
 		gdp: 283,
 		gdpYear: 2024,
+		medianIncome: 75801,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'KY',
@@ -128,6 +160,8 @@ export const US_STATES_DATA_FULL = [
 		population: 4505836,
 		gdp: 365,
 		gdpYear: 2024,
+		medianIncome: 69146,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'LA',
@@ -135,6 +169,8 @@ export const US_STATES_DATA_FULL = [
 		population: 4657757,
 		gdp: 377,
 		gdpYear: 2024,
+		medianIncome: 62840,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'ME',
@@ -142,6 +178,8 @@ export const US_STATES_DATA_FULL = [
 		population: 1344212,
 		gdp: 117,
 		gdpYear: 2024,
+		medianIncome: 78346,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'MD',
@@ -149,6 +187,8 @@ export const US_STATES_DATA_FULL = [
 		population: 6177224,
 		gdp: 596,
 		gdpYear: 2024,
+		medianIncome: 91297,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'MA',
@@ -156,6 +196,8 @@ export const US_STATES_DATA_FULL = [
 		population: 7029917,
 		gdp: 814,
 		gdpYear: 2024,
+		medianIncome: 100277,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'MI',
@@ -163,6 +205,8 @@ export const US_STATES_DATA_FULL = [
 		population: 10077331,
 		gdp: 821,
 		gdpYear: 2024,
+		medianIncome: 77521,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'MN',
@@ -170,6 +214,8 @@ export const US_STATES_DATA_FULL = [
 		population: 5737915,
 		gdp: 644,
 		gdpYear: 2024,
+		medianIncome: 89289,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'MS',
@@ -177,6 +223,8 @@ export const US_STATES_DATA_FULL = [
 		population: 2939690,
 		gdp: 211,
 		gdpYear: 2024,
+		medianIncome: 59268,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'MO',
@@ -184,6 +232,8 @@ export const US_STATES_DATA_FULL = [
 		population: 6196911,
 		gdp: 524,
 		gdpYear: 2024,
+		medianIncome: 71987,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'MT',
@@ -191,6 +241,8 @@ export const US_STATES_DATA_FULL = [
 		population: 1084225,
 		gdp: 106,
 		gdpYear: 2024,
+		medianIncome: 76234,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'NE',
@@ -198,6 +250,8 @@ export const US_STATES_DATA_FULL = [
 		population: 1961504,
 		gdp: 213,
 		gdpYear: 2024,
+		medianIncome: 78923,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'NV',
@@ -205,6 +259,8 @@ export const US_STATES_DATA_FULL = [
 		population: 3177772,
 		gdp: 297,
 		gdpYear: 2024,
+		medianIncome: 80245,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'NH',
@@ -212,6 +268,8 @@ export const US_STATES_DATA_FULL = [
 		population: 1377529,
 		gdp: 142,
 		gdpYear: 2024,
+		medianIncome: 97156,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'NJ',
@@ -219,6 +277,8 @@ export const US_STATES_DATA_FULL = [
 		population: 9288994,
 		gdp: 961,
 		gdpYear: 2024,
+		medianIncome: 101726,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'NM',
@@ -226,6 +286,8 @@ export const US_STATES_DATA_FULL = [
 		population: 2117522,
 		gdp: 175,
 		gdpYear: 2024,
+		medianIncome: 63718,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'NY',
@@ -233,6 +295,8 @@ export const US_STATES_DATA_FULL = [
 		population: 19954727,
 		gdp: 2297,
 		gdpYear: 2024,
+		medianIncome: 85452,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'NC',
@@ -240,6 +304,8 @@ export const US_STATES_DATA_FULL = [
 		population: 10439388,
 		gdp: 978,
 		gdpYear: 2024,
+		medianIncome: 77318,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'ND',
@@ -247,6 +313,8 @@ export const US_STATES_DATA_FULL = [
 		population: 779094,
 		gdp: 107,
 		gdpYear: 2024,
+		medianIncome: 82451,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'OH',
@@ -254,6 +322,8 @@ export const US_STATES_DATA_FULL = [
 		population: 11799448,
 		gdp: 928,
 		gdpYear: 2024,
+		medianIncome: 73682,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'OK',
@@ -261,6 +331,8 @@ export const US_STATES_DATA_FULL = [
 		population: 3959353,
 		gdp: 348,
 		gdpYear: 2024,
+		medianIncome: 67524,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'OR',
@@ -268,6 +340,8 @@ export const US_STATES_DATA_FULL = [
 		population: 4237256,
 		gdp: 410,
 		gdpYear: 2024,
+		medianIncome: 80456,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'PA',
@@ -275,6 +349,8 @@ export const US_STATES_DATA_FULL = [
 		population: 12961683,
 		gdp: 1024,
 		gdpYear: 2024,
+		medianIncome: 79345,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'RI',
@@ -282,6 +358,8 @@ export const US_STATES_DATA_FULL = [
 		population: 1097379,
 		gdp: 113,
 		gdpYear: 2024,
+		medianIncome: 82913,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'SC',
@@ -289,6 +367,8 @@ export const US_STATES_DATA_FULL = [
 		population: 5118425,
 		gdp: 483,
 		gdpYear: 2024,
+		medianIncome: 72156,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'SD',
@@ -296,6 +376,8 @@ export const US_STATES_DATA_FULL = [
 		population: 884659,
 		gdp: 105,
 		gdpYear: 2024,
+		medianIncome: 76834,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'TN',
@@ -303,6 +385,8 @@ export const US_STATES_DATA_FULL = [
 		population: 6910840,
 		gdp: 651,
 		gdpYear: 2024,
+		medianIncome: 73249,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'TX',
@@ -310,6 +394,8 @@ export const US_STATES_DATA_FULL = [
 		population: 29145505,
 		gdp: 2709,
 		gdpYear: 2024,
+		medianIncome: 77154,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'UT',
@@ -317,6 +403,8 @@ export const US_STATES_DATA_FULL = [
 		population: 3271616,
 		gdp: 342,
 		gdpYear: 2024,
+		medianIncome: 87451,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'VT',
@@ -324,6 +412,8 @@ export const US_STATES_DATA_FULL = [
 		population: 643077,
 		gdp: 46,
 		gdpYear: 2024,
+		medianIncome: 82567,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'VA',
@@ -331,6 +421,8 @@ export const US_STATES_DATA_FULL = [
 		population: 8631393,
 		gdp: 817,
 		gdpYear: 2024,
+		medianIncome: 88923,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'WA',
@@ -338,6 +430,8 @@ export const US_STATES_DATA_FULL = [
 		population: 7705281,
 		gdp: 951,
 		gdpYear: 2024,
+		medianIncome: 92845,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'WV',
@@ -345,6 +439,8 @@ export const US_STATES_DATA_FULL = [
 		population: 1770071,
 		gdp: 130,
 		gdpYear: 2024,
+		medianIncome: 60783,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'WI',
@@ -352,6 +448,8 @@ export const US_STATES_DATA_FULL = [
 		population: 5893718,
 		gdp: 569,
 		gdpYear: 2024,
+		medianIncome: 78456,
+		medianIncomeYear: 2023,
 	},
 	{
 		code: 'WY',
@@ -359,5 +457,7 @@ export const US_STATES_DATA_FULL = [
 		population: 576851,
 		gdp: 53,
 		gdpYear: 2024,
+		medianIncome: 79652,
+		medianIncomeYear: 2023,
 	},
 ]

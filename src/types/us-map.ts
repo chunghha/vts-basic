@@ -7,4 +7,6 @@ export interface USState {
 	population: number // 2020 Census
 	gdp: number // in billions USD
 	gdpYear: number // year of GDP data
+	medianIncome: number // annual median household income in USD
+	medianIncomeYear: number // year of median income data
 }

@@ -322,6 +322,36 @@ These can be done quickly for immediate impact:
 
 ---
 
+## US Map Enhancement: Median Income Toggle
+
+- [x] **Add median income field to USState type** (`src/types/us-map.ts`)
+  - Added `medianIncome: number` (annual median household income in USD)
+  - Added `medianIncomeYear: number`
+
+- [x] **Populate median income data** (`src/data/us-states.ts`)
+  - Added median income values for all 50 states from Census Bureau ACS data (2023)
+
+- [x] **Add visualization mode toggle to USMapSVG** (`src/components/USMapSVG.tsx`)
+  - Added `displayMode` prop: 'gdp' | 'income'
+  - Created dynamic `getColor()` function that supports both metrics with quartile logic
+  - Added toggle switch with pastel tone styling (#c7d2e8 for GDP, #d9e9c1 for Income)
+  - Toggle buttons have subtle shadows (0 2px 4px) and hover effects
+  - Made legend dynamic - shows appropriate ranges for selected metric
+  - Updated state overlay to show relevant data (GDP + per capita vs Median Income)
+
+- [x] **Update USMapPage** (`src/pages/us-map/index.tsx`)
+  - Added state for `displayMode`
+  - Passed mode and handler to USMapSVG component
+  - Added average median income to national summary statistics
+
+**Implementation Complete**: All 4 pastel colors used for both GDP and income quartiles
+- Q1: #c7d2e8 (pastel purple/lavender)
+- Q2: #d9e9c1 (pastel green/lime)
+- Q3: #f5d5b8 (pastel orange)
+- Q4: #f5b9b1 (pastel pink/coral)
+
+---
+
 ## Notes
 
 - Update this file as items are completed
