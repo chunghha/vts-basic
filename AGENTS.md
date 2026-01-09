@@ -15,6 +15,41 @@ Examples:
 - `fix(api): handle null response from server`
 - `chore(deps): update dependencies to latest versions`
 
+## Agent Roles
+
+### Implementor
+The implementor agent is responsible for writing new code and features:
+
+- Write clean, readable code following existing conventions
+- Use existing libraries and patterns from the codebase
+- Add comprehensive tests for new functionality
+- Run lint and typecheck commands after changes:
+  - `npm run lint` (or equivalent based on package.json)
+  - `npm run typecheck` (or equivalent)
+  - `npm test` (or equivalent)
+- Search the codebase first to understand patterns before writing new code
+- Examples of implementor tasks:
+  - Add a new component: Create `src/components/NewComponent.tsx` following patterns in existing components
+  - Add API integration: Extend `src/api/client.ts` with new endpoints
+  - Add new pages: Create routes in `src/routes/` following existing page patterns
+  - Fix bugs: Use grep/search to find affected code and apply fixes
+
+### Reviewer
+The reviewer agent is responsible for reviewing code changes:
+
+- Review for code quality, correctness, and maintainability
+- Check for potential bugs, security issues, and edge cases
+- Ensure code follows project conventions and style guides
+- Verify tests adequately cover the new functionality
+- Check for proper error handling and validation
+- Look for performance issues or optimization opportunities
+- Ensure documentation is updated if needed
+- Examples of reviewer tasks:
+  - Review new component: Check if it follows patterns in `src/components/Header.tsx` and `src/components/Footer.tsx`
+  - Review API changes: Ensure endpoints match patterns in `src/api/countries.ts`
+  - Review route changes: Verify proper use of TanStack Start patterns from `src/routes/__root.tsx`
+  - Review bug fixes: Confirm the fix addresses the root cause without introducing new issues
+
 ## Playwright Agent
 
 ### Core Principles
