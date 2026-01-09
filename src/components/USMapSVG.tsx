@@ -147,10 +147,14 @@ export default function USMapSVG({
 
 	// Create quartiles for current mode
 	const values = useMemo(() => {
-		const data =
-			displayMode === 'gdp'
-				? states.map((s) => s.gdp)
-				: states.map((s) => s.medianIncome)
+		let data: number[]
+		if (displayMode === US_MAP_MODES.GDP) {
+			data = states.map((s) => s.gdp)
+		} else if (displayMode === US_MAP_MODES.INCOME) {
+			data = states.map((s) => s.medianIncome)
+		} else {
+			data = states.map((s) => s.medianHousePrice)
+		}
 		return data.sort((a, b) => a - b)
 	}, [states, displayMode])
 
@@ -170,8 +174,15 @@ export default function USMapSVG({
 				return STATE_COLORS[state.code] || US_MAP_COLORS.selected
 			}
 
-			const value =
-				displayMode === US_MAP_MODES.GDP ? state.gdp : state.medianIncome
+			let value: number
+			if (displayMode === US_MAP_MODES.GDP) {
+				value = state.gdp
+			} else if (displayMode === US_MAP_MODES.INCOME) {
+				value = state.medianIncome
+			} else {
+				value = state.medianHousePrice
+			}
+
 			if (value <= quartiles.q1) return US_MAP_COLORS.q1
 			if (value <= quartiles.q2) return US_MAP_COLORS.q2
 			if (value <= quartiles.q3) return US_MAP_COLORS.q3
@@ -193,7 +204,7 @@ export default function USMapSVG({
 	return (
 		<div className="w-full">
 			{/* Display Mode Toggle */}
-			<div className="mb-6 flex gap-3 justify-center">
+			<div className="mb-6 flex gap-3 justify-center flex-wrap">
 				<button
 					type="button"
 					onClick={() => onModeChange(US_MAP_MODES.GDP)}
@@ -228,6 +239,24 @@ export default function USMapSVG({
 				>
 					Median Income
 				</button>
+				<button
+					type="button"
+					onClick={() => onModeChange(US_MAP_MODES.HOUSE_PRICE)}
+					className={`px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${
+						displayMode === US_MAP_MODES.HOUSE_PRICE
+							? 'text-gray-800 shadow-md hover:shadow-lg'
+							: 'text-gray-700 bg-gray-100 hover:bg-gray-200'
+					}`}
+					style={{
+						backgroundColor:
+							displayMode === US_MAP_MODES.HOUSE_PRICE
+								? US_MAP_COLORS.q3
+								: undefined,
+					}}
+					aria-pressed={displayMode === US_MAP_MODES.HOUSE_PRICE}
+				>
+					Median Home Price
+				</button>
 			</div>
 
 			<div
@@ -248,14 +277,26 @@ export default function USMapSVG({
 							height="593"
 							viewBox="0 0 900 600"
 							role="img"
-							aria-label={`Interactive United States map showing ${displayMode === 'gdp' ? 'GDP' : 'Median Income'} data by color`}
+							aria-label={`Interactive United States map showing ${
+								displayMode === US_MAP_MODES.GDP
+									? 'GDP'
+									: displayMode === US_MAP_MODES.INCOME
+										? 'Median Income'
+										: 'Median Home Price'
+							} data by color`}
 						>
 							{states.map((state) => (
 								// biome-ignore lint/a11y/useSemanticElements: Using a <g> element with role='button' is a standard way to make SVG shapes accessible as buttons.
 								<g
 									key={`${state.code}-${selectedState?.code}`}
 									onClick={() => handleStateClick(state.code)}
-									aria-label={`${state.name} - ${displayMode === 'gdp' ? `GDP: $${state.gdp}B` : `Median Income: $${state.medianIncome.toLocaleString()}`}`}
+									aria-label={`${state.name} - ${
+										displayMode === US_MAP_MODES.GDP
+											? `GDP: $${state.gdp}B`
+											: displayMode === US_MAP_MODES.INCOME
+												? `Median Income: $${state.medianIncome.toLocaleString()}`
+												: `Median Home Price: $${state.medianHousePrice.toLocaleString()}`
+									}`}
 									style={{ cursor: 'pointer' }}
 									role="button"
 									tabIndex={0}
@@ -329,7 +370,7 @@ export default function USMapSVG({
 											{(selectedState.population / 1_000_000).toFixed(1)}M
 										</span>
 									</div>
-									{displayMode === 'gdp' ? (
+									{displayMode === US_MAP_MODES.GDP ? (
 										<>
 											<div className="flex justify-between">
 												<span style={{ color: 'inherit', opacity: 0.75 }}>
@@ -354,13 +395,22 @@ export default function USMapSVG({
 												</span>
 											</div>
 										</>
-									) : (
+									) : displayMode === US_MAP_MODES.INCOME ? (
 										<div className="flex justify-between">
 											<span style={{ color: 'inherit', opacity: 0.75 }}>
 												Median Income:
 											</span>
 											<span className="font-semibold">
 												${selectedState.medianIncome.toLocaleString()}
+											</span>
+										</div>
+									) : (
+										<div className="flex justify-between">
+											<span style={{ color: 'inherit', opacity: 0.75 }}>
+												Median Home Price:
+											</span>
+											<span className="font-semibold">
+												${selectedState.medianHousePrice.toLocaleString()}
 											</span>
 										</div>
 									)}
@@ -379,32 +429,40 @@ export default function USMapSVG({
 						color: US_MAP_COLORS.q1,
 						gdpLabel: 'Lowest GDP',
 						incomeLabel: 'Lowest Income',
+						priceLabel: 'Lowest Price',
 						gdpRange: `$${(quartiles.q1 || 0).toFixed(0)}B`,
 						incomeRange: `$${(quartiles.q1 || 0).toLocaleString()}`,
+						priceRange: `$${(quartiles.q1 || 0).toLocaleString()}`,
 					},
 					{
 						id: 'q2',
 						color: US_MAP_COLORS.q2,
 						gdpLabel: 'Low GDP',
 						incomeLabel: 'Low Income',
+						priceLabel: 'Low Price',
 						gdpRange: `$${(quartiles.q1 || 0).toFixed(0)}B-$${(quartiles.q2 || 0).toFixed(0)}B`,
 						incomeRange: `$${(quartiles.q1 || 0).toLocaleString()}-$${(quartiles.q2 || 0).toLocaleString()}`,
+						priceRange: `$${(quartiles.q1 || 0).toLocaleString()}-$${(quartiles.q2 || 0).toLocaleString()}`,
 					},
 					{
 						id: 'q3',
 						color: US_MAP_COLORS.q3,
 						gdpLabel: 'Medium GDP',
 						incomeLabel: 'Medium Income',
+						priceLabel: 'Medium Price',
 						gdpRange: `$${(quartiles.q2 || 0).toFixed(0)}B-$${(quartiles.q3 || 0).toFixed(0)}B`,
 						incomeRange: `$${(quartiles.q2 || 0).toLocaleString()}-$${(quartiles.q3 || 0).toLocaleString()}`,
+						priceRange: `$${(quartiles.q2 || 0).toLocaleString()}-$${(quartiles.q3 || 0).toLocaleString()}`,
 					},
 					{
 						id: 'q4',
 						color: US_MAP_COLORS.q4,
 						gdpLabel: 'High GDP',
 						incomeLabel: 'High Income',
+						priceLabel: 'High Price',
 						gdpRange: `$${(quartiles.q3 || 0).toFixed(0)}B+`,
 						incomeRange: `$${(quartiles.q3 || 0).toLocaleString()}+`,
+						priceRange: `$${(quartiles.q3 || 0).toLocaleString()}+`,
 					},
 				].map((item) => (
 					<div key={item.id} className="flex items-center gap-2">
@@ -415,12 +473,16 @@ export default function USMapSVG({
 						<span className="text-base-content/70">
 							{displayMode === US_MAP_MODES.GDP
 								? item.gdpLabel
-								: item.incomeLabel}
+								: displayMode === US_MAP_MODES.INCOME
+									? item.incomeLabel
+									: item.priceLabel}
 							<br />
 							<span className="text-xs">
 								{displayMode === US_MAP_MODES.GDP
 									? item.gdpRange
-									: item.incomeRange}
+									: displayMode === US_MAP_MODES.INCOME
+										? item.incomeRange
+										: item.priceRange}
 							</span>
 						</span>
 					</div>

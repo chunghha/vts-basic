@@ -8,7 +8,7 @@ import type { USState } from '../../types/us-map'
 
 /**
  * US States interactive map page
- * Displays population, GDP and median income data for each state
+ * Displays population, GDP, median income, and median home price data for each state
  */
 export default function USMapPage() {
 	const [selectedState, setSelectedState] = useState<USState | null>(null)
@@ -24,6 +24,8 @@ export default function USMapPage() {
 		0,
 	)
 	const avgMedianIncome = totalMedianIncome / statesData.length
+	const avgMedianHousePrice =
+		statesData.reduce((sum, s) => sum + s.medianHousePrice, 0) / statesData.length
 
 	return (
 		<main className="min-h-screen bg-base-100 text-base-content">
@@ -32,11 +34,11 @@ export default function USMapPage() {
 					{/* Page Header */}
 					<div className="mb-8">
 						<h1 className="text-4xl md:text-5xl font-extrabold mb-4">
-							US States by Population, GDP & Income
+							US States by Population, GDP, Income & Home Prices
 						</h1>
 						<p className="text-lg text-base-content/70 max-w-2xl">
-							Click on a state to view its population, GDP and median income
-							data.
+							Click on a state to view its population, GDP, median income, and
+							median home price data.
 						</p>
 					</div>
 
@@ -55,7 +57,7 @@ export default function USMapPage() {
 					{/* Statistics Section */}
 					<section className="bg-base-200/50 rounded-lg p-8">
 						<h2 className="text-2xl font-bold mb-6">National Summary</h2>
-						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 							<div className="stat bg-base-100 rounded-lg shadow">
 								<div className="stat-title">Total Population</div>
 								<div className="stat-value">
@@ -71,6 +73,15 @@ export default function USMapPage() {
 								<div className="stat-value">
 									$
 									{avgMedianIncome.toLocaleString('en-US', {
+										maximumFractionDigits: 0,
+									})}
+								</div>
+							</div>
+							<div className="stat bg-base-100 rounded-lg shadow">
+								<div className="stat-title">Avg Home Price</div>
+								<div className="stat-value">
+									$
+									{avgMedianHousePrice.toLocaleString('en-US', {
 										maximumFractionDigits: 0,
 									})}
 								</div>

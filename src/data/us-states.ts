@@ -18,6 +18,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 63852,
 		medianIncomeYear: 2023,
+		medianHousePrice: 285000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'AK',
@@ -27,6 +29,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 87606,
 		medianIncomeYear: 2023,
+		medianHousePrice: 485000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'AZ',
@@ -36,6 +40,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 78267,
 		medianIncomeYear: 2023,
+		medianHousePrice: 465000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'AR',
@@ -45,6 +51,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 61519,
 		medianIncomeYear: 2023,
+		medianHousePrice: 245000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'CA',
@@ -54,6 +62,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 91571,
 		medianIncomeYear: 2023,
+		medianHousePrice: 875000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'CO',
@@ -63,6 +73,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 88239,
 		medianIncomeYear: 2023,
+		medianHousePrice: 625000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'CT',
@@ -72,6 +84,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 98814,
 		medianIncomeYear: 2023,
+		medianHousePrice: 315000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'DE',
@@ -81,6 +95,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 82645,
 		medianIncomeYear: 2023,
+		medianHousePrice: 385000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'FL',
@@ -90,6 +106,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 77251,
 		medianIncomeYear: 2023,
+		medianHousePrice: 425000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'GA',
@@ -99,6 +117,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 78866,
 		medianIncomeYear: 2023,
+		medianHousePrice: 395000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'HI',
@@ -108,6 +128,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 90296,
 		medianIncomeYear: 2023,
+		medianHousePrice: 1050000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'ID',
@@ -117,6 +139,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 78631,
 		medianIncomeYear: 2023,
+		medianHousePrice: 475000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'IL',
@@ -126,6 +150,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 81456,
 		medianIncomeYear: 2023,
+		medianHousePrice: 245000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'IN',
@@ -135,6 +161,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 74352,
 		medianIncomeYear: 2023,
+		medianHousePrice: 215000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'IA',
@@ -144,6 +172,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 76918,
 		medianIncomeYear: 2023,
+		medianHousePrice: 215000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'KS',
@@ -153,6 +183,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 75801,
 		medianIncomeYear: 2023,
+		medianHousePrice: 225000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'KY',
@@ -162,6 +194,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 69146,
 		medianIncomeYear: 2023,
+		medianHousePrice: 235000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'LA',
@@ -171,6 +205,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 62840,
 		medianIncomeYear: 2023,
+		medianHousePrice: 265000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'ME',
@@ -180,6 +216,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 78346,
 		medianIncomeYear: 2023,
+		medianHousePrice: 385000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'MD',
@@ -189,6 +227,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 91297,
 		medianIncomeYear: 2023,
+		medianHousePrice: 425000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'MA',
@@ -198,6 +238,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 100277,
 		medianIncomeYear: 2023,
+		medianHousePrice: 525000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'MI',
@@ -207,6 +249,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 77521,
 		medianIncomeYear: 2023,
+		medianHousePrice: 285000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'MN',
@@ -216,6 +260,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 89289,
 		medianIncomeYear: 2023,
+		medianHousePrice: 385000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'MS',
@@ -225,6 +271,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 59268,
 		medianIncomeYear: 2023,
+		medianHousePrice: 215000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'MO',
@@ -234,6 +282,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 71987,
 		medianIncomeYear: 2023,
+		medianHousePrice: 245000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'MT',
@@ -243,6 +293,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 76234,
 		medianIncomeYear: 2023,
+		medianHousePrice: 495000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'NE',
@@ -252,6 +304,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 78923,
 		medianIncomeYear: 2023,
+		medianHousePrice: 235000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'NV',
@@ -261,6 +315,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 80245,
 		medianIncomeYear: 2023,
+		medianHousePrice: 515000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'NH',
@@ -270,6 +326,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 97156,
 		medianIncomeYear: 2023,
+		medianHousePrice: 445000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'NJ',
@@ -279,6 +337,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 101726,
 		medianIncomeYear: 2023,
+		medianHousePrice: 475000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'NM',
@@ -288,6 +348,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 63718,
 		medianIncomeYear: 2023,
+		medianHousePrice: 315000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'NY',
@@ -297,6 +359,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 85452,
 		medianIncomeYear: 2023,
+		medianHousePrice: 385000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'NC',
@@ -306,6 +370,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 77318,
 		medianIncomeYear: 2023,
+		medianHousePrice: 365000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'ND',
@@ -315,6 +381,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 82451,
 		medianIncomeYear: 2023,
+		medianHousePrice: 265000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'OH',
@@ -324,6 +392,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 73682,
 		medianIncomeYear: 2023,
+		medianHousePrice: 215000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'OK',
@@ -333,6 +403,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 67524,
 		medianIncomeYear: 2023,
+		medianHousePrice: 215000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'OR',
@@ -342,6 +414,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 80456,
 		medianIncomeYear: 2023,
+		medianHousePrice: 545000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'PA',
@@ -351,6 +425,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 79345,
 		medianIncomeYear: 2023,
+		medianHousePrice: 285000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'RI',
@@ -360,6 +436,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 82913,
 		medianIncomeYear: 2023,
+		medianHousePrice: 385000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'SC',
@@ -369,6 +447,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 72156,
 		medianIncomeYear: 2023,
+		medianHousePrice: 325000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'SD',
@@ -378,6 +458,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 76834,
 		medianIncomeYear: 2023,
+		medianHousePrice: 275000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'TN',
@@ -387,6 +469,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 73249,
 		medianIncomeYear: 2023,
+		medianHousePrice: 335000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'TX',
@@ -396,6 +480,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 77154,
 		medianIncomeYear: 2023,
+		medianHousePrice: 335000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'UT',
@@ -405,6 +491,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 87451,
 		medianIncomeYear: 2023,
+		medianHousePrice: 565000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'VT',
@@ -414,6 +502,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 82567,
 		medianIncomeYear: 2023,
+		medianHousePrice: 375000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'VA',
@@ -423,6 +513,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 88923,
 		medianIncomeYear: 2023,
+		medianHousePrice: 415000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'WA',
@@ -432,6 +524,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 92845,
 		medianIncomeYear: 2023,
+		medianHousePrice: 625000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'WV',
@@ -441,6 +535,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 60783,
 		medianIncomeYear: 2023,
+		medianHousePrice: 165000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'WI',
@@ -450,6 +546,8 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 78456,
 		medianIncomeYear: 2023,
+		medianHousePrice: 275000,
+		medianHousePriceYear: 2024,
 	},
 	{
 		code: 'WY',
@@ -459,5 +557,7 @@ export const US_STATES_DATA_FULL = [
 		gdpYear: 2024,
 		medianIncome: 79652,
 		medianIncomeYear: 2023,
+		medianHousePrice: 385000,
+		medianHousePriceYear: 2024,
 	},
 ]

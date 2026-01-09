@@ -9,4 +9,6 @@ export interface USState {
 	gdpYear: number // year of GDP data
 	medianIncome: number // annual median household income in USD
 	medianIncomeYear: number // year of median income data
+	medianHousePrice: number // median house price in USD
+	medianHousePriceYear: number // year of median house price data
 }

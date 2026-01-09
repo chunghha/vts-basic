@@ -22,6 +22,7 @@ export const US_MAP_COLORS = {
 export const US_MAP_MODES = {
 	GDP: 'gdp',
 	INCOME: 'income',
+	HOUSE_PRICE: 'housePrice',
 } as const
 
 export type USMapMode = (typeof US_MAP_MODES)[keyof typeof US_MAP_MODES]

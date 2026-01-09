@@ -23,10 +23,7 @@ The implementor agent is responsible for writing new code and features:
 - Write clean, readable code following existing conventions
 - Use existing libraries and patterns from the codebase
 - Add comprehensive tests for new functionality
-- Run lint and typecheck commands after changes:
-  - `npm run lint` (or equivalent based on package.json)
-  - `npm run typecheck` (or equivalent)
-  - `npm test` (or equivalent)
+- Run `bun run check:all` (or equivalent) before committing to ensure code quality
 - Search the codebase first to understand patterns before writing new code
 - Examples of implementor tasks:
   - Add a new component: Create `src/components/NewComponent.tsx` following patterns in existing components
