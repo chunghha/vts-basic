@@ -25,7 +25,8 @@ export default function USMapPage() {
 	)
 	const avgMedianIncome = totalMedianIncome / statesData.length
 	const avgMedianHousePrice =
-		statesData.reduce((sum, s) => sum + s.medianHousePrice, 0) / statesData.length
+		statesData.reduce((sum, s) => sum + s.medianHousePrice, 0) /
+		statesData.length
 
 	return (
 		<main className="min-h-screen bg-base-100 text-base-content">
