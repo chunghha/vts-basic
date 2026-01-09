@@ -45,10 +45,24 @@ VTS Basic is a production-ready React application that combines modern web techn
 - [Docker Deployment Guide](docs/rationale/0001_docker_deployment.md) - Complete guide for building and deploying with Docker
 - [Build Validation](#build-validation) - Automatic asset validation after builds
 
+## Data Sources
+
+### US Map Page
+- **State Population**: 2020 U.S. Census Bureau
+- **State GDP**: 2024 Bureau of Economic Analysis (BEA) estimates
+- **Median Household Income**: 2023 U.S. Census Bureau (American Community Survey)
+- **SVG State Paths**: Derived from [react-usa-map](https://github.com/VictorBjelkholm/react-usa-map) package
+
+The US Map visualization displays all 50 states with color-coded quartiles for either GDP or median income. Toggle between metrics to compare economic output and household income distributions across the country.
+
+### Countries Page
+- Live data from [REST Countries API](https://restcountries.com)
+
 ## Credits
 
 - The file `docs/design_iterator.md` is credited to EveryInc — original source:
   https://github.com/EveryInc/claude_commands/blob/main/agents/design-iterator.md
+- SVG state paths for the US Map are based on [react-usa-map](https://github.com/VictorBjelkholm/react-usa-map) by Victor Bjelkholm
 
 ---
 
