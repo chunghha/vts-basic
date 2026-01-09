@@ -1,8 +1,8 @@
-import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
-import USMapSVG from '../USMapSVG'
-import { US_MAP_MODES, US_MAP_COLORS } from '../../constants/us-map-colors'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
+import { US_MAP_MODES } from '../../constants/us-map-colors'
 import type { USState } from '../../types/us-map'
+import USMapSVG from '../USMapSVG'
 
 const mockStates: USState[] = [
 	{
@@ -54,13 +54,13 @@ describe('USMapSVG Component', () => {
 
 	describe('Display Mode Toggle', () => {
 		it('renders toggle buttons with correct text', () => {
-			const { container } = render(
+			render(
 				<USMapSVG
 					states={mockStates}
 					onStateClick={mockOnStateClick}
 					displayMode={US_MAP_MODES.GDP}
 					onModeChange={mockOnModeChange}
-				/>
+				/>,
 			)
 
 			expect(screen.getByText('GDP')).toBeTruthy()
@@ -74,7 +74,7 @@ describe('USMapSVG Component', () => {
 					onStateClick={mockOnStateClick}
 					displayMode={US_MAP_MODES.GDP}
 					onModeChange={mockOnModeChange}
-				/>
+				/>,
 			)
 
 			const gdpButton = screen.getByText('GDP').closest('button')
@@ -88,7 +88,7 @@ describe('USMapSVG Component', () => {
 					onStateClick={mockOnStateClick}
 					displayMode={US_MAP_MODES.INCOME}
 					onModeChange={mockOnModeChange}
-				/>
+				/>,
 			)
 
 			const incomeButton = screen.getByText('Median Income').closest('button')
@@ -102,7 +102,7 @@ describe('USMapSVG Component', () => {
 					onStateClick={mockOnStateClick}
 					displayMode={US_MAP_MODES.INCOME}
 					onModeChange={mockOnModeChange}
-				/>
+				/>,
 			)
 
 			const gdpButton = screen.getByText('GDP').closest('button')
@@ -118,7 +118,7 @@ describe('USMapSVG Component', () => {
 					onStateClick={mockOnStateClick}
 					displayMode={US_MAP_MODES.GDP}
 					onModeChange={mockOnModeChange}
-				/>
+				/>,
 			)
 
 			const incomeButton = screen.getByText('Median Income').closest('button')
@@ -136,7 +136,7 @@ describe('USMapSVG Component', () => {
 					onStateClick={mockOnStateClick}
 					displayMode={US_MAP_MODES.GDP}
 					onModeChange={mockOnModeChange}
-				/>
+				/>,
 			)
 
 			expect(screen.getByText(/Lowest GDP/i)).toBeTruthy()
@@ -152,7 +152,7 @@ describe('USMapSVG Component', () => {
 					onStateClick={mockOnStateClick}
 					displayMode={US_MAP_MODES.INCOME}
 					onModeChange={mockOnModeChange}
-				/>
+				/>,
 			)
 
 			expect(screen.getByText(/Lowest Income/i)).toBeTruthy()
@@ -168,15 +168,15 @@ describe('USMapSVG Component', () => {
 					onStateClick={mockOnStateClick}
 					displayMode={US_MAP_MODES.GDP}
 					onModeChange={mockOnModeChange}
-				/>
+				/>,
 			)
 
 			const legendBoxes = container.querySelectorAll('.w-6.h-6.rounded-sm')
 			expect(legendBoxes.length).toBeGreaterThanOrEqual(4)
 
 			// Check that at least one box has the q1 color
-			const colors = Array.from(legendBoxes).map((box) =>
-				window.getComputedStyle(box).backgroundColor
+			const colors = Array.from(legendBoxes).map(
+				(box) => window.getComputedStyle(box).backgroundColor,
 			)
 			expect(colors.length).toBeGreaterThanOrEqual(1)
 		})
@@ -190,7 +190,7 @@ describe('USMapSVG Component', () => {
 					onStateClick={mockOnStateClick}
 					displayMode={US_MAP_MODES.GDP}
 					onModeChange={mockOnModeChange}
-				/>
+				/>,
 			)
 
 			let svg = screen.getByRole('img')
@@ -202,7 +202,7 @@ describe('USMapSVG Component', () => {
 					onStateClick={mockOnStateClick}
 					displayMode={US_MAP_MODES.INCOME}
 					onModeChange={mockOnModeChange}
-				/>
+				/>,
 			)
 
 			svg = screen.getByRole('img')
@@ -218,13 +218,13 @@ describe('USMapSVG Component', () => {
 					onStateClick={mockOnStateClick}
 					displayMode={US_MAP_MODES.GDP}
 					onModeChange={mockOnModeChange}
-				/>
+				/>,
 			)
 
 			const stateElements = screen.getAllByRole('button')
 			// Find a state button (not toggle buttons)
 			const stateButton = stateElements.find((btn) =>
-				btn.getAttribute('aria-label')?.includes('California')
+				btn.getAttribute('aria-label')?.includes('California'),
 			)
 
 			if (stateButton) {
@@ -241,7 +241,7 @@ describe('USMapSVG Component', () => {
 					selectedState={mockStates[0]}
 					displayMode={US_MAP_MODES.GDP}
 					onModeChange={mockOnModeChange}
-				/>
+				/>,
 			)
 
 			// In GDP mode, should show GDP and per capita
@@ -255,7 +255,7 @@ describe('USMapSVG Component', () => {
 					selectedState={mockStates[0]}
 					displayMode={US_MAP_MODES.INCOME}
 					onModeChange={mockOnModeChange}
-				/>
+				/>,
 			)
 
 			// In income mode, should show median income
@@ -271,7 +271,7 @@ describe('USMapSVG Component', () => {
 					onStateClick={mockOnStateClick}
 					displayMode={US_MAP_MODES.GDP}
 					onModeChange={mockOnModeChange}
-				/>
+				/>,
 			)
 
 			const gdpButton = screen.getByText('GDP').closest('button')
@@ -288,12 +288,12 @@ describe('USMapSVG Component', () => {
 					onStateClick={mockOnStateClick}
 					displayMode={US_MAP_MODES.GDP}
 					onModeChange={mockOnModeChange}
-				/>
+				/>,
 			)
 
 			const stateButtons = screen.getAllByRole('button')
 			const caButton = stateButtons.find((btn) =>
-				btn.getAttribute('aria-label')?.includes('California')
+				btn.getAttribute('aria-label')?.includes('California'),
 			)
 
 			expect(caButton?.getAttribute('aria-label')).toContain('GDP')
@@ -304,15 +304,17 @@ describe('USMapSVG Component', () => {
 					onStateClick={mockOnStateClick}
 					displayMode={US_MAP_MODES.INCOME}
 					onModeChange={mockOnModeChange}
-				/>
+				/>,
 			)
 
 			const stateButtonsIncome = screen.getAllByRole('button')
 			const caButtonIncome = stateButtonsIncome.find((btn) =>
-				btn.getAttribute('aria-label')?.includes('California')
+				btn.getAttribute('aria-label')?.includes('California'),
 			)
 
-			expect(caButtonIncome?.getAttribute('aria-label')).toContain('Median Income')
+			expect(caButtonIncome?.getAttribute('aria-label')).toContain(
+				'Median Income',
+			)
 		})
 	})
 })

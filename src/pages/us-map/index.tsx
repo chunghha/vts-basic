@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Footer } from '../../components/Footer'
 import USMapSVG from '../../components/USMapSVG'
-import { US_STATES_DATA_FULL } from '../../data/us-states'
-import { US_MAP_MODES } from '../../constants/us-map-colors'
-import type { USState } from '../../types/us-map'
 import type { USMapMode } from '../../constants/us-map-colors'
+import { US_MAP_MODES } from '../../constants/us-map-colors'
+import { US_STATES_DATA_FULL } from '../../data/us-states'
+import type { USState } from '../../types/us-map'
 
 /**
  * US States interactive map page
@@ -19,7 +19,10 @@ export default function USMapPage() {
 	// Calculate statistics
 	const totalPopulation = statesData.reduce((sum, s) => sum + s.population, 0)
 	const totalGDP = statesData.reduce((sum, s) => sum + s.gdp, 0)
-	const totalMedianIncome = statesData.reduce((sum, s) => sum + s.medianIncome, 0)
+	const totalMedianIncome = statesData.reduce(
+		(sum, s) => sum + s.medianIncome,
+		0,
+	)
 	const avgMedianIncome = totalMedianIncome / statesData.length
 
 	return (
@@ -32,7 +35,8 @@ export default function USMapPage() {
 							US States by Population, GDP & Income
 						</h1>
 						<p className="text-lg text-base-content/70 max-w-2xl">
-							Click on a state to view its population, GDP and median income data.
+							Click on a state to view its population, GDP and median income
+							data.
 						</p>
 					</div>
 
@@ -65,7 +69,10 @@ export default function USMapPage() {
 							<div className="stat bg-base-100 rounded-lg shadow">
 								<div className="stat-title">Avg Median Income</div>
 								<div className="stat-value">
-									${avgMedianIncome.toLocaleString('en-US', { maximumFractionDigits: 0 })}
+									$
+									{avgMedianIncome.toLocaleString('en-US', {
+										maximumFractionDigits: 0,
+									})}
 								</div>
 							</div>
 							<div className="stat bg-base-100 rounded-lg shadow">

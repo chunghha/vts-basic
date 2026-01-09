@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useMemo } from 'react'
+import {
+	US_MAP_COLORS,
+	US_MAP_MODES,
+	type USMapMode,
+} from '../constants/us-map-colors'
 import type { USState } from '../types/us-map'
-import { US_MAP_COLORS, US_MAP_MODES, US_MAP_SHADOWS, type USMapMode } from '../constants/us-map-colors'
 
 interface Props {
 	states: USState[]
@@ -143,7 +147,10 @@ export default function USMapSVG({
 
 	// Create quartiles for current mode
 	const values = useMemo(() => {
-		const data = displayMode === 'gdp' ? states.map((s) => s.gdp) : states.map((s) => s.medianIncome)
+		const data =
+			displayMode === 'gdp'
+				? states.map((s) => s.gdp)
+				: states.map((s) => s.medianIncome)
 		return data.sort((a, b) => a - b)
 	}, [states, displayMode])
 
@@ -163,7 +170,8 @@ export default function USMapSVG({
 				return STATE_COLORS[state.code] || US_MAP_COLORS.selected
 			}
 
-			const value = displayMode === US_MAP_MODES.GDP ? state.gdp : state.medianIncome
+			const value =
+				displayMode === US_MAP_MODES.GDP ? state.gdp : state.medianIncome
 			if (value <= quartiles.q1) return US_MAP_COLORS.q1
 			if (value <= quartiles.q2) return US_MAP_COLORS.q2
 			if (value <= quartiles.q3) return US_MAP_COLORS.q3
@@ -212,7 +220,9 @@ export default function USMapSVG({
 					}`}
 					style={{
 						backgroundColor:
-							displayMode === US_MAP_MODES.INCOME ? US_MAP_COLORS.q2 : undefined,
+							displayMode === US_MAP_MODES.INCOME
+								? US_MAP_COLORS.q2
+								: undefined,
 					}}
 					aria-pressed={displayMode === US_MAP_MODES.INCOME}
 				>
@@ -365,6 +375,7 @@ export default function USMapSVG({
 			<div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
 				{[
 					{
+						id: 'q1',
 						color: US_MAP_COLORS.q1,
 						gdpLabel: 'Lowest GDP',
 						incomeLabel: 'Lowest Income',
@@ -372,6 +383,7 @@ export default function USMapSVG({
 						incomeRange: `$${(quartiles.q1 || 0).toLocaleString()}`,
 					},
 					{
+						id: 'q2',
 						color: US_MAP_COLORS.q2,
 						gdpLabel: 'Low GDP',
 						incomeLabel: 'Low Income',
@@ -379,6 +391,7 @@ export default function USMapSVG({
 						incomeRange: `$${(quartiles.q1 || 0).toLocaleString()}-$${(quartiles.q2 || 0).toLocaleString()}`,
 					},
 					{
+						id: 'q3',
 						color: US_MAP_COLORS.q3,
 						gdpLabel: 'Medium GDP',
 						incomeLabel: 'Medium Income',
@@ -386,23 +399,28 @@ export default function USMapSVG({
 						incomeRange: `$${(quartiles.q2 || 0).toLocaleString()}-$${(quartiles.q3 || 0).toLocaleString()}`,
 					},
 					{
+						id: 'q4',
 						color: US_MAP_COLORS.q4,
 						gdpLabel: 'High GDP',
 						incomeLabel: 'High Income',
 						gdpRange: `$${(quartiles.q3 || 0).toFixed(0)}B+`,
 						incomeRange: `$${(quartiles.q3 || 0).toLocaleString()}+`,
 					},
-				].map((item, index) => (
-					<div key={`legend-${index}`} className="flex items-center gap-2">
+				].map((item) => (
+					<div key={item.id} className="flex items-center gap-2">
 						<div
 							className="w-6 h-6 rounded-sm border border-gray-300"
 							style={{ backgroundColor: item.color }}
 						/>
 						<span className="text-base-content/70">
-							{displayMode === US_MAP_MODES.GDP ? item.gdpLabel : item.incomeLabel}
+							{displayMode === US_MAP_MODES.GDP
+								? item.gdpLabel
+								: item.incomeLabel}
 							<br />
 							<span className="text-xs">
-								{displayMode === US_MAP_MODES.GDP ? item.gdpRange : item.incomeRange}
+								{displayMode === US_MAP_MODES.GDP
+									? item.gdpRange
+									: item.incomeRange}
 							</span>
 						</span>
 					</div>
