@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import type { USState } from '../types/us-map'
+import { US_MAP_COLORS, US_MAP_MODES, US_MAP_SHADOWS, type USMapMode } from '../constants/us-map-colors'
 
 interface Props {
 	states: USState[]
 	onStateClick: (state: USState | null) => void
 	selectedState?: USState | null
-	displayMode: 'gdp' | 'income'
-	onModeChange: (mode: 'gdp' | 'income') => void
+	displayMode: USMapMode
+	onModeChange: (mode: USMapMode) => void
 }
 
 import { US_STATE_PATHS as STATE_PATHS } from '../data/us-state-paths'
@@ -153,29 +154,20 @@ export default function USMapSVG({
 		return { q1, q2, q3, max: values[values.length - 1] }
 	}, [values])
 
-	// Pastel color palette for 4 groups (used for both GDP and income)
-	const PALETTE_COLORS = {
-		lowest: '#c7d2e8', // Pastel purple/lavender
-		low: '#d9e9c1', // Pastel green/lime
-		medium: '#f5d5b8', // Pastel orange
-		high: '#f5b9b1', // Pastel pink/coral
-		selected: '#8b5cf6', // Purple (selected state)
-	}
-
 	/**
 	 * Get color based on state's metric quartile or state-specific color when selected
 	 */
 	const getColor = useCallback(
 		(state: USState): string => {
 			if (selectedState?.code === state.code) {
-				return STATE_COLORS[state.code] || PALETTE_COLORS.selected
+				return STATE_COLORS[state.code] || US_MAP_COLORS.selected
 			}
 
-			const value = displayMode === 'gdp' ? state.gdp : state.medianIncome
-			if (value <= quartiles.q1) return PALETTE_COLORS.lowest
-			if (value <= quartiles.q2) return PALETTE_COLORS.low
-			if (value <= quartiles.q3) return PALETTE_COLORS.medium
-			return PALETTE_COLORS.high
+			const value = displayMode === US_MAP_MODES.GDP ? state.gdp : state.medianIncome
+			if (value <= quartiles.q1) return US_MAP_COLORS.q1
+			if (value <= quartiles.q2) return US_MAP_COLORS.q2
+			if (value <= quartiles.q3) return US_MAP_COLORS.q3
+			return US_MAP_COLORS.q4
 		},
 		[selectedState?.code, quartiles, displayMode],
 	)
@@ -196,57 +188,33 @@ export default function USMapSVG({
 			<div className="mb-6 flex gap-3 justify-center">
 				<button
 					type="button"
-					onClick={() => onModeChange('gdp')}
+					onClick={() => onModeChange(US_MAP_MODES.GDP)}
+					className={`px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${
+						displayMode === US_MAP_MODES.GDP
+							? 'text-gray-800 shadow-md hover:shadow-lg'
+							: 'text-gray-700 bg-gray-100 hover:bg-gray-200'
+					}`}
 					style={{
-						backgroundColor: displayMode === 'gdp' ? '#c7d2e8' : '#f0f0f0',
-						color: '#333333',
-						padding: '0.5rem 1rem',
-						borderRadius: '0.5rem',
-						fontWeight: '600',
-						border: 'none',
-						cursor: 'pointer',
-						boxShadow: displayMode === 'gdp' ? '0 2px 4px rgba(0, 0, 0, 0.1)' : '0 1px 2px rgba(0, 0, 0, 0.05)',
-						transition: 'all 0.3s ease',
+						backgroundColor:
+							displayMode === US_MAP_MODES.GDP ? US_MAP_COLORS.q1 : undefined,
 					}}
-					aria-pressed={displayMode === 'gdp'}
-					onMouseEnter={(e) => {
-						if (displayMode === 'gdp') {
-							e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
-						}
-					}}
-					onMouseLeave={(e) => {
-						if (displayMode === 'gdp') {
-							e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
-						}
-					}}
+					aria-pressed={displayMode === US_MAP_MODES.GDP}
 				>
 					GDP
 				</button>
 				<button
 					type="button"
-					onClick={() => onModeChange('income')}
+					onClick={() => onModeChange(US_MAP_MODES.INCOME)}
+					className={`px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${
+						displayMode === US_MAP_MODES.INCOME
+							? 'text-gray-800 shadow-md hover:shadow-lg'
+							: 'text-gray-700 bg-gray-100 hover:bg-gray-200'
+					}`}
 					style={{
-						backgroundColor: displayMode === 'income' ? '#d9e9c1' : '#f0f0f0',
-						color: '#333333',
-						padding: '0.5rem 1rem',
-						borderRadius: '0.5rem',
-						fontWeight: '600',
-						border: 'none',
-						cursor: 'pointer',
-						boxShadow: displayMode === 'income' ? '0 2px 4px rgba(0, 0, 0, 0.1)' : '0 1px 2px rgba(0, 0, 0, 0.05)',
-						transition: 'all 0.3s ease',
+						backgroundColor:
+							displayMode === US_MAP_MODES.INCOME ? US_MAP_COLORS.q2 : undefined,
 					}}
-					aria-pressed={displayMode === 'income'}
-					onMouseEnter={(e) => {
-						if (displayMode === 'income') {
-							e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
-						}
-					}}
-					onMouseLeave={(e) => {
-						if (displayMode === 'income') {
-							e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
-						}
-					}}
+					aria-pressed={displayMode === US_MAP_MODES.INCOME}
 				>
 					Median Income
 				</button>
@@ -395,66 +363,50 @@ export default function USMapSVG({
 
 			{/* Legend */}
 			<div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
-				<div className="flex items-center gap-2">
-					<div
-						className="w-6 h-6 rounded-sm border border-gray-300"
-						style={{ backgroundColor: PALETTE_COLORS.lowest }}
-					/>
-					<span className="text-base-content/70">
-						{displayMode === 'gdp' ? 'Lowest GDP' : 'Lowest Income'}
-						<br />
-						<span className="text-xs">
-							{displayMode === 'gdp'
-								? `$${(quartiles.q1 || 0).toFixed(0)}B`
-								: `$${(quartiles.q1 || 0).toLocaleString()}`}
+				{[
+					{
+						color: US_MAP_COLORS.q1,
+						gdpLabel: 'Lowest GDP',
+						incomeLabel: 'Lowest Income',
+						gdpRange: `$${(quartiles.q1 || 0).toFixed(0)}B`,
+						incomeRange: `$${(quartiles.q1 || 0).toLocaleString()}`,
+					},
+					{
+						color: US_MAP_COLORS.q2,
+						gdpLabel: 'Low GDP',
+						incomeLabel: 'Low Income',
+						gdpRange: `$${(quartiles.q1 || 0).toFixed(0)}B-$${(quartiles.q2 || 0).toFixed(0)}B`,
+						incomeRange: `$${(quartiles.q1 || 0).toLocaleString()}-$${(quartiles.q2 || 0).toLocaleString()}`,
+					},
+					{
+						color: US_MAP_COLORS.q3,
+						gdpLabel: 'Medium GDP',
+						incomeLabel: 'Medium Income',
+						gdpRange: `$${(quartiles.q2 || 0).toFixed(0)}B-$${(quartiles.q3 || 0).toFixed(0)}B`,
+						incomeRange: `$${(quartiles.q2 || 0).toLocaleString()}-$${(quartiles.q3 || 0).toLocaleString()}`,
+					},
+					{
+						color: US_MAP_COLORS.q4,
+						gdpLabel: 'High GDP',
+						incomeLabel: 'High Income',
+						gdpRange: `$${(quartiles.q3 || 0).toFixed(0)}B+`,
+						incomeRange: `$${(quartiles.q3 || 0).toLocaleString()}+`,
+					},
+				].map((item, index) => (
+					<div key={`legend-${index}`} className="flex items-center gap-2">
+						<div
+							className="w-6 h-6 rounded-sm border border-gray-300"
+							style={{ backgroundColor: item.color }}
+						/>
+						<span className="text-base-content/70">
+							{displayMode === US_MAP_MODES.GDP ? item.gdpLabel : item.incomeLabel}
+							<br />
+							<span className="text-xs">
+								{displayMode === US_MAP_MODES.GDP ? item.gdpRange : item.incomeRange}
+							</span>
 						</span>
-					</span>
-				</div>
-				<div className="flex items-center gap-2">
-					<div
-						className="w-6 h-6 rounded-sm border border-gray-300"
-						style={{ backgroundColor: PALETTE_COLORS.low }}
-					/>
-					<span className="text-base-content/70">
-						{displayMode === 'gdp' ? 'Low GDP' : 'Low Income'}
-						<br />
-						<span className="text-xs">
-							{displayMode === 'gdp'
-								? `$${(quartiles.q1 || 0).toFixed(0)}B-$${(quartiles.q2 || 0).toFixed(0)}B`
-								: `$${(quartiles.q1 || 0).toLocaleString()}-$${(quartiles.q2 || 0).toLocaleString()}`}
-						</span>
-					</span>
-				</div>
-				<div className="flex items-center gap-2">
-					<div
-						className="w-6 h-6 rounded-sm border border-gray-300"
-						style={{ backgroundColor: PALETTE_COLORS.medium }}
-					/>
-					<span className="text-base-content/70">
-						{displayMode === 'gdp' ? 'Medium GDP' : 'Medium Income'}
-						<br />
-						<span className="text-xs">
-							{displayMode === 'gdp'
-								? `$${(quartiles.q2 || 0).toFixed(0)}B-$${(quartiles.q3 || 0).toFixed(0)}B`
-								: `$${(quartiles.q2 || 0).toLocaleString()}-$${(quartiles.q3 || 0).toLocaleString()}`}
-						</span>
-					</span>
-				</div>
-				<div className="flex items-center gap-2">
-					<div
-						className="w-6 h-6 rounded-sm border border-gray-300"
-						style={{ backgroundColor: PALETTE_COLORS.high }}
-					/>
-					<span className="text-base-content/70">
-						{displayMode === 'gdp' ? 'High GDP' : 'High Income'}
-						<br />
-						<span className="text-xs">
-							{displayMode === 'gdp'
-								? `$${(quartiles.q3 || 0).toFixed(0)}B+`
-								: `$${(quartiles.q3 || 0).toLocaleString()}+`}
-						</span>
-					</span>
-				</div>
+					</div>
+				))}
 			</div>
 		</div>
 	)

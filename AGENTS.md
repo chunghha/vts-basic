@@ -35,8 +35,9 @@ The implementor agent is responsible for writing new code and features:
   - Fix bugs: Use grep/search to find affected code and apply fixes
 
 ### Reviewer
-The reviewer agent is responsible for reviewing code changes:
+The reviewer agent is responsible for reviewing code changes and providing a grade with recommended actions.
 
+#### Review Checklist
 - Review for code quality, correctness, and maintainability
 - Check for potential bugs, security issues, and edge cases
 - Ensure code follows project conventions and style guides
@@ -44,11 +45,69 @@ The reviewer agent is responsible for reviewing code changes:
 - Check for proper error handling and validation
 - Look for performance issues or optimization opportunities
 - Ensure documentation is updated if needed
-- Examples of reviewer tasks:
-  - Review new component: Check if it follows patterns in `src/components/Header.tsx` and `src/components/Footer.tsx`
-  - Review API changes: Ensure endpoints match patterns in `src/api/countries.ts`
-  - Review route changes: Verify proper use of TanStack Start patterns from `src/routes/__root.tsx`
-  - Review bug fixes: Confirm the fix addresses the root cause without introducing new issues
+
+#### Grading System
+
+**Grade A - Excellent (Ready to Merge)**
+- All requirements met with no issues
+- Code follows all conventions and best practices
+- Comprehensive tests with good coverage
+- Performance optimized
+- Documentation complete
+
+**Recommended Action:** Approve and merge
+
+---
+
+**Grade B - Good (Minor Issues)**
+- Core functionality correct
+- Minor style or convention violations
+- Tests adequate but could be improved
+- Performance acceptable with minor optimization opportunities
+- Documentation mostly complete
+
+**Recommended Action:** Request minor fixes before merge (1-2 hours max)
+
+---
+
+**Grade C - Acceptable (Moderate Issues)**
+- Functionality works but with edge cases
+- Multiple convention violations
+- Tests incomplete or missing edge case coverage
+- Performance issues present
+- Documentation incomplete
+
+**Recommended Action:** Request moderate improvements (3-6 hours)
+
+---
+
+**Grade D - Poor (Significant Issues)**
+- Functionality has bugs or incomplete
+- Major convention violations
+- Tests inadequate or missing
+- Performance severely impacted
+- Documentation missing or incorrect
+
+**Recommended Action:** Request significant refactoring (1-2 days)
+
+---
+
+**Grade F - Failing (Critical Issues)**
+- Code does not work as intended
+- Security vulnerabilities present
+- No tests for new functionality
+- Severe performance regressions
+- Breaking changes not documented
+
+**Recommended Action:** Reject - needs complete rewrite
+
+---
+
+#### Review Examples
+- Review new component: Check if it follows patterns in `src/components/Header.tsx` and `src/components/Footer.tsx`
+- Review API changes: Ensure endpoints match patterns in `src/api/countries.ts`
+- Review route changes: Verify proper use of TanStack Start patterns from `src/routes/__root.tsx`
+- Review bug fixes: Confirm the fix addresses the root cause without introducing new issues
 
 ## Playwright Agent
 

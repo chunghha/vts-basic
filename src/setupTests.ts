@@ -1,8 +1,9 @@
 /**
- * Basic DOM test setup for Vitest + Testing Library
+ * Basic DOM test setup for Vitest + Testing Library with happy-dom
  *
  * - Provide a minimal `matchMedia` polyfill used by some UI libraries.
  * - Set the React act environment flag so React's testing behavior is correct.
+ * - Configure vitest to work with happy-dom environment
  */
 
 if (typeof window !== 'undefined' && !window.matchMedia) {

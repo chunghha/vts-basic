@@ -2,7 +2,9 @@ import { useState } from 'react'
 import { Footer } from '../../components/Footer'
 import USMapSVG from '../../components/USMapSVG'
 import { US_STATES_DATA_FULL } from '../../data/us-states'
+import { US_MAP_MODES } from '../../constants/us-map-colors'
 import type { USState } from '../../types/us-map'
+import type { USMapMode } from '../../constants/us-map-colors'
 
 /**
  * US States interactive map page
@@ -10,7 +12,7 @@ import type { USState } from '../../types/us-map'
  */
 export default function USMapPage() {
 	const [selectedState, setSelectedState] = useState<USState | null>(null)
-	const [displayMode, setDisplayMode] = useState<'gdp' | 'income'>('gdp')
+	const [displayMode, setDisplayMode] = useState<USMapMode>(US_MAP_MODES.GDP)
 
 	const statesData = US_STATES_DATA_FULL
 
